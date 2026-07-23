@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methodology — ontology</title>
+<link rel="stylesheet" href="shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="index.html">ontology</a>
+  <a href="methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <h1>Methodology</h1>
+  <p class="lede">What's real here, what's fabricated, and why.</p>
+
+  <h2>The companies are fake</h2>
+  <p>
+    Every "company" referenced in a vertical's <code>materials/</code> folder — Cairn Drivetrain Co.
+    in manufacturing, and whatever follows in later verticals — is fictional. No real enterprise's
+    documents are used or referenced. Real internal documents are confidential and inconsistent in
+    ways specific to that organization; publishing real ones wouldn't be possible or appropriate,
+    so each vertical gets an invented company instead.
+  </p>
+
+  <h2>The mess is deliberate, not incidental</h2>
+  <p>
+    The fake source material isn't meant to be internally consistent. Each vertical's materials
+    are written to contain the kinds of contradictions real enterprise documents actually have:
+    departments using the same word for different things, supplier catalogs that cross-reference
+    parts approximately rather than exactly, revision histories that don't supersede cleanly. The
+    demo stages exist to show what it looks like to notice and resolve exactly this kind of mess —
+    a tidy, conflict-free source document would make for a demo that teaches nothing.
+  </p>
+
+  <h2>The method is the reusable part</h2>
+  <p>
+    <a href="shared/core/unfold.md">The Unfold method</a> (Discover → Draft → Resolve → Validate)
+    is the same across every vertical. What's specific per industry is which conflict shapes are
+    common and what output format makes sense — see each vertical's <code>recipe.md</code>. This
+    is deliberately not a single monolithic tool: it's a shared method with industry-specific
+    guidance layered on top, so a vertical can diverge from the others' stage count or order
+    without breaking the pattern.
+  </p>
+
+  <h2>Feedback</h2>
+  <p>
+    Each vertical page has a thumbs up/down and optional text feedback widget. Submissions are
+    insert-only — there is no way to read feedback back through the public site or its API, only
+    through the project owner's own dashboard access. See <code>shared/core/feedback-widget.js</code>
+    if you want to verify that claim yourself.
+  </p>
+</div>
+</body>
+</html>

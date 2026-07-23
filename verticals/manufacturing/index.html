@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manufacturing / Supply Chain — ontology</title>
+<link rel="stylesheet" href="../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../index.html">ontology</a>
+  <a href="../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing / Supply Chain</span>
+  <h1>Cairn Drivetrain Co.</h1>
+  <p class="lede">
+    A fictional mid-drive motor manufacturer for e-bikes. Its bill of materials, supplier
+    catalog, engineering change log, and department glossary all disagree with each other —
+    on purpose. This walkthrough resolves those disagreements into an ontology, one decision
+    at a time.
+  </p>
+
+  <h2>Source material</h2>
+  <p>Read these first — the stages below assume you've seen the mess.</p>
+  <div class="card-grid">
+    <a class="card" href="materials/01-bill-of-materials.csv">
+      <h3>Bill of Materials</h3>
+      <p>The MTR-100 motor's part tree, including the MTR-100R ambiguity.</p>
+    </a>
+    <a class="card" href="materials/02-supplier-catalog.md">
+      <h3>Supplier Catalog</h3>
+      <p>Three suppliers' cross-references for the same fasteners.</p>
+    </a>
+    <a class="card" href="materials/03-engineering-change-log.md">
+      <h3>Engineering Change Log</h3>
+      <p>Rotor revision history — and the exception nobody updated downstream.</p>
+    </a>
+    <a class="card" href="materials/04-department-glossary.md">
+      <h3>Department Glossary</h3>
+      <p>Engineering, Procurement, and QA's separately-maintained term lists.</p>
+    </a>
+  </div>
+
+  <h2>Walk the Unfold process</h2>
+  <div class="card-grid">
+    <a class="card" href="stages/01-discover.html">
+      <span class="tag">Stage 1</span>
+      <h3>Discover</h3>
+      <p>Inventory every term and conflict, without resolving anything yet.</p>
+    </a>
+    <a class="card" href="stages/02-draft.html">
+      <span class="tag">Stage 2</span>
+      <h3>Draft</h3>
+      <p>A first-pass class/relation structure, with inferences marked.</p>
+    </a>
+    <a class="card" href="stages/03-resolve.html">
+      <span class="tag">Stage 3</span>
+      <h3>Resolve</h3>
+      <p>Each conflict, one at a time, with a recommended resolution.</p>
+    </a>
+    <a class="card" href="stages/04-validate.html">
+      <span class="tag">Stage 4</span>
+      <h3>Validate</h3>
+      <p>Check nothing was silently dropped; produce the changelog.</p>
+    </a>
+  </div>
+
+  <h2>Result</h2>
+  <div class="card-grid">
+    <a class="card" href="output/ontology.md">
+      <h3>Final ontology</h3>
+      <p>Class hierarchy + relation set, in plain markdown.</p>
+    </a>
+    <a class="card" href="output/changelog.md">
+      <h3>Resolution changelog</h3>
+      <p>Every Resolve-phase decision, auditable without re-reading source docs.</p>
+    </a>
+  </div>
+
+  <h2>Run this on your own docs</h2>
+  <p>
+    Point your own Claude Code or Codex session at <a href="recipe.md">recipe.md</a> — it tells
+    the agent to run this same method against <em>your</em> BOMs, supplier catalogs, and change
+    logs instead of Cairn Drivetrain's fake ones.
+  </p>
+
+  <div id="feedback"></div>
+</div>
+<script src="../../shared/core/feedback-widget.js"></script>
+<script>renderFeedbackWidget("feedback", "manufacturing");</script>
+</body>
+</html>

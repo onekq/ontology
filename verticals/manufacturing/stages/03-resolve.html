@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Manufacturing — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">
+    Each conflict from Discover, walked one at a time, in dependency order — a parent
+    classification decision before the children that hang off it. This page shows the
+    conversation as a worked example; when you run this against your own docs, your agent
+    asks these one at a time and waits for your answer instead of dumping them all at once.
+  </p>
+
+  <div class="stage-nav">
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Conflict 1 of 7 — parent decision, resolve first</span>
+    <h3>Is MTR-100R a variant of MTR-100, or a separate product?</h3>
+    <p>
+      Procurement's service BOM lists it as a child part. Engineering's drawing register treats
+      it as an independent top-level assembly with its own revision history — and it ships a
+      different rotor spec (6 magnets, Rev B) than current MTR-100 production (8 magnets, Rev C).
+    </p>
+    <div class="recommended">
+      <div class="label">Recommended</div>
+      Model as its own <code>Product</code>, related to MTR-100 by a <code>derivedFrom</code>
+      relation — not <code>hasPart</code>, not a simple <code>variantOf</code>. It diverges in
+      spec and has an independent revision history; collapsing it into MTR-100 as a child would
+      hide that divergence from anyone querying the ontology.
+    </div>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Conflict 2 of 7 — depends on Conflict 1</span>
+    <h3>Does the Rotor Subassembly's Rev B → Rev C count as supersession?</h3>
+    <p>
+      Engineering's glossary assumes Rev C supersedes Rev B outright. ECN-118 says Rev B keeps
+      shipping in field-service kits (now modeled as MTR-100R, per Conflict 1) until ~1,200 units
+      of inventory are depleted.
+    </p>
+    <div class="recommended">
+      <div class="label">Recommended</div>
+      Don't model <code>supersedes</code> as a strict global relation. Instead: Rev C supersedes
+      Rev B <em>scoped to MTR-100 production only</em> — add a <code>shippingContext</code>
+      attribute to each Revision instance so MTR-100R can continue pointing at Rev B without that
+      being treated as stale data.
+    </div>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Conflict 3 of 7</span>
+    <h3>Are the three suppliers' FST-004 cross-references the same part?</h3>
+    <p>
+      Meridian's is an exact spec match. Tri-Star's is 0.7mm longer than spec, marked "equivalent"
+      without engineering sign-off. Value Bolt's is the wrong head type entirely.
+    </p>
+    <div class="recommended">
+      <div class="label">Recommended</div>
+      Three <code>SupplierCrossReference</code> instances, all pointing at the same internal
+      <code>Part</code> (FST-004) — but tag Tri-Star's and Value Bolt's as
+      <code>unverified-equivalent</code> rather than treating all three as certainly identical.
+      That flag is what should surface in a BOM audit; silently accepting them as equal would bury
+      the wrong-head-type problem again.
+    </div>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Conflict 4 of 7</span>
+    <h3>Is FST-004-2 the same part as FST-004, or different?</h3>
+    <p>
+      Different coating (zinc-nickel vs. zinc), added for outdoor/corrosion-prone mounts. PO
+      shorthand "FST-4-12" has conflated the two for 18 months of receiving records.
+    </p>
+    <div class="recommended">
+      <div class="label">Recommended</div>
+      Two distinct <code>Part</code> instances, related by <code>alternativeTo</code> (not
+      <code>supersedes</code> — FST-004-2 doesn't replace FST-004 everywhere, only in
+      corrosion-prone contexts). Separately: flag to the user that receiving should log full part
+      numbers, not shorthand — that's a data-quality fix outside the ontology itself, but worth
+      surfacing since the ontology can't repair already-ambiguous historical records.
+    </div>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Conflict 5 of 7</span>
+    <h3>Is "Assembly" one class or two?</h3>
+    <p>
+      Engineering means any BOM node with children. Procurement means a kitted unit purchased as
+      one line item. STA-200 is the former but not the latter — it's built in-house from
+      individually sourced parts.
+    </p>
+    <div class="recommended">
+      <div class="label">Recommended</div>
+      Keep as two classes — <code>StructuralAssembly</code> (Engineering's meaning) and
+      <code>PurchasedKit</code> (Procurement's) — related by an optional
+      <code>mayCorrespondTo</code>, not merged. They're genuinely different concepts that happen
+      to share an English word, not a naming inconsistency to clean up.
+    </div>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Conflict 6 of 7</span>
+    <h3>Does "Controller" mean the part or the person?</h3>
+    <p>
+      CTL-400 ("Controller Board Assembly" in ERP) vs. the QA job role "Quality Controller."
+      ECN-124 already renamed the part to "Motor Control Unit" on engineering drawings for exactly
+      this reason — ERP was never updated to match.
+    </p>
+    <div class="recommended">
+      <div class="label">Recommended</div>
+      Name the ontology class <code>MotorControlUnit</code>, matching the current engineering
+      drawings. Keep <code>ControllerBoardAssembly</code> as a documented deprecated alias so
+      ERP-based lookups still resolve. Don't create any class for the job role — it's a person
+      attribute, out of scope for a parts ontology, and giving it a class would just reintroduce
+      the collision this conflict is trying to remove.
+    </div>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Conflict 7 of 7</span>
+    <h3>Does "Housing" mean the part or the shipping container?</h3>
+    <p>HSG-500 (cast aluminum motor enclosure) vs. Procurement's outer shipping crate.</p>
+    <div class="recommended">
+      <div class="label">Recommended</div>
+      Two unrelated classes — <code>MotorHousing</code> and <code>ShippingContainer</code> — no
+      shared parent needed. Unlike "Assembly," there's no legitimate overlap case here to model;
+      it's purely a vocabulary collision.
+    </div>
+  </div>
+
+  <p>All seven resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.</p>
+</div>
+</body>
+</html>

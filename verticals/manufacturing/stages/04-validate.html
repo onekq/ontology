@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Manufacturing — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">
+    Check the resolved ontology against the Stage 1 inventory. Does every discovered term map to
+    something in the final structure, or was it silently dropped?
+  </p>
+
+  <div class="stage-nav">
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>MTR-100</td><td><code>Product</code> instance</td></tr>
+      <tr><td>MTR-100R</td><td><code>Product</code> instance, <code>derivedFrom</code> MTR-100 (Conflict 1)</td></tr>
+      <tr><td>ROT-300 Rev B / Rev C</td><td>Two <code>Revision</code> instances, scoped <code>supersedes</code> (Conflict 2)</td></tr>
+      <tr><td>FST-004 (3 supplier refs)</td><td>One <code>Part</code>, three <code>SupplierCrossReference</code>, two flagged <code>unverified-equivalent</code> (Conflict 3)</td></tr>
+      <tr><td>FST-004 vs FST-004-2</td><td>Two <code>Part</code> instances, <code>alternativeTo</code> (Conflict 4)</td></tr>
+      <tr><td>Assembly (Eng. vs Procurement)</td><td><code>StructuralAssembly</code> + <code>PurchasedKit</code>, <code>mayCorrespondTo</code> (Conflict 5)</td></tr>
+      <tr><td>Controller (part vs role)</td><td><code>MotorControlUnit</code>, alias <code>ControllerBoardAssembly</code>; role explicitly out of scope (Conflict 6)</td></tr>
+      <tr><td>Housing (part vs crate)</td><td><code>MotorHousing</code> / <code>ShippingContainer</code>, unrelated (Conflict 7)</td></tr>
+      <tr><td>STA-200</td><td><code>StructuralAssembly</code>, no <code>PurchasedKit</code> correspondence — matches its "built in-house" note from Discover</td></tr>
+      <tr><td>Motor Control Unit (ECN-124 name)</td><td>Became the canonical class name (Conflict 6)</td></tr>
+    </tbody>
+  </table>
+
+  <p>Ten of eleven Discover-stage entries land explicitly. The eleventh — "Rev / Revision" as a general glossary term — isn't a distinct ontology element itself; it's the concept the <code>Revision</code> class and its scoped <code>supersedes</code> relation implement. Logged here so it doesn't read as a silent drop.</p>
+
+  <p>See <a href="../output/ontology.md">the final ontology</a> and <a href="../output/changelog.md">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>
