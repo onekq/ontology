@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Department Glossary — Cairn Drivetrain Co.</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing — Source material</span>
+  <h1>Internal Glossary Snapshot</h1>
+  <p class="lede">
+    As maintained separately by three departments. No single glossary exists — these are excerpts
+    from each department's own wiki page, never reconciled.
+    (<a href="04-department-glossary.md">raw export</a>)
+  </p>
+
+  <h2>Engineering wiki — "Assembly"</h2>
+  <p>Any BOM node with one or more children. A subassembly can itself contain subassemblies. Purely structural — says nothing about how or whether the thing is purchased as a unit.</p>
+
+  <h2>Procurement wiki — "Assembly"</h2>
+  <p>A kitted or pre-packaged unit purchased as a single line item from a vendor. Several of Engineering's "assemblies" (e.g. STA-200) are not purchased as a kit at all — they're built in-house from individually sourced parts, so Procurement doesn't track them as an "assembly," just as a build instruction.</p>
+
+  <h2>QA wiki — "Controller"</h2>
+  <p>Job role: Quality Controller, floor-level inspection sign-off authority. (See also: Controller Board Assembly, an unrelated electronics part — ECN-124 renamed it "Motor Control Unit" specifically to stop this collision, but the old name persists in ERP.)</p>
+
+  <h2>Procurement wiki — "Housing"</h2>
+  <p>Outer shipping carton/crate used for logistics and freight quoting. (See also: Motor Housing HSG-500, the cast aluminum enclosure — an unrelated physical part that engineering also just calls "the housing.")</p>
+
+  <h2>Engineering wiki — "Rev" / "Revision"</h2>
+  <p>A dated snapshot of a part's design. Revisions are assumed to supersede one another (Rev C replaces Rev B). This assumption is false for the Rotor Subassembly specifically — Rev B and Rev C are concurrently shipping in different product lines — but the glossary entry hasn't been updated to carve out that exception.</p>
+</div>
+</body>
+</html>

@@ -28,23 +28,26 @@
   </div>
 
   <table>
-    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw meaning(s)</th><th>Flag</th></tr></thead>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
     <tbody>
-      <tr><td>MTR-100</td><td>BOM</td><td>Top-level motor unit product</td><td>—</td></tr>
-      <tr><td>MTR-100R</td><td>BOM, ECN log</td><td>BOM: child/optional part of MTR-100. Engineering: independent top-level product with its own revision history.</td><td>Conflict</td></tr>
-      <tr><td>ROT-300 (Rotor Subassembly)</td><td>BOM, ECN log</td><td>BOM lists Rev C (8 magnets) uniformly. ECN-118 says Rev B (6 magnets) still ships in field-service kits.</td><td>Conflict</td></tr>
-      <tr><td>FST-004</td><td>BOM, Supplier catalog</td><td>Internal code "M4x12 SHCS." Three supplier cross-references, one with a 0.7mm length mismatch, one with the wrong head type.</td><td>Conflict</td></tr>
-      <tr><td>FST-004 vs FST-004-2</td><td>Supplier catalog</td><td>Two distinct parts (different coating), routinely conflated under PO shorthand "FST-4-12."</td><td>Conflict</td></tr>
+      <tr><td>MTR-100 / MTR-100R</td><td>BOM, ECN log, Requirements</td><td>BOM: MTR-100R is a child/optional part. Engineering: independent top-level product. Requirements: MTR-100R is marketed as spec-compatible on the service parts price list.</td><td>Conflict</td></tr>
+      <tr><td>ROT-320</td><td>BOM</td><td>Same part number used for two physically different parts: 6× N38 magnets (Rev B row) vs. 8× N42 magnets (Rev C row). No new number was issued.</td><td>Conflict</td></tr>
+      <tr><td>ROT-300 parent links</td><td>BOM</td><td>Both revision rows are referenced downstream as plain "ROT-300" — nothing in the export says which children belong to which revision.</td><td>Conflict</td></tr>
+      <tr><td>Effectivity dates</td><td>BOM</td><td>Present as a real field, but inconsistently populated — some rows blank, Rev B's end date was never entered even though Rev C superseded it in main production.</td><td>Conflict</td></tr>
+      <tr><td>Classification codes</td><td>BOM</td><td>Present on some rows (backfilled 2024), absent on others. No stated rule for which rows are exempt.</td><td>Note</td></tr>
+      <tr><td>FST-004 vendor cross-refs</td><td>Supplier catalog</td><td>Meridian is confirmed manufacturer+vendor, exact match. Tri-Star is vendor only, manufacturer unrecorded, 0.7mm length mismatch. Value Bolt is a reseller, manufacturer unknown, confirmed wrong head type.</td><td>Conflict</td></tr>
+      <tr><td>FST-004 vs FST-004-2</td><td>Supplier catalog</td><td>Two distinct parts (coating difference), routinely conflated under PO shorthand "FST-4-12."</td><td>Conflict</td></tr>
+      <tr><td>Vendor vs. Manufacturer</td><td>Supplier catalog</td><td>ERP has one "Vendor" field; for resold parts, who actually manufactured the part is often simply not recorded.</td><td>Conflict</td></tr>
       <tr><td>Assembly</td><td>Dept. glossary</td><td>Engineering: any BOM node with children. Procurement: a kitted unit purchased as one line item.</td><td>Conflict</td></tr>
-      <tr><td>Controller</td><td>Dept. glossary, BOM</td><td>Electronics part (CTL-400, "Controller Board Assembly" in ERP). Also a QA job role ("Quality Controller").</td><td>Conflict</td></tr>
-      <tr><td>Housing</td><td>Dept. glossary, BOM</td><td>Cast aluminum motor enclosure (HSG-500). Also Procurement's term for the outer shipping crate.</td><td>Conflict</td></tr>
-      <tr><td>Rev / Revision</td><td>Dept. glossary, ECN log</td><td>Assumed to be a linear supersession chain. False for the rotor specifically — Rev B and Rev C ship concurrently.</td><td>Conflict</td></tr>
-      <tr><td>STA-200 (Stator Subassembly)</td><td>BOM</td><td>Built in-house from individually sourced parts — not purchased as a kit.</td><td>—</td></tr>
-      <tr><td>Motor Control Unit</td><td>ECN-124</td><td>New engineering-drawing name for CTL-400, not propagated to ERP.</td><td>Note</td></tr>
+      <tr><td>Controller</td><td>Dept. glossary, BOM</td><td>Electronics part (CTL-400) vs. QA job role ("Quality Controller").</td><td>Conflict</td></tr>
+      <tr><td>Housing</td><td>Dept. glossary, BOM</td><td>Motor enclosure (HSG-500) vs. Procurement's shipping crate.</td><td>Conflict</td></tr>
+      <tr><td>REQ-002 (torque)</td><td>Requirements</td><td>Satisfied by Rev C only. MTR-100R (Rev B by default) is sold as a compatible replacement without re-verification against this requirement.</td><td>Conflict — compliance stakes</td></tr>
+      <tr><td>REQ-009 (corrosion)</td><td>Requirements</td><td>Satisfied-by field names FST-004-2, but BOM doesn't mark which mount points are "exposed," so which line items should actually be FST-004-2 is unclear.</td><td>Conflict</td></tr>
+      <tr><td>REQ-014 (ingress protection)</td><td>Requirements, ECN log</td><td>Satisfied-by link points at a drawing that predates an undocumented gasket material swap; nothing flags the link as stale.</td><td>Conflict</td></tr>
     </tbody>
   </table>
 
-  <p>Eleven entries logged, six flagged as conflicts. None resolved yet — that's Stage 3.</p>
+  <p>Fourteen entries logged, eleven flagged as conflicts. None resolved yet — that's Stage 3.</p>
 </div>
 </body>
 </html>

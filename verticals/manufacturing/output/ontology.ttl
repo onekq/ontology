@@ -1,0 +1,86 @@
+@prefix cairn:  <https://onekq.github.io/ontology/verticals/manufacturing/ontology#> .
+@prefix iof:    <https://spec.industrialontologies.org/ontology/core/Core/> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix qudt:   <http://qudt.org/schema/qudt/> .
+@prefix unit:   <http://qudt.org/vocab/unit/> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Domain classes not covered by IOF Core / PROV-O / SKOS -----------------
+
+cairn:Product a owl:Class ; rdfs:label "Product" .
+cairn:PurchasedKit a owl:Class ;
+    rdfs:label "Purchased Kit" ;
+    rdfs:comment "Procurement's 'assembly' meaning - a kitted, purchasable unit. Not covered by IOF Core's structural Assembly class." .
+cairn:MotorControlUnit a owl:Class ; rdfs:subClassOf iof:MaterialArtifact ;
+    rdfs:label "Motor Control Unit" ;
+    skos:altLabel "Controller Board Assembly" .
+cairn:MotorHousing a owl:Class ; rdfs:subClassOf iof:MaterialArtifact .
+cairn:ShippingContainer a owl:Class ; rdfs:subClassOf iof:MaterialArtifact .
+cairn:alternativeTo a owl:ObjectProperty ;
+    rdfs:comment "Domain-specific: no clean fit in IOF Core, PROV-O, or SKOS for FST-004 vs FST-004-2." .
+
+# --- Conflict 1: MTR-100R -----------------------------------------------------
+
+cairn:MTR-100 a cairn:Product .
+cairn:MTR-100R a cairn:Product ;
+    prov:wasDerivedFrom cairn:MTR-100 .
+
+# --- Conflict 2: ROT-320 identifier reuse across revisions -------------------
+
+cairn:ROT-320-RevB a iof:Identifier ;
+    iof:denotes cairn:ROT-320-RevB-Part .
+cairn:ROT-320-RevB-Part a iof:MaterialComponent ;
+    rdfs:label "Neodymium Magnet N38 (6x)" .
+
+cairn:ROT-320-RevC a iof:Identifier ;
+    iof:denotes cairn:ROT-320-RevC-Part ;
+    prov:wasRevisionOf cairn:ROT-320-RevB .
+cairn:ROT-320-RevC-Part a iof:MaterialComponent ;
+    rdfs:label "Neodymium Magnet N42 (8x)" .
+
+cairn:MTR-100
+    iof:hasComponentPartAtSomeTime cairn:ROT-320-RevC-Part .
+cairn:MTR-100R
+    iof:hasComponentPartAtSomeTime cairn:ROT-320-RevB-Part .
+
+# --- Conflict 3: FST-004 vendor cross-references ------------------------------
+
+cairn:FST-004 a iof:MaterialComponent ;
+    rdfs:label "M4x12 SHCS" ;
+    qudt:hasQuantity [ qudt:value 12 ; qudt:unit unit:MilliM ] .
+
+cairn:Meridian-MF-SC-0412Z skos:exactMatch cairn:FST-004 .
+cairn:MeridianFasteners a iof:Manufacturer, iof:Supplier ;
+    rdfs:label "Meridian Fasteners" .
+
+cairn:TriStar-TS-4120
+    skos:closeMatch cairn:FST-004 ;
+    qudt:hasQuantity [ qudt:value 12.7 ; qudt:unit unit:MilliM ] . # 0.5in converted - does not equal FST-004's 12mm
+cairn:TriStarHardware a iof:Supplier ;
+    rdfs:label "Tri-Star Hardware" .
+    # No iof:Manufacturer role asserted - genuinely unknown, not assumed.
+
+cairn:ValueBolt-VB-M412SH a iof:MaterialComponent ;
+    rdfs:label "M4x12 Button Head Cap Screw" .
+    # No skos:closeMatch or skos:exactMatch to FST-004 - confirmed wrong head type, not merely unverified.
+cairn:ValueBoltSupply a iof:Supplier ;
+    rdfs:label "Value Bolt Supply" .
+
+cairn:FST-004 cairn:alternativeTo cairn:FST-004-2 .
+cairn:FST-004-2 a iof:MaterialComponent ;
+    rdfs:label "M4x12 SHCS, zinc-nickel coated" .
+
+# --- Conflict 5: Assembly split -----------------------------------------------
+
+cairn:STA-200 a iof:Assembly ;
+    rdfs:comment "Built in-house; has component parts at all times per IOF Core's definition, but is not a PurchasedKit." .
+
+# --- Conflict 8: requirement satisfaction re-verification --------------------
+
+cairn:REQ-002 a iof:RequirementSpecification ;
+    rdfs:comment "Rotor shall deliver minimum 45 Nm continuous torque at rated RPM." ;
+    iof:requirementSatisfiedBy cairn:ROT-320-RevC-Part .
+    # Deliberately NOT asserted as satisfied by ROT-320-RevB-Part / MTR-100R - see changelog.

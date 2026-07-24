@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering Change Log — Cairn Drivetrain Co.</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing — Source material</span>
+  <h1>Engineering Change Notice Log</h1>
+  <p class="lede">
+    MTR-100 rotor and controller history. Effectivity dates for what shipped when now live on
+    the BOM export itself — this log covers rationale, not dates.
+    (<a href="03-engineering-change-log.md">raw export</a>)
+  </p>
+
+  <h2>ECN-101 <span style="font-weight:400;color:var(--muted)">— 2023-11-02</span></h2>
+  <p>Rotor Rev B released. 6× Neodymium magnet, N38 grade. Baseline for MTR-100 production.</p>
+
+  <h2>ECN-118 <span style="font-weight:400;color:var(--muted)">— 2025-02-14</span></h2>
+  <p>
+    Rotor Rev C released. Magnet grade upgraded N38 → N42, count increased 6 → 8, for torque
+    improvement on steep-grade use cases. Effective for MTR-100 main production line.
+    Field-service inventory of Rev B rotors (~1,200 units at release) continues to be drawn down
+    under the same part number — see the BOM's open-ended effectivity date on the Rev B row.
+  </p>
+
+  <h2>ECN-124 <span style="font-weight:400;color:var(--muted)">— 2025-06-30</span></h2>
+  <p>
+    Renamed "Controller Board Assembly" (CTL-400) to "Motor Control Unit" on all new engineering
+    drawings, to avoid confusion with the Quality Controller role (see department glossary). ERP
+    was not updated — CTL-400 is still labeled "Controller Board Assembly" in purchasing.
+  </p>
+
+  <h2>Open question, never resolved</h2>
+  <p>
+    Is <code>MTR-100R</code> a <strong>variant</strong> of <code>MTR-100</code>, or a
+    <strong>distinct product</strong> that happens to share a naming prefix? Procurement's service
+    BOM models it as a child part that silently pulls whichever ROT-300 revision is in stock.
+    Engineering's drawing register models it as an independent top-level assembly. No ECN has ever
+    settled this — see <a href="05-requirements.html">the requirements doc</a> for why it isn't
+    just a bookkeeping question.
+  </p>
+</div>
+</body>
+</html>

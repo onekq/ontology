@@ -1,36 +1,43 @@
 # Cairn Drivetrain Co. — Resolved Ontology
 
-Output of the Unfold method applied to `materials/`. See `changelog.md` for why each decision was made.
+Output of the Unfold method applied to `materials/`, grounded in the
+[IOF Core Ontology](https://github.com/iofoundry/ontology) plus W3C PROV-O, W3C SKOS, and QUDT
+where IOF Core doesn't reach. See `../stages/03-resolve.html` for the reasoning behind each
+choice, and `changelog.md` for a flat list of what was decided. A machine-readable version is at
+[`ontology.ttl`](ontology.ttl).
 
 ## Classes
 
-| Class | Definition |
-|---|---|
-| `Product` | A top-level sellable unit. |
-| `StructuralAssembly` | A BOM node with children, regardless of purchasing method. |
-| `PurchasedKit` | A unit bought as one line item from a supplier. |
-| `Part` | A leaf-level component. |
-| `SupplierCrossReference` | A supplier's own part number/description mapped to an internal `Part`. |
-| `Revision` | A dated snapshot of a part's design, scoped to a shipping context. |
-| `MotorControlUnit` | Canonical name for CTL-400 (alias: `ControllerBoardAssembly`). |
-| `MotorHousing` | Cast aluminum motor enclosure (HSG-500). |
-| `ShippingContainer` | Outer logistics/freight crate — unrelated to `MotorHousing`. |
+| Class | Source | Definition |
+|---|---|---|
+| `Product` | domain | A top-level sellable unit. |
+| `Assembly` | **IOF Core** | A `MaterialArtifact` with a component part at all times. |
+| `PurchasedKit` | domain | A unit bought as one line item from a vendor — Procurement's meaning of "assembly," which IOF Core's structural `Assembly` doesn't cover. |
+| `Part` | domain | A leaf-level component. |
+| `Identifier` | **IOF Core** | Denotes a thing via `denotes`/`designates`. Not the thing itself — critical for the ROT-320 case, where one display string denoted two different physical parts. |
+| `Manufacturer` | **IOF Core** | An `Organization` bearing `ManufacturerRole`. |
+| `Supplier` | **IOF Core** | An `Organization` bearing `SupplierRole` — distinct from `Manufacturer`; one org can hold both roles, or only one. |
+| `MotorControlUnit` | domain | Canonical name for CTL-400 (alias: `ControllerBoardAssembly`). |
+| `MotorHousing` | domain | Cast aluminum motor enclosure (HSG-500). |
+| `ShippingContainer` | domain | Outer logistics/freight crate — unrelated to `MotorHousing`. |
 
 ## Relations
 
-| Relation | Domain → Range | Cardinality | Notes |
+| Relation | Source | Domain → Range | Notes |
 |---|---|---|---|
-| `hasPart` | `Product`/`StructuralAssembly` → `Part`/`StructuralAssembly` | 1..* | |
-| `derivedFrom` | `Product` → `Product` | 0..1 | MTR-100R → MTR-100 |
-| `supersedes` | `Revision` → `Revision` | 0..1 | Scoped by `shippingContext`, not global |
-| `crossReferencedAs` | `Part` → `SupplierCrossReference` | 0..* | May carry `unverified-equivalent` flag |
-| `alternativeTo` | `Part` → `Part` | 0..* | FST-004 ↔ FST-004-2 |
-| `mayCorrespondTo` | `StructuralAssembly` → `PurchasedKit` | 0..1 | Optional; not all assemblies are kits |
+| `hasComponentPartAtSomeTime` | **IOF Core** | `Product`/`Assembly` → `Part`/`Assembly` | Used instead of `AtAllTimes` wherever a part is scoped to one product line, not globally true |
+| `wasDerivedFrom` | **W3C PROV-O** | `Product` → `Product` | MTR-100R → MTR-100 |
+| `wasRevisionOf` | **W3C PROV-O** | `Identifier` → `Identifier` | ROT-320-RevC → ROT-320-RevB |
+| `exactMatch` / `closeMatch` | **W3C SKOS** | `Part` → vendor cross-reference | Confidence-graded equivalence; a disproven match (Value Bolt) gets neither |
+| `hasRole` (→`ManufacturerRole`/`SupplierRole`) | **IOF Core** | `Organization` → `Role` | Manufacturer left unfilled where genuinely unknown, not defaulted to the vendor |
+| `alternativeTo` | domain | `Part` → `Part` | FST-004 ↔ FST-004-2; not a standard predicate, no clean IOF/PROV/SKOS fit |
+| `requirementSatisfiedBy` | **IOF Core** | `RequirementSpecification` → `DesignSpecification` | Treated as re-verify-on-change, not a static pointer (Conflict 8) |
 
 ## Worked instances
 
-- **MTR-100** (`Product`) —`hasPart`→ STA-200, ROT-300 (Rev C), MotorControlUnit, MotorHousing
-- **MTR-100R** (`Product`) —`derivedFrom`→ MTR-100; `hasPart`→ ROT-300 (Rev B)
-- **ROT-300 Rev B** —`supersedes`(scope: main production line)→ *superseded by* ROT-300 Rev C; `shippingContext`: field-service kits only
-- **FST-004** —`crossReferencedAs`→ Meridian MF-SC-0412Z (verified), Tri-Star TS-4120 (unverified-equivalent), Value Bolt VB-M412SH (unverified-equivalent, wrong head type)
-- **FST-004** —`alternativeTo`→ FST-004-2 (zinc-nickel, outdoor/corrosion contexts)
+- **MTR-100** (`Product`) — `hasComponentPartAtSomeTime` → STA-200, ROT-320-RevC, MotorControlUnit, MotorHousing (scoped to main production line)
+- **MTR-100R** (`Product`) — `wasDerivedFrom` → MTR-100; `hasComponentPartAtSomeTime` → ROT-320-RevB
+- **ROT-320-RevC** (`Identifier`, denotes the 8×N42 magnet part) — `wasRevisionOf` → ROT-320-RevB (denotes the 6×N38 part — a *different* physical part sharing the old display string)
+- **FST-004** — `exactMatch` → Meridian MF-SC-0412Z; `closeMatch` → Tri-Star TS-4120 (12mm vs. 12.7mm, quantified via QUDT); *no match property* → Value Bolt VB-M412SH (confirmed wrong head type)
+- **FST-004** — `alternativeTo` → FST-004-2 (zinc-nickel, outdoor/corrosion contexts)
+- **REQ-002** — `requirementSatisfiedBy` → ROT-320-RevC only; flagged for re-verification wherever a downstream product (MTR-100R) resolves to ROT-320-RevB instead

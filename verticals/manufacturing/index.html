@@ -17,29 +17,33 @@
   <h1>Cairn Drivetrain Co.</h1>
   <p class="lede">
     A fictional mid-drive motor manufacturer for e-bikes. Its bill of materials, supplier
-    catalog, engineering change log, and department glossary all disagree with each other —
-    on purpose. This walkthrough resolves those disagreements into an ontology, one decision
-    at a time.
+    catalog, engineering change log, and requirements register all disagree with each other —
+    on purpose. This walkthrough resolves those disagreements into an ontology grounded in real,
+    published vocabulary (IOF Core, PROV-O, SKOS, QUDT), one decision at a time.
   </p>
 
   <h2>Source material</h2>
   <p>Read these first — the stages below assume you've seen the mess.</p>
   <div class="card-grid">
-    <a class="card" href="materials/01-bill-of-materials.csv">
+    <a class="card" href="materials/01-bill-of-materials.html">
       <h3>Bill of Materials</h3>
-      <p>The MTR-100 motor's part tree, including the MTR-100R ambiguity.</p>
+      <p>The MTR-100 motor's part tree — effectivity dates, classification codes, and the MTR-100R/ROT-320 identifier ambiguity.</p>
     </a>
-    <a class="card" href="materials/02-supplier-catalog.md">
+    <a class="card" href="materials/02-supplier-catalog.html">
       <h3>Supplier Catalog</h3>
-      <p>Three suppliers' cross-references for the same fasteners.</p>
+      <p>Three vendors' cross-references for the same fastener, manufacturer identity included.</p>
     </a>
-    <a class="card" href="materials/03-engineering-change-log.md">
+    <a class="card" href="materials/03-engineering-change-log.html">
       <h3>Engineering Change Log</h3>
-      <p>Rotor revision history — and the exception nobody updated downstream.</p>
+      <p>Rotor revision rationale — and the open question nobody's settled.</p>
     </a>
-    <a class="card" href="materials/04-department-glossary.md">
+    <a class="card" href="materials/04-department-glossary.html">
       <h3>Department Glossary</h3>
       <p>Engineering, Procurement, and QA's separately-maintained term lists.</p>
+    </a>
+    <a class="card" href="materials/05-requirements.html">
+      <h3>Requirements Register</h3>
+      <p>Three requirements whose "Satisfied by" links have quietly gone stale.</p>
     </a>
   </div>
 
@@ -71,7 +75,11 @@
   <div class="card-grid">
     <a class="card" href="output/ontology.md">
       <h3>Final ontology</h3>
-      <p>Class hierarchy + relation set, in plain markdown.</p>
+      <p>Class hierarchy + relation set, grounded in real vocabulary — plain markdown.</p>
+    </a>
+    <a class="card" href="output/ontology.ttl">
+      <h3>Turtle serialization</h3>
+      <p>Machine-readable RDF, valid — parses cleanly with real IOF Core / PROV-O / SKOS / QUDT predicates.</p>
     </a>
     <a class="card" href="output/changelog.md">
       <h3>Resolution changelog</h3>

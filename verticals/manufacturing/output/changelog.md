@@ -1,13 +1,16 @@
 # Resolution Changelog — Cairn Drivetrain Co.
 
 Each entry settles one conflict logged in Stage 1 (Discover) and resolved in Stage 3 (Resolve).
+Vocabulary in **bold** is from a real published ontology, not invented for this project.
 
-1. **MTR-100R** modeled as its own `Product` with `derivedFrom` MTR-100, not as a child part — it diverges in spec (rotor revision) and has an independent revision history.
-2. **`supersedes`** made a scoped relation (via `shippingContext`), not a global one — Rev B and Rev C ship concurrently in different contexts, so a strict linear chain would misrepresent reality.
-3. **FST-004 cross-references** kept as three separate `SupplierCrossReference` instances rather than collapsed into one equivalence — two are flagged `unverified-equivalent` pending engineering sign-off, preserving the wrong-head-type and length-mismatch problems instead of hiding them.
-4. **FST-004 / FST-004-2** kept as two distinct `Part` instances related by `alternativeTo` — different coating for different use contexts, not a straight supersession.
-5. **"Assembly"** split into `StructuralAssembly` and `PurchasedKit` rather than merged into one class — Engineering's and Procurement's meanings genuinely diverge (STA-200 is the former, not the latter).
-6. **"Controller"** resolved to `MotorControlUnit` (matching current engineering drawings), with `ControllerBoardAssembly` kept as a deprecated alias for ERP lookups. No class created for the QA job role — out of scope for a parts ontology.
-7. **"Housing"** split into unrelated `MotorHousing` and `ShippingContainer` classes — no legitimate overlap case, purely a vocabulary collision.
+1. **MTR-100R** modeled as its own `Product` linked by **PROV-O's `wasDerivedFrom`** to MTR-100, not as a child part — it's independently tracked and, per REQ-002, doesn't always meet the same spec.
+2. **ROT-320**'s two physically different magnets (Rev B: 6×N38, Rev C: 8×N42) split into two **IOF Core `Identifier`** instances linked by **PROV-O's `wasRevisionOf`**, each `denotes`-ing a distinct part — the shared display string is not treated as a single identity. BOM relationships use **IOF Core's `hasComponentPartAtSomeTime`**, not `AtAllTimes`, since neither revision is globally true across product lines.
+3. **FST-004 vendor cross-references** kept at three different confidence levels using **SKOS**: `exactMatch` (Meridian), `closeMatch` (Tri-Star, now backed by actual **QUDT** quantity values showing a real 0.7mm gap, not an eyeballed one), and *no match property at all* for Value Bolt — a confirmed wrong part shouldn't be modeled as merely unverified.
+4. **Vendor vs. manufacturer** split into **IOF Core's `ManufacturerRole`** and `SupplierRole` — left unfilled for Tri-Star and Value Bolt where genuinely unknown, rather than silently defaulting to the vendor's identity.
+5. **FST-004 / FST-004-2** kept as two `Part`s related by a domain-specific `alternativeTo` — checked against IOF Core, PROV-O, and SKOS first; none fit cleanly, so a custom predicate was used deliberately rather than by default.
+6. **"Assembly"** resolved as **IOF Core's own `Assembly` class** for Engineering's meaning (a `MaterialArtifact` with a component part at all times) plus a domain-specific `PurchasedKit` for Procurement's commercial meaning, which IOF Core's structural definition doesn't reach.
+7. **"Controller"** resolved to `MotorControlUnit`, with `ControllerBoardAssembly` kept as a deprecated alias. No class for the QA job role.
+8. **"Housing"** split into unrelated `MotorHousing` and `ShippingContainer` — no legitimate overlap, purely a vocabulary collision.
+9. **REQ-002 / REQ-014**'s `requirementSatisfiedBy` links (**IOF Core**) treated as needing re-verification on change, not static pointers — directly motivated by REQ-002 currently being violated by a product still on the price list.
 
-**Nothing from the Discover inventory was silently dropped** — see Stage 4 (Validate) for the full term-by-term trace.
+**Two items were explicitly logged as not resolved**, not silently dropped: partial classification-code coverage (a data-completeness gap, not a conflict), and REQ-009 (folded into #9 as the same underlying defect rather than fixed twice). See Stage 4 (Validate) for the full trace.

@@ -1,20 +1,23 @@
-level,part_number,description,qty,unit,parent,notes
-0,MTR-100,Mid-Drive Motor Unit,1,ea,,Primary SKU sold to OEM bike partners
-1,STA-200,Stator Subassembly,1,ea,MTR-100,
-2,STA-210,"Stator Core, Laminated Steel",1,ea,STA-200,
-2,STA-215,Copper Winding Coil 0.45mm,3,ea,STA-200,Three-phase winding
-2,FST-004,M4x12 SHCS (Stator Mount),6,ea,STA-200,see supplier catalog for cross-refs
-1,ROT-300,Rotor Subassembly (Rev C),1,ea,MTR-100,Rev C per ECN-118
-2,ROT-310,Rotor Core,1,ea,ROT-300,
-2,ROT-320,Neodymium Magnet N42,8,ea,ROT-300,Rev C count; Rev B was 6x N38 - see ECN log
-2,FST-004,M4x12 SHCS (Rotor Mount),4,ea,ROT-300,same part number as stator mount screws
-1,CTL-400,Controller Board Assembly,1,ea,MTR-100,engineering drawings call this "Motor Control Unit" per ECN-124 - ERP still says Controller Board Assembly
-2,CTL-410,Main PCB 48V,1,ea,CTL-400,
-2,CTL-420,Hall Sensor,3,ea,CTL-400,
-2,FST-002,M3x8 SHCS,4,ea,CTL-400,
-1,HSG-500,Motor Housing Cast Aluminum,1,ea,MTR-100,
-2,HSG-510,Housing Shell Front,1,ea,HSG-500,
-2,HSG-520,Housing Shell Rear,1,ea,HSG-500,
-2,GSK-001,Housing Gasket Silicone,1,ea,HSG-500,
-2,FST-006,M5x16 SHCS (Housing),8,ea,HSG-500,
-1,MTR-100R,Field Service Repair Kit,1,optional,MTR-100,"Procurement's service BOM lists this as a child of MTR-100. Engineering treats MTR-100R as its own top-level product with an independent BOM (own rotor, 6x N38 magnets - the Rev B spec, not Rev C). Unresolved: is MTR-100R a variant of MTR-100, or a sibling product that happens to share a name prefix?"
+level,part_number,rev,description,qty,unit,parent,classification_code,effective_from,effective_to,notes
+0,MTR-100,C,Mid-Drive Motor Unit,1,ea,,27-37-15-01,2023-01-15,,Primary SKU sold to OEM bike partners
+1,STA-200,,Stator Subassembly,1,ea,MTR-100,,2023-01-15,,Rev not tracked at this level - built in-house, not revision-controlled
+2,STA-210,,"Stator Core, Laminated Steel",1,ea,STA-200,27-37-13-02,,,Classification code added in 2024 backfill; effectivity dates were not backfilled
+2,STA-215,,Copper Winding Coil 0.45mm,3,ea,STA-200,,,,Three-phase winding
+2,FST-004,,M4x12 SHCS (Stator Mount),6,ea,STA-200,23-13-17-01,2023-01-15,,see supplier catalog for cross-refs
+1,ROT-300,B,Rotor Subassembly,1,ea,MTR-100,27-37-15-02,2023-11-02,,Baseline rotor spec - still shipping in MTR-100R contexts; no end date entered
+1,ROT-300,C,Rotor Subassembly,1,ea,MTR-100,27-37-15-02,2025-02-14,,Current production rotor spec. ERP does not distinguish this row from the Rev B row above via any parent-child link - both are referenced downstream simply as "ROT-300"
+2,ROT-310,B,Rotor Core,1,ea,ROT-300,,2023-11-02,,
+2,ROT-310,C,Rotor Core,1,ea,ROT-300,,2025-02-14,,Identical casting to Rev B - unchanged between revisions
+2,ROT-320,B,Neodymium Magnet N38,6,ea,ROT-300,,2023-11-02,,
+2,ROT-320,C,Neodymium Magnet N42,8,ea,ROT-300,,2025-02-14,,Same part number ROT-320 reused for a different physical part - grade and count both changed
+2,FST-004,,M4x12 SHCS (Rotor Mount),4,ea,ROT-300,23-13-17-01,,,Same part number as stator mount screws
+1,CTL-400,,Controller Board Assembly,1,ea,MTR-100,,2023-01-15,,Engineering drawings call this "Motor Control Unit" per ECN-124 - ERP still says Controller Board Assembly
+2,CTL-410,,Main PCB 48V,1,ea,CTL-400,,,,
+2,CTL-420,,Hall Sensor,3,ea,CTL-400,,,,
+2,FST-002,,M3x8 SHCS,4,ea,CTL-400,23-13-17-02,,,
+1,HSG-500,,Motor Housing Cast Aluminum,1,ea,MTR-100,23-11-09-04,2023-01-15,,
+2,HSG-510,,Housing Shell Front,1,ea,HSG-500,,,,
+2,HSG-520,,Housing Shell Rear,1,ea,HSG-500,,,,
+2,GSK-001,,Housing Gasket Silicone,1,ea,HSG-500,,,,
+2,FST-006,,M5x16 SHCS (Housing),8,ea,HSG-500,23-13-17-03,,,
+1,MTR-100R,,Field Service Repair Kit,1,optional,MTR-100,,,,"Procurement's service BOM lists this as a child of MTR-100 with no rev specified - pulls whichever ROT-300 row is in stock, currently Rev B. Engineering treats MTR-100R as an independent top-level product with its own revision history."

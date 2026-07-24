@@ -30,22 +30,38 @@
   <table>
     <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
     <tbody>
-      <tr><td>MTR-100</td><td><code>Product</code> instance</td></tr>
-      <tr><td>MTR-100R</td><td><code>Product</code> instance, <code>derivedFrom</code> MTR-100 (Conflict 1)</td></tr>
-      <tr><td>ROT-300 Rev B / Rev C</td><td>Two <code>Revision</code> instances, scoped <code>supersedes</code> (Conflict 2)</td></tr>
-      <tr><td>FST-004 (3 supplier refs)</td><td>One <code>Part</code>, three <code>SupplierCrossReference</code>, two flagged <code>unverified-equivalent</code> (Conflict 3)</td></tr>
-      <tr><td>FST-004 vs FST-004-2</td><td>Two <code>Part</code> instances, <code>alternativeTo</code> (Conflict 4)</td></tr>
-      <tr><td>Assembly (Eng. vs Procurement)</td><td><code>StructuralAssembly</code> + <code>PurchasedKit</code>, <code>mayCorrespondTo</code> (Conflict 5)</td></tr>
-      <tr><td>Controller (part vs role)</td><td><code>MotorControlUnit</code>, alias <code>ControllerBoardAssembly</code>; role explicitly out of scope (Conflict 6)</td></tr>
-      <tr><td>Housing (part vs crate)</td><td><code>MotorHousing</code> / <code>ShippingContainer</code>, unrelated (Conflict 7)</td></tr>
-      <tr><td>STA-200</td><td><code>StructuralAssembly</code>, no <code>PurchasedKit</code> correspondence — matches its "built in-house" note from Discover</td></tr>
-      <tr><td>Motor Control Unit (ECN-124 name)</td><td>Became the canonical class name (Conflict 6)</td></tr>
+      <tr><td>MTR-100 / MTR-100R</td><td><code>Product</code>, <code>prov:wasDerivedFrom</code> (Conflict 1)</td></tr>
+      <tr><td>ROT-320 dual identity</td><td>Two <code>Identifier</code> instances, <code>prov:wasRevisionOf</code> (Conflict 2)</td></tr>
+      <tr><td>ROT-300 parent links</td><td><code>hasComponentPartAtSomeTime</code>, scoped per product line (Conflict 2)</td></tr>
+      <tr><td>Effectivity dates</td><td>Modeled as the temporal qualifier on component-part relations, not a standalone date field (Conflict 2)</td></tr>
+      <tr><td>Classification codes</td><td>Not resolved — logged as a data-completeness gap, not an ontology conflict. See "Not resolved" below.</td></tr>
+      <tr><td>FST-004 vendor cross-refs</td><td><code>skos:exactMatch</code> / <code>skos:closeMatch</code> / no match, <code>ManufacturerRole</code> vs. <code>SupplierRole</code> split, <code>qudt:QuantityValue</code> for lengths (Conflict 3)</td></tr>
+      <tr><td>FST-004 vs FST-004-2</td><td>Two <code>Part</code>s, domain-specific <code>alternativeTo</code> (Conflict 4)</td></tr>
+      <tr><td>Vendor vs. Manufacturer</td><td><code>ManufacturerRole</code> left explicitly unfilled where unknown, not defaulted to the vendor (Conflict 3)</td></tr>
+      <tr><td>Assembly</td><td>IOF Core <code>Assembly</code> (Engineering's meaning) + domain <code>PurchasedKit</code> (Procurement's), <code>mayCorrespondTo</code> (Conflict 5)</td></tr>
+      <tr><td>Controller</td><td><code>MotorControlUnit</code>, alias <code>ControllerBoardAssembly</code>; role explicitly out of scope (Conflict 6)</td></tr>
+      <tr><td>Housing</td><td><code>MotorHousing</code> / <code>ShippingContainer</code>, unrelated (Conflict 7)</td></tr>
+      <tr><td>REQ-002, REQ-014</td><td><code>requirementSatisfiedBy</code> re-verification rule (Conflict 8)</td></tr>
+      <tr><td>REQ-009</td><td>Not independently resolved — same underlying gap as Conflict 8 (stale satisfied-by link), not repeated as its own conflict. See below.</td></tr>
     </tbody>
   </table>
 
-  <p>Ten of eleven Discover-stage entries land explicitly. The eleventh — "Rev / Revision" as a general glossary term — isn't a distinct ontology element itself; it's the concept the <code>Revision</code> class and its scoped <code>supersedes</code> relation implement. Logged here so it doesn't read as a silent drop.</p>
+  <h2>Not resolved — logged, not dropped</h2>
+  <p>
+    <strong>Classification codes:</strong> partial coverage was noted in Discover but never taken
+    to Resolve — there's no conflict to adjudicate, just a data-completeness gap. Recording that
+    explicitly here is the point: Validate exists to catch things that got quietly skipped, and
+    "skipped for a legitimate reason" still has to be written down, not just skipped again.
+  </p>
+  <p>
+    <strong>REQ-009:</strong> folded into Conflict 8's fix rather than resolved separately — a
+    real modeling call, not an oversight, since both are instances of the same
+    "satisfied-by-link-goes-stale" defect.
+  </p>
 
-  <p>See <a href="../output/ontology.md">the final ontology</a> and <a href="../output/changelog.md">the resolution changelog</a>.</p>
+  <p>See <a href="../output/ontology.md">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.md">the resolution changelog</a>.</p>
 </div>
 </body>
 </html>

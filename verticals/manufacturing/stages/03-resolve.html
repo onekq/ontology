@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Resolve — Manufacturing — ontology</title>
 <link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .done-msg { display: none; }
+</style>
 </head>
 <body>
 <nav class="top">
@@ -16,10 +33,10 @@
   <span class="tag">Manufacturing</span>
   <h1>Stage 3 — Resolve</h1>
   <p class="lede">
-    Each conflict from Discover, walked one at a time, in dependency order — a parent
-    classification decision before the children that hang off it. This page shows the
-    conversation as a worked example; when you run this against your own docs, your agent
-    asks these one at a time and waits for your answer instead of dumping them all at once.
+    One conflict at a time, in dependency order. Reveal the recommended answer, then move on —
+    same discipline the method itself requires: <em>"never batch conflicts."</em> Vocabulary
+    below comes from real ontologies (IOF Core, W3C PROV-O, W3C SKOS, QUDT) — see Stage 2 for
+    where each came from.
   </p>
 
   <div class="stage-nav">
@@ -29,122 +46,159 @@
     <a href="04-validate.html">4. Validate</a>
   </div>
 
-  <div class="conflict">
-    <span class="label">Conflict 1 of 7 — parent decision, resolve first</span>
-    <h3>Is MTR-100R a variant of MTR-100, or a separate product?</h3>
-    <p>
-      Procurement's service BOM lists it as a child part. Engineering's drawing register treats
-      it as an independent top-level assembly with its own revision history — and it ships a
-      different rotor spec (6 magnets, Rev B) than current MTR-100 production (8 magnets, Rev C).
-    </p>
-    <div class="recommended">
-      <div class="label">Recommended</div>
-      Model as its own <code>Product</code>, related to MTR-100 by a <code>derivedFrom</code>
-      relation — not <code>hasPart</code>, not a simple <code>variantOf</code>. It diverges in
-      spec and has an independent revision history; collapsing it into MTR-100 as a child would
-      hide that divergence from anyone querying the ontology.
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 8</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Is MTR-100R a variant of MTR-100, or a separate product?</h3>
+      <p>Procurement's service BOM lists it as a child part. Engineering treats it as an independent top-level assembly. It's also sold on the service parts price list as a compatible replacement — see REQ-002 later in this walkthrough for why that claim matters.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — PROV-O</div>
+        Model as its own <code>Product</code>, related to MTR-100 by <code>prov:wasDerivedFrom</code> — a real W3C-standard predicate for exactly this "related but independently-tracked" relationship. Not <code>hasPart</code>: MTR-100R isn't a component of MTR-100, it's a separate thing derived from it.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
     </div>
   </div>
 
-  <div class="conflict">
-    <span class="label">Conflict 2 of 7 — depends on Conflict 1</span>
-    <h3>Does the Rotor Subassembly's Rev B → Rev C count as supersession?</h3>
-    <p>
-      Engineering's glossary assumes Rev C supersedes Rev B outright. ECN-118 says Rev B keeps
-      shipping in field-service kits (now modeled as MTR-100R, per Conflict 1) until ~1,200 units
-      of inventory are depleted.
-    </p>
-    <div class="recommended">
-      <div class="label">Recommended</div>
-      Don't model <code>supersedes</code> as a strict global relation. Instead: Rev C supersedes
-      Rev B <em>scoped to MTR-100 production only</em> — add a <code>shippingContext</code>
-      attribute to each Revision instance so MTR-100R can continue pointing at Rev B without that
-      being treated as stale data.
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 1</span>
+      <h3>ROT-320 uses the same part number for two physically different magnets — and Rev B/Rev C ship concurrently</h3>
+      <p>BOM rows show ROT-320 Rev B (6× N38) and Rev C (8× N42) as if they were the same identifier. Neither has an end date on its effectivity range.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — IOF Core + PROV-O</div>
+        Two distinct <code>Identifier</code> instances (ROT-320-RevB, ROT-320-RevC) both <code>denotes</code>-ing physically different parts — the shared display string "ROT-320" is not itself the identifier the ontology should track. Link them with <code>prov:wasRevisionOf</code> (Rev C revises Rev B). For the BOM relationship, use <code>hasComponentPartAtSomeTime</code> rather than <code>AtAllTimes</code> on both — MTR-100R's link points at Rev B, MTR-100 main line's points at Rev C, and neither is globally true.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
     </div>
   </div>
 
-  <div class="conflict">
-    <span class="label">Conflict 3 of 7</span>
-    <h3>Are the three suppliers' FST-004 cross-references the same part?</h3>
-    <p>
-      Meridian's is an exact spec match. Tri-Star's is 0.7mm longer than spec, marked "equivalent"
-      without engineering sign-off. Value Bolt's is the wrong head type entirely.
-    </p>
-    <div class="recommended">
-      <div class="label">Recommended</div>
-      Three <code>SupplierCrossReference</code> instances, all pointing at the same internal
-      <code>Part</code> (FST-004) — but tag Tri-Star's and Value Bolt's as
-      <code>unverified-equivalent</code> rather than treating all three as certainly identical.
-      That flag is what should surface in a BOM audit; silently accepting them as equal would bury
-      the wrong-head-type problem again.
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 8</span>
+      <h3>Are the three vendors' FST-004 cross-references the same part?</h3>
+      <p>Meridian is both manufacturer and vendor, exact spec. Tri-Star is vendor-only (manufacturer unrecorded), and its stated length (0.5in) isn't actually 12mm. Value Bolt is a reseller (manufacturer unknown) with a confirmed wrong head type.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — SKOS + IOF Core + QUDT</div>
+        Split the ERP's single "Vendor" field into IOF Core's <code>ManufacturerRole</code> and <code>SupplierRole</code> — Tri-Star and Value Bolt hold <code>SupplierRole</code> with <code>ManufacturerRole</code> explicitly unfilled, not silently assumed. For the cross-references: Meridian's gets <code>skos:exactMatch</code>. Tri-Star's gets <code>skos:closeMatch</code> — but only after re-expressing both lengths as proper <code>qudt:QuantityValue</code>s (12mm vs. 12.7mm) so the 0.7mm gap is a computed fact, not an eyeballed approximation. Value Bolt's gets <strong>no match property at all</strong> — a confirmed wrong head type isn't "unverified," it's disproven, and SKOS shouldn't claim otherwise.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
     </div>
   </div>
 
-  <div class="conflict">
-    <span class="label">Conflict 4 of 7</span>
-    <h3>Is FST-004-2 the same part as FST-004, or different?</h3>
-    <p>
-      Different coating (zinc-nickel vs. zinc), added for outdoor/corrosion-prone mounts. PO
-      shorthand "FST-4-12" has conflated the two for 18 months of receiving records.
-    </p>
-    <div class="recommended">
-      <div class="label">Recommended</div>
-      Two distinct <code>Part</code> instances, related by <code>alternativeTo</code> (not
-      <code>supersedes</code> — FST-004-2 doesn't replace FST-004 everywhere, only in
-      corrosion-prone contexts). Separately: flag to the user that receiving should log full part
-      numbers, not shorthand — that's a data-quality fix outside the ontology itself, but worth
-      surfacing since the ontology can't repair already-ambiguous historical records.
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 8</span>
+      <h3>Is FST-004-2 the same part as FST-004, or different?</h3>
+      <p>Different coating (zinc-nickel vs. zinc), added for outdoor/corrosion-prone mounts. PO shorthand "FST-4-12" has conflated the two for 18 months.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended</div>
+        Two distinct <code>Part</code> instances. Neither IOF Core nor SKOS has a perfect single-predicate fit here — this isn't a revision (FST-004-2 doesn't replace FST-004 everywhere) and it isn't an equivalence claim (they're deliberately different). Use a domain-specific <code>alternativeTo</code> relation rather than force-fitting a standard one; flag to the user that receiving should log full part numbers, not shorthand.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
     </div>
   </div>
 
-  <div class="conflict">
-    <span class="label">Conflict 5 of 7</span>
-    <h3>Is "Assembly" one class or two?</h3>
-    <p>
-      Engineering means any BOM node with children. Procurement means a kitted unit purchased as
-      one line item. STA-200 is the former but not the latter — it's built in-house from
-      individually sourced parts.
-    </p>
-    <div class="recommended">
-      <div class="label">Recommended</div>
-      Keep as two classes — <code>StructuralAssembly</code> (Engineering's meaning) and
-      <code>PurchasedKit</code> (Procurement's) — related by an optional
-      <code>mayCorrespondTo</code>, not merged. They're genuinely different concepts that happen
-      to share an English word, not a naming inconsistency to clean up.
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 8</span>
+      <h3>Is "Assembly" one class or two?</h3>
+      <p>Engineering means any BOM node with children. Procurement means a kitted unit purchased as one line item. STA-200 is the former but not the latter.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — IOF Core, partial fit</div>
+        Engineering's meaning maps onto IOF Core's own <code>Assembly</code> class directly (a <code>MaterialArtifact</code> with a component part at all times). Procurement's "kitted purchase" meaning is commercial, not structural — IOF Core doesn't reach it. Add a domain-specific <code>PurchasedKit</code> class, related by an optional <code>mayCorrespondTo</code>, rather than forcing it into <code>Assembly</code>.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
     </div>
   </div>
 
-  <div class="conflict">
-    <span class="label">Conflict 6 of 7</span>
-    <h3>Does "Controller" mean the part or the person?</h3>
-    <p>
-      CTL-400 ("Controller Board Assembly" in ERP) vs. the QA job role "Quality Controller."
-      ECN-124 already renamed the part to "Motor Control Unit" on engineering drawings for exactly
-      this reason — ERP was never updated to match.
-    </p>
-    <div class="recommended">
-      <div class="label">Recommended</div>
-      Name the ontology class <code>MotorControlUnit</code>, matching the current engineering
-      drawings. Keep <code>ControllerBoardAssembly</code> as a documented deprecated alias so
-      ERP-based lookups still resolve. Don't create any class for the job role — it's a person
-      attribute, out of scope for a parts ontology, and giving it a class would just reintroduce
-      the collision this conflict is trying to remove.
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 8</span>
+      <h3>Does "Controller" mean the part or the person?</h3>
+      <p>CTL-400 ("Controller Board Assembly" in ERP) vs. the QA job role "Quality Controller." ECN-124 already renamed the part on engineering drawings for exactly this reason.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended</div>
+        Name the class <code>MotorControlUnit</code>, matching current drawings. Keep <code>ControllerBoardAssembly</code> as a documented deprecated alias for ERP lookups. No class for the job role — out of scope for a parts ontology, and giving it one would reintroduce the exact collision this conflict is trying to remove.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
     </div>
   </div>
 
-  <div class="conflict">
-    <span class="label">Conflict 7 of 7</span>
-    <h3>Does "Housing" mean the part or the shipping container?</h3>
-    <p>HSG-500 (cast aluminum motor enclosure) vs. Procurement's outer shipping crate.</p>
-    <div class="recommended">
-      <div class="label">Recommended</div>
-      Two unrelated classes — <code>MotorHousing</code> and <code>ShippingContainer</code> — no
-      shared parent needed. Unlike "Assembly," there's no legitimate overlap case here to model;
-      it's purely a vocabulary collision.
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 8</span>
+      <h3>Does "Housing" mean the part or the shipping container?</h3>
+      <p>HSG-500 (cast aluminum motor enclosure) vs. Procurement's outer shipping crate.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended</div>
+        Two unrelated classes — <code>MotorHousing</code> and <code>ShippingContainer</code>. No shared parent needed; it's purely a vocabulary collision, unlike "Assembly" where a legitimate partial overlap existed.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
     </div>
   </div>
 
-  <p>All seven resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.</p>
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 8 — highest stakes</span>
+      <h3>REQ-002 and REQ-014's "Satisfied by" links have gone stale</h3>
+      <p>REQ-002 (45 Nm torque) is only met by Rev C, but MTR-100R (Rev B by default) is marketed as a compatible replacement. REQ-014 (IP65 ingress protection) points at a drawing that predates an undocumented gasket material swap.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — IOF Core</div>
+        <code>requirementSatisfiedBy</code> shouldn't be a static, set-once pointer. Model it so that a change to the linked <code>DesignSpecification</code> (or, per Conflict 2, to which <code>Identifier</code>/revision a downstream product actually resolves to) flags the requirement link for re-verification rather than silently continuing to claim satisfaction. This is the conflict where getting the ontology right isn't academic — REQ-002 unresolved means a torque spec is being misrepresented on parts still being sold.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All eight resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 8;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
 </div>
 </body>
 </html>

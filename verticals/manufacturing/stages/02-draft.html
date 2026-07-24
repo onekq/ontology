@@ -16,9 +16,11 @@
   <span class="tag">Manufacturing</span>
   <h1>Stage 2 — Draft</h1>
   <p class="lede">
-    A first-pass class/relation structure from the Discover inventory. Anything not directly
-    stated in a source document is marked <code>[inferred]</code> — the Resolve stage will
-    challenge these, not just accept them.
+    Instead of inventing class names from scratch, this draft is built against the
+    <a href="https://github.com/iofoundry/ontology">Industrial Ontologies Foundry (IOF) Core
+    Ontology</a> — an actively maintained, industry-backed ontology built on BFO. Definitions
+    below are quoted or closely paraphrased from the actual published ontology, not guessed from
+    class names.
   </p>
 
   <div class="stage-nav">
@@ -28,35 +30,61 @@
     <a href="04-validate.html">4. Validate</a>
   </div>
 
-  <h2>Candidate classes</h2>
+  <h2>The pattern IOF Core uses: rigid type + role</h2>
+  <p>
+    IOF Core doesn't give a part one fixed class. A physical thing has a rigid type
+    (<code>MaterialArtifact</code>) plus zero or more <em>roles</em> that depend on context and
+    can change. Their own explanatory note on <code>MaterialComponent</code> makes the point
+    directly: <em>"Assemblies that are components for one manufacturer may be final products for
+    another (e.g., diesel engines are Cummins's primary product line, yet a component for its
+    customer Freightliner)."</em> MTR-100 is exactly this — Cairn's <em>product</em>, but a
+    <em>component</em> from an OEM bike partner's perspective. One class hierarchy can't capture
+    that; a role can.
+  </p>
+
+  <h2>Classes adopted from IOF Core</h2>
   <table>
-    <thead><tr><th>Class</th><th>Definition</th></tr></thead>
+    <thead><tr><th>Class</th><th>Definition (from the ontology)</th></tr></thead>
     <tbody>
-      <tr><td>Product</td><td>A top-level sellable unit (e.g. MTR-100).</td></tr>
-      <tr><td>StructuralAssembly</td><td>A BOM node with children, regardless of how it's purchased. <code>[inferred]</code> — split from Procurement's "assembly" meaning, not yet confirmed as the right split.</td></tr>
-      <tr><td>PurchasedKit</td><td>A unit bought as one line item from a supplier. <code>[inferred]</code> — same split as above.</td></tr>
-      <tr><td>Part</td><td>A leaf-level component (no children in the BOM).</td></tr>
-      <tr><td>SupplierCrossReference</td><td>A supplier's own part number/description mapped to an internal part. <code>[inferred]</code> — not an explicit concept in the source docs, but implied by the cross-reference table.</td></tr>
-      <tr><td>Revision</td><td>A dated snapshot of a part's design.</td></tr>
-      <tr><td>DepartmentRole</td><td>A named job function (e.g. Quality Controller). <code>[inferred]</code> — added specifically to disambiguate from the electronics "Controller" part.</td></tr>
+      <tr><td><code>Assembly</code></td><td>A <code>MaterialArtifact</code> with a component part <em>at all times</em> — permanently composed of parts, not just currently. IOF's own counter-example: "an engine block" doesn't qualify (no separable parts). This maps to Engineering's glossary meaning more precisely than it maps to Procurement's.</td></tr>
+      <tr><td><code>MaterialComponent</code></td><td>A material entity that <em>bears</em> <code>MaterialComponentRole</code> — a role, not an inherent type.</td></tr>
+      <tr><td><code>MaterialProduct</code></td><td>Same pattern: a material entity bearing <code>MaterialProductRole</code>.</td></tr>
+      <tr><td><code>Manufacturer</code></td><td>An <code>Organization</code> bearing <code>ManufacturerRole</code>.</td></tr>
+      <tr><td><code>Supplier</code></td><td>An <code>Organization</code> bearing <code>SupplierRole</code> — a distinct role from <code>Manufacturer</code>. One organization can hold both, or only one.</td></tr>
+      <tr><td><code>Identifier</code></td><td>Denotes a thing via the <code>denotes</code>/<code>designates</code> relations — the identifier itself is not the thing.</td></tr>
+      <tr><td><code>RequirementSpecification</code> / <code>DesignSpecification</code></td><td>Distinct information content entities, linked by <code>requirementSatisfiedBy</code> / <code>satisfiesRequirement</code>.</td></tr>
     </tbody>
   </table>
+
+  <h2>Where IOF Core doesn't reach — flagged, not forced</h2>
+  <p>
+    Procurement's "Assembly" meaning — a <em>kitted, purchasable unit</em> — is a commercial
+    concept, not a structural one, and doesn't map cleanly onto IOF Core's structural
+    <code>Assembly</code> class. Rather than force a fit, this stays open going into Resolve:
+    <code>[inferred, contested]</code> — Procurement's meaning likely needs a separate,
+    domain-specific class (e.g. <code>PurchasedKit</code>) related to, not merged with,
+    <code>Assembly</code>.
+  </p>
+  <p>
+    Similarly, IOF Core has no single first-class "Revision" entity — it models change through
+    temporally-qualified relations (<code>hasComponentPartAtSomeTime</code> vs.
+    <code>hasComponentPartAtAllTimes</code>) rather than a reified version object. Real PLM
+    standards (ISO 10303/STEP AP242) do the opposite — revisions as explicit entities. Both are
+    legitimate; Resolve has to pick one for this ontology rather than silently defaulting to
+    either.
+  </p>
 
   <h2>Candidate relations</h2>
   <table>
-    <thead><tr><th>Relation</th><th>Cardinality</th><th>Status</th></tr></thead>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td>hasPart (Product/StructuralAssembly → Part/StructuralAssembly)</td><td>1..*</td><td>Stated directly by BOM</td></tr>
-      <tr><td>variantOf (Product → Product)</td><td>0..1</td><td><code>[inferred, contested]</code> — candidate for the MTR-100/MTR-100R relationship, not yet confirmed correct in Resolve</td></tr>
-      <tr><td>crossReferencedAs (Part → SupplierCrossReference)</td><td>0..*</td><td><code>[inferred]</code></td></tr>
-      <tr><td>supersedes (Revision → Revision)</td><td>0..1</td><td><code>[inferred, contested]</code> — assumes linear supersession, which Stage 1 already flagged as false for the rotor</td></tr>
+      <tr><td><code>hasComponentPartAtSomeTime</code> / <code>AtAllTimes</code></td><td>IOF Core</td><td>Candidate for BOM parent/child — the "AtSomeTime" variant is the direct fix for Rev B/Rev C concurrently shipping</td></tr>
+      <tr><td><code>wasDerivedFrom</code> / <code>wasRevisionOf</code></td><td>W3C PROV-O</td><td><code>[inferred, contested]</code> — candidates for MTR-100R↔MTR-100 and Rev B↔Rev C; IOF Core itself doesn't cover provenance, PROV-O does</td></tr>
+      <tr><td><code>exactMatch</code> / <code>closeMatch</code></td><td>W3C SKOS</td><td><code>[inferred, contested]</code> — candidates for the three FST-004 vendor cross-references, at different confidence levels</td></tr>
     </tbody>
   </table>
 
-  <p>
-    Two relations are marked <em>contested</em> on purpose — they're the draft's best guess, not
-    a settled answer. Stage 3 resolves both explicitly rather than letting them stand by default.
-  </p>
+  <p>Three items are marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
 </div>
 </body>
 </html>

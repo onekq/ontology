@@ -1,17 +1,24 @@
 # Engineering Change Notice Log — MTR-100 Rotor & Controller
 
+Effectivity dates for what shipped when now live on the BOM export itself (`01-bill-of-materials`)
+— this log covers rationale, not dates.
+
 ## ECN-101 (2023-11-02)
-Rotor Rev B released. 6x Neodymium magnet, N38 grade. Baseline for MTR-100 production and MTR-100R field service kits.
+Rotor Rev B released. 6× Neodymium magnet, N38 grade. Baseline for MTR-100 production.
 
 ## ECN-118 (2025-02-14)
-Rotor Rev C released. Magnet grade upgraded N38 → N42, count increased 6 → 8, for torque improvement on steep-grade use cases.
-
-> Effective for MTR-100 main production line immediately. **Legacy field service kits continue to ship Rev B (6-magnet, N38) rotors until existing inventory (~1,200 units as of this ECN) is depleted — do not update the service BOM until Q3.**
-
-This note is the only place that documents that MTR-100 and MTR-100R currently ship *different rotor specs under the same conceptual part*. The BOM export (`01-bill-of-materials.csv`) does not reflect this — it lists Rev C (8 magnets) uniformly, including under the MTR-100R line.
+Rotor Rev C released. Magnet grade upgraded N38 → N42, count increased 6 → 8, for torque
+improvement on steep-grade use cases. Effective for MTR-100 main production line. Field-service
+inventory of Rev B rotors (~1,200 units at time of release) continues to be drawn down under the
+same part number — see the BOM's open-ended effectivity date on the Rev B row.
 
 ## ECN-124 (2025-06-30)
-Renamed "Controller Board Assembly" (CTL-400) to "Motor Control Unit" on all new engineering drawings, to avoid confusion with the Quality Controller role (see department glossary). ERP/procurement records were not updated — CTL-400 is still labeled "Controller Board Assembly" in the purchasing system and on the BOM export.
+Renamed "Controller Board Assembly" (CTL-400) to "Motor Control Unit" on all new engineering
+drawings, to avoid confusion with the Quality Controller role (see department glossary). ERP was
+not updated — CTL-400 is still labeled "Controller Board Assembly" in the purchasing system.
 
-## Open question flagged by Engineering, never resolved
-Is `MTR-100R` a **variant** of `MTR-100` (same product, different configuration/rotor spec), or a **distinct product** that happens to share a naming prefix and ships a legacy rotor spec on purpose? Procurement's service BOM models it as a child part. Engineering's drawing register models it as an independent top-level assembly with its own revision history. No ECN has ever settled this.
+## Open question, never resolved
+Is `MTR-100R` a **variant** of `MTR-100`, or a **distinct product** that happens to share a naming
+prefix? Procurement's service BOM models it as a child part that silently pulls whichever ROT-300
+revision is in stock. Engineering's drawing register models it as an independent top-level assembly.
+No ECN has ever settled this — see `05-requirements.md` for why it isn't just a bookkeeping question.

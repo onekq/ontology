@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bill of Materials — Cairn Drivetrain Co.</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  tr.flagged { background: var(--accent-bg); }
+  .dl { font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing — Source material</span>
+  <h1>Bill of Materials</h1>
+  <p class="lede">
+    MTR-100's part tree, as exported from ERP. <code>rev</code>, <code>classification_code</code>,
+    and effectivity dates are all real ERP fields — and all three are inconsistently populated,
+    same as a real export would be. Rows shaded orange are where that inconsistency creates a
+    genuine ambiguity.
+    <span class="dl">(<a href="01-bill-of-materials.csv">raw .csv export</a>)</span>
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Lvl</th><th>Part #</th><th>Rev</th><th>Description</th><th>Qty</th><th>Parent</th><th>Class code</th><th>Effective</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>MTR-100</td><td>C</td><td>Mid-Drive Motor Unit</td><td>1</td><td>—</td><td>27-37-15-01</td><td>2023-01-15 →</td><td>Primary SKU sold to OEM bike partners</td></tr>
+      <tr><td>1</td><td>STA-200</td><td>—</td><td>Stator Subassembly</td><td>1</td><td>MTR-100</td><td>—</td><td>2023-01-15 →</td><td>Rev not tracked at this level — built in-house, not revision-controlled</td></tr>
+      <tr><td>2</td><td>STA-210</td><td>—</td><td>Stator Core, Laminated Steel</td><td>1</td><td>STA-200</td><td>27-37-13-02</td><td>—</td><td>Classification added in 2024 backfill; effectivity was not</td></tr>
+      <tr><td>2</td><td>STA-215</td><td>—</td><td>Copper Winding Coil 0.45mm</td><td>3</td><td>STA-200</td><td>—</td><td>—</td><td>Three-phase winding</td></tr>
+      <tr><td>2</td><td>FST-004</td><td>—</td><td>M4x12 SHCS (Stator Mount)</td><td>6</td><td>STA-200</td><td>23-13-17-01</td><td>2023-01-15 →</td><td>see supplier catalog</td></tr>
+      <tr class="flagged"><td>1</td><td>ROT-300</td><td>B</td><td>Rotor Subassembly</td><td>1</td><td>MTR-100</td><td>27-37-15-02</td><td>2023-11-02 →</td><td>Baseline spec, still shipping in MTR-100R contexts — no end date entered</td></tr>
+      <tr class="flagged"><td>1</td><td>ROT-300</td><td>C</td><td>Rotor Subassembly</td><td>1</td><td>MTR-100</td><td>27-37-15-02</td><td>2025-02-14 →</td><td>Current production spec. ERP has no parent-child link distinguishing this row from the Rev B row above — both are just "ROT-300" downstream</td></tr>
+      <tr><td>2</td><td>ROT-310</td><td>B</td><td>Rotor Core</td><td>1</td><td>ROT-300</td><td>—</td><td>2023-11-02 →</td><td></td></tr>
+      <tr><td>2</td><td>ROT-310</td><td>C</td><td>Rotor Core</td><td>1</td><td>ROT-300</td><td>—</td><td>2025-02-14 →</td><td>Identical casting to Rev B</td></tr>
+      <tr class="flagged"><td>2</td><td>ROT-320</td><td>B</td><td>Neodymium Magnet N38</td><td>6</td><td>ROT-300</td><td>—</td><td>2023-11-02 →</td><td></td></tr>
+      <tr class="flagged"><td>2</td><td>ROT-320</td><td>C</td><td>Neodymium Magnet N42</td><td>8</td><td>ROT-300</td><td>—</td><td>2025-02-14 →</td><td><strong>Same part number reused for a physically different part</strong> — grade and count both changed</td></tr>
+      <tr><td>2</td><td>FST-004</td><td>—</td><td>M4x12 SHCS (Rotor Mount)</td><td>4</td><td>ROT-300</td><td>23-13-17-01</td><td>—</td><td>Same part number as stator mount screws</td></tr>
+      <tr><td>1</td><td>CTL-400</td><td>—</td><td>Controller Board Assembly</td><td>1</td><td>MTR-100</td><td>—</td><td>2023-01-15 →</td><td>Drawings call this "Motor Control Unit" (ECN-124) — ERP still says Controller Board Assembly</td></tr>
+      <tr><td>2</td><td>CTL-410</td><td>—</td><td>Main PCB 48V</td><td>1</td><td>CTL-400</td><td>—</td><td>—</td><td></td></tr>
+      <tr><td>2</td><td>CTL-420</td><td>—</td><td>Hall Sensor</td><td>3</td><td>CTL-400</td><td>—</td><td>—</td><td></td></tr>
+      <tr><td>2</td><td>FST-002</td><td>—</td><td>M3x8 SHCS</td><td>4</td><td>CTL-400</td><td>23-13-17-02</td><td>—</td><td></td></tr>
+      <tr><td>1</td><td>HSG-500</td><td>—</td><td>Motor Housing Cast Aluminum</td><td>1</td><td>MTR-100</td><td>23-11-09-04</td><td>2023-01-15 →</td><td></td></tr>
+      <tr><td>2</td><td>HSG-510</td><td>—</td><td>Housing Shell Front</td><td>1</td><td>HSG-500</td><td>—</td><td>—</td><td></td></tr>
+      <tr><td>2</td><td>HSG-520</td><td>—</td><td>Housing Shell Rear</td><td>1</td><td>HSG-500</td><td>—</td><td>—</td><td></td></tr>
+      <tr><td>2</td><td>GSK-001</td><td>—</td><td>Housing Gasket Silicone</td><td>1</td><td>HSG-500</td><td>—</td><td>—</td><td></td></tr>
+      <tr><td>2</td><td>FST-006</td><td>—</td><td>M5x16 SHCS (Housing)</td><td>8</td><td>HSG-500</td><td>23-13-17-03</td><td>—</td><td></td></tr>
+      <tr class="flagged"><td>1</td><td>MTR-100R</td><td>—</td><td>Field Service Repair Kit</td><td>1 (optional)</td><td>MTR-100</td><td>—</td><td>—</td><td>Procurement's service BOM lists this as a child with no rev specified — pulls whichever ROT-300 row is in stock (currently Rev B). Engineering treats it as an independent top-level product with its own revision history.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
