@@ -21,6 +21,9 @@ cairn:MotorHousing a owl:Class ; rdfs:subClassOf iof:MaterialArtifact .
 cairn:ShippingContainer a owl:Class ; rdfs:subClassOf iof:MaterialArtifact .
 cairn:alternativeTo a owl:ObjectProperty ;
     rdfs:comment "Domain-specific: no clean fit in IOF Core, PROV-O, or SKOS for FST-004 vs FST-004-2." .
+cairn:mayCorrespondTo a owl:ObjectProperty ;
+    rdfs:domain iof:Assembly ; rdfs:range cairn:PurchasedKit ;
+    rdfs:comment "Domain-specific, optional: an Assembly (structural, IOF Core) may or may not also be a PurchasedKit (commercial). No current Cairn Drivetrain part instantiates this - see comment on STA-200 below." .
 
 # --- Conflict 1: MTR-100R -----------------------------------------------------
 
@@ -76,7 +79,20 @@ cairn:FST-004-2 a iof:MaterialComponent ;
 # --- Conflict 5: Assembly split -----------------------------------------------
 
 cairn:STA-200 a iof:Assembly ;
-    rdfs:comment "Built in-house; has component parts at all times per IOF Core's definition, but is not a PurchasedKit." .
+    rdfs:comment "Built in-house; has component parts at all times per IOF Core's definition. Does NOT get cairn:mayCorrespondTo to any PurchasedKit - it is explicitly not purchased as a kit. No part in the current materials genuinely is a PurchasedKit; the class and mayCorrespondTo are declared for completeness, not force-instantiated against a bad fit." .
+
+# --- Conflicts 6 & 7: Controller and Housing name collisions -----------------
+
+cairn:CTL-400 a cairn:MotorControlUnit ;
+    skos:altLabel "Controller Board Assembly" ;
+    rdfs:comment "ERP still uses the alias label; engineering drawings use MotorControlUnit per ECN-124." .
+
+cairn:HSG-500 a cairn:MotorHousing .
+
+# cairn:ShippingContainer is declared as a class (Conflict 7) but no source
+# material actually describes a concrete shipping crate as a trackable part
+# with its own identifier - so unlike MotorHousing, it has no instance here.
+# Declared for completeness, not force-instantiated against nonexistent data.
 
 # --- Conflict 8: requirement satisfaction re-verification --------------------
 

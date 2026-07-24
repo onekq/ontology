@@ -31,6 +31,7 @@ choice, and `changelog.md` for a flat list of what was decided. A machine-readab
 | `exactMatch` / `closeMatch` | **W3C SKOS** | `Part` → vendor cross-reference | Confidence-graded equivalence; a disproven match (Value Bolt) gets neither |
 | `hasRole` (→`ManufacturerRole`/`SupplierRole`) | **IOF Core** | `Organization` → `Role` | Manufacturer left unfilled where genuinely unknown, not defaulted to the vendor |
 | `alternativeTo` | domain | `Part` → `Part` | FST-004 ↔ FST-004-2; not a standard predicate, no clean IOF/PROV/SKOS fit |
+| `mayCorrespondTo` | domain | `Assembly` → `PurchasedKit` | Optional, unused by any current instance — see note below |
 | `requirementSatisfiedBy` | **IOF Core** | `RequirementSpecification` → `DesignSpecification` | Treated as re-verify-on-change, not a static pointer (Conflict 8) |
 
 ## Worked instances
@@ -41,3 +42,14 @@ choice, and `changelog.md` for a flat list of what was decided. A machine-readab
 - **FST-004** — `exactMatch` → Meridian MF-SC-0412Z; `closeMatch` → Tri-Star TS-4120 (12mm vs. 12.7mm, quantified via QUDT); *no match property* → Value Bolt VB-M412SH (confirmed wrong head type)
 - **FST-004** — `alternativeTo` → FST-004-2 (zinc-nickel, outdoor/corrosion contexts)
 - **REQ-002** — `requirementSatisfiedBy` → ROT-320-RevC only; flagged for re-verification wherever a downstream product (MTR-100R) resolves to ROT-320-RevB instead
+
+## Known gaps
+
+- **`mayCorrespondTo` is declared but has no worked instance.** No part in the current source
+  material is genuinely a `PurchasedKit` — STA-200 is explicitly *not* one (built in-house). The
+  relation exists for when a future part actually needs it, not as a proven pattern yet.
+- **`ShippingContainer` is declared but has no instance**, for the same reason: no source document
+  describes a concrete shipping crate as a trackable part with its own identifier. It resolves the
+  *naming* collision from the department glossary; it doesn't yet model a real thing.
+- Full picture, including which conflicts have a worked example in `ontology.ttl` and which are
+  class-only, is in the changelog.
