@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Cairn Drivetrain Co.</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published ontology, not invented for this
+    project. This list itemizes 11 entries against Resolve's 10 conflicts — #3 and #4 both come
+    from Resolve's single "Conflict 3" (vendor cross-references), split here because they're
+    independently auditable decisions.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>3</td><td>Yes</td></tr>
+      <tr><td>5</td><td>4</td><td>Yes</td></tr>
+      <tr><td>6</td><td>5</td><td>Class only — no part is genuinely a PurchasedKit yet</td></tr>
+      <tr><td>7</td><td>6</td><td>Yes</td></tr>
+      <tr><td>8</td><td>7</td><td>MotorHousing yes; ShippingContainer class only, no source data to instantiate</td></tr>
+      <tr><td>9</td><td>8</td><td>Yes</td></tr>
+      <tr><td>10</td><td>9</td><td>Yes</td></tr>
+      <tr><td>11</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>MTR-100R</strong> modeled as its own <code>Product</code> linked by <strong>PROV-O's <code>wasDerivedFrom</code></strong> to MTR-100, not as a child part — it's independently tracked and, per REQ-002, doesn't always meet the same spec.</li>
+    <li><strong>ROT-320</strong>'s two physically different magnets (Rev B: 6×N38, Rev C: 8×N42) split into two <strong>IOF Core <code>Identifier</code></strong> instances linked by <strong>PROV-O's <code>wasRevisionOf</code></strong>, each <code>denotes</code>-ing a distinct part — the shared display string is not treated as a single identity. BOM relationships use <strong>IOF Core's <code>hasComponentPartAtSomeTime</code></strong>, not <code>AtAllTimes</code>, since neither revision is globally true across product lines.</li>
+    <li><strong>FST-004 vendor cross-references</strong> kept at three different confidence levels using <strong>SKOS</strong>: <code>exactMatch</code> (Meridian), <code>closeMatch</code> (Tri-Star, now backed by actual <strong>QUDT</strong> quantity values showing a real 0.7mm gap, not an eyeballed one), and no match property at all for Value Bolt — a confirmed wrong part shouldn't be modeled as merely unverified.</li>
+    <li><strong>Vendor vs. manufacturer</strong> split into <strong>IOF Core's <code>ManufacturerRole</code></strong> and <code>SupplierRole</code> — left unfilled for Tri-Star and Value Bolt where genuinely unknown, rather than silently defaulting to the vendor's identity.</li>
+    <li><strong>FST-004 / FST-004-2</strong> kept as two <code>Part</code>s related by a domain-specific <code>alternativeTo</code> — checked against IOF Core, PROV-O, and SKOS first; none fit cleanly, so a custom predicate was used deliberately rather than by default.</li>
+    <li><strong>"Assembly"</strong> resolved as <strong>IOF Core's own <code>Assembly</code> class</strong> for Engineering's meaning (a <code>MaterialArtifact</code> with a component part at all times) plus a domain-specific <code>PurchasedKit</code> for Procurement's commercial meaning, which IOF Core's structural definition doesn't reach — related by <code>mayCorrespondTo</code>, declared but not yet instantiated (no current part is genuinely a kit).</li>
+    <li><strong>"Controller"</strong> resolved to <code>MotorControlUnit</code>, with <code>ControllerBoardAssembly</code> kept as a deprecated alias. No class for the QA job role.</li>
+    <li><strong>"Housing"</strong> split into unrelated <code>MotorHousing</code> (instantiated as HSG-500) and <code>ShippingContainer</code> (declared to resolve the naming collision, but not instantiated — no source material describes an actual trackable shipping-crate part).</li>
+    <li><strong>REQ-002 / REQ-014</strong>'s <code>requirementSatisfiedBy</code> links (<strong>IOF Core</strong>) treated as needing re-verification on change, not static pointers — directly motivated by REQ-002 currently being violated by a product still on the price list.</li>
+    <li><strong>Station 2's QC checkpoint</strong> modeled as an <strong>IOF Core <code>MeasurementProcess</code></strong> whose <code>hasProcessCharacteristic</code> is explicitly "magnet presence" — not rotor identifier, not magnet count. Makes the gap (this check can't distinguish Rev B from Rev C) a queryable fact instead of something only visible by reading the work instruction closely.</li>
+    <li><strong>Two disagreeing cycle-time figures</strong> (work instruction vs. capacity table) kept as two separate <strong>IOF Core <code>PlanSpecification</code></strong> instances rather than collapsed into one "correct" number — the disagreement between Production Engineering and Production Planning is itself the fact worth preserving.</li>
+  </ol>
+
+  <p><strong>Two items were explicitly logged as not resolved</strong>, not silently dropped: partial classification-code coverage (a data-completeness gap, not a conflict), and REQ-009 (folded into #9 as the same underlying defect rather than fixed twice). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

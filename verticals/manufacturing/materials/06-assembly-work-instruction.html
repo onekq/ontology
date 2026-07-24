@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assembly Work Instruction — Cairn Drivetrain Co.</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .station { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; background: var(--card); }
+  .station h2 { margin-top: 0; }
+  .cycle-time { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+  .qc-flag { background: var(--accent-bg); border-left: 3px solid var(--accent); padding: 0.5rem 0.8rem; border-radius: 6px; margin: 0.6rem 0; font-size: 0.92rem; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing — Source material</span>
+  <h1>WI-MTR100-01 — Mid-Drive Motor Assembly</h1>
+  <p class="lede">
+    Maintained by Production Engineering. Revision lettering on this document tracks
+    <em>instruction</em> changes only — it is not kept in sync with the product's own BOM
+    revision (Rev B/Rev C). Last updated 2024-03, before ECN-118 (Rev C rotor) and before
+    ECN-124 (Controller rename). (<a href="06-assembly-work-instruction.md">raw export</a>)
+  </p>
+
+  <div class="station">
+    <h2>Station 1 — Stator Prep</h2>
+    <p>Install STA-210 core and STA-215 windings into housing fixture. Torque FST-004 fasteners to 1.2 N·m.</p>
+    <div class="qc-flag">Does not specify FST-004 vs. FST-004-2 — operators use whichever is in the station 1 parts bin.</div>
+    <div class="cycle-time">Cycle time: 6.0 min</div>
+  </div>
+
+  <div class="station">
+    <h2>Station 2 — Rotor Install</h2>
+    <p>Install rotor per BOM.</p>
+    <div class="qc-flag"><strong>QC checkpoint:</strong> confirm magnets present (visual check).</div>
+    <div class="cycle-time">Cycle time: 4.5 min</div>
+  </div>
+
+  <div class="station">
+    <h2>Station 3 — Controller Install</h2>
+    <p>Install Controller Board Assembly (CTL-400). Connect Hall sensor harness, verify continuity.</p>
+    <div class="cycle-time">Cycle time: 3.0 min</div>
+  </div>
+
+  <div class="station">
+    <h2>Station 4 — Housing Assembly</h2>
+    <p>Install GSK-001 gasket, torque HSG-500 shells together per drawing DWG-HSG-500-C. Verify no visible gap at seam.</p>
+    <div class="cycle-time">Cycle time: 5.5 min</div>
+  </div>
+
+  <div class="station">
+    <h2>Station 5 — Final QC</h2>
+    <p>Power-on functional test: confirm rotation, confirm no fault codes on controller. Package for shipment.</p>
+    <div class="cycle-time">Cycle time: 4.0 min</div>
+  </div>
+
+  <h2>Station Capacity Assumptions <span style="font-weight:400;color:var(--muted)">(Production Planning, updated 2024-08 — maintained separately from this work instruction, by a different team)</span></h2>
+  <table>
+    <thead><tr><th>Station</th><th>Assumed cycle time</th><th>WI-MTR100-01 says</th></tr></thead>
+    <tbody>
+      <tr><td>Stator Prep</td><td>6.0 min</td><td>6.0 min</td></tr>
+      <tr style="background:var(--accent-bg);"><td>Rotor Install</td><td>3.5 min</td><td>4.5 min</td></tr>
+      <tr><td>Controller Install</td><td>3.0 min</td><td>3.0 min</td></tr>
+      <tr style="background:var(--accent-bg);"><td>Housing Assembly</td><td>5.0 min</td><td>5.5 min</td></tr>
+      <tr><td>Final QC</td><td>4.0 min</td><td>4.0 min</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

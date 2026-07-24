@@ -41,6 +41,7 @@
   </p>
 
   <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
     <a href="01-discover.html">1. Discover</a>
     <a href="02-draft.html">2. Draft</a>
     <a class="current" href="03-resolve.html">3. Resolve</a>
@@ -48,7 +49,7 @@
   </div>
 
   <div class="stepper-bar">
-    <span id="stepper-label">Conflict 1 of 8</span>
+    <span id="stepper-label">Conflict 1 of 10</span>
     <div class="stepper-dots" id="stepper-dots"></div>
   </div>
 
@@ -152,22 +153,50 @@
 
   <div class="conflict-step" data-step="8">
     <div class="conflict">
-      <span class="label">Conflict 8 of 8 — highest stakes</span>
+      <span class="label">Conflict 8 of 10</span>
       <h3>REQ-002 and REQ-014's "Satisfied by" links have gone stale</h3>
       <p>REQ-002 (45 Nm torque) is only met by Rev C, but MTR-100R (Rev B by default) is marketed as a compatible replacement. REQ-014 (IP65 ingress protection) points at a drawing that predates an undocumented gasket material swap.</p>
       <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
       <div class="recommended">
         <div class="label">Recommended — IOF Core</div>
         <code>requirementSatisfiedBy</code> shouldn't be a static, set-once pointer. Model it so that a change to the linked <code>DesignSpecification</code> (or, per Conflict 2, to which <code>Identifier</code>/revision a downstream product actually resolves to) flags the requirement link for re-verification rather than silently continuing to claim satisfaction. This is the conflict where getting the ontology right isn't academic — REQ-002 unresolved means a torque spec is being misrepresented on parts still being sold.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10 — depends on Conflict 2</span>
+      <h3>Station 2's QC checkpoint can't actually catch the ROT-320 Rev B/Rev C difference</h3>
+      <p>The work instruction says "confirm magnets present (visual check)." That passes identically whether the installed rotor is Rev B (6× N38) or Rev C (8× N42) — the one distinction the whole Conflict 2 resolution depends on being tracked correctly downstream of the build line, not just in the BOM.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — IOF Core</div>
+        Model Station 2 as an <code>AssemblyProcess</code> with a <code>MeasurementProcess</code> whose <code>hasProcessCharacteristic</code> is explicitly "magnet presence" — not "rotor identifier" or "magnet count." That makes the gap a first-class, queryable fact (this measurement process does not verify which <code>Identifier</code> was installed) instead of something only visible by reading the work instruction's prose closely. The fix on the floor is a different question from the fix in the ontology; the ontology's job here is to make the gap impossible to miss.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>Two teams maintain two different cycle times for the same stations</h3>
+      <p>The work instruction (Production Engineering) and the capacity table (Production Planning) disagree on Rotor Install (4.5 vs. 3.5 min) and Housing Assembly (5.5 vs. 5.0 min) — same stations, same purpose, maintained by different teams who don't reconcile them.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — IOF Core</div>
+        Model the work instruction and the capacity table as two distinct <code>PlanSpecification</code> instances, each with its own <code>hasDateTimeInstantValue</code>-qualified figures, rather than picking one number as "correct" and discarding the other. The disagreement itself is the fact worth keeping — collapsing it into a single number would hide that these two teams are working from different assumptions, which is a bigger problem than either number being wrong.
         <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
-          All eight resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const TOTAL = 8;
+    const TOTAL = 10;
     let current = 1;
 
     function renderDots() {

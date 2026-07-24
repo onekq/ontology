@@ -17,9 +17,10 @@
   <h1>Cairn Drivetrain Co.</h1>
   <p class="lede">
     A fictional mid-drive motor manufacturer for e-bikes. Its bill of materials, supplier
-    catalog, engineering change log, and requirements register all disagree with each other —
-    on purpose. This walkthrough resolves those disagreements into an ontology grounded in real,
-    published vocabulary (IOF Core, PROV-O, SKOS, QUDT), one decision at a time.
+    catalog, engineering change log, requirements register, and assembly work instruction all
+    disagree with each other — on purpose. This walkthrough resolves those disagreements into an
+    ontology grounded in real, published vocabulary (IOF Core, PROV-O, SKOS, QUDT), one decision
+    at a time.
   </p>
 
   <h2>Source material</h2>
@@ -45,10 +46,19 @@
       <h3>Requirements Register</h3>
       <p>Three requirements whose "Satisfied by" links have quietly gone stale.</p>
     </a>
+    <a class="card" href="materials/06-assembly-work-instruction.html">
+      <h3>Assembly Work Instruction</h3>
+      <p>The actual build steps — a QC checkpoint that doesn't check what it needs to, and a cycle-time number two teams don't agree on.</p>
+    </a>
   </div>
 
-  <h2>Walk the Unfold process</h2>
+  <h2>Walk the Build process</h2>
   <div class="card-grid">
+    <a class="card" href="stages/00-competency-questions.html">
+      <span class="tag">Stage 0</span>
+      <h3>Scope</h3>
+      <p>Write the competency questions the ontology needs to answer, before touching any material.</p>
+    </a>
     <a class="card" href="stages/01-discover.html">
       <span class="tag">Stage 1</span>
       <h3>Discover</h3>
@@ -73,17 +83,17 @@
 
   <h2>Result</h2>
   <div class="card-grid">
-    <a class="card" href="output/ontology.md">
+    <a class="card" href="output/ontology.html">
       <h3>Final ontology</h3>
-      <p>Class hierarchy + relation set, grounded in real vocabulary — plain markdown.</p>
+      <p>Class hierarchy + relation set, grounded in real vocabulary.</p>
     </a>
     <a class="card" href="output/ontology.ttl">
       <h3>Turtle serialization</h3>
       <p>Machine-readable RDF, valid — parses cleanly with real IOF Core / PROV-O / SKOS / QUDT predicates.</p>
     </a>
-    <a class="card" href="output/changelog.md">
+    <a class="card" href="output/changelog.html">
       <h3>Resolution changelog</h3>
-      <p>Every Resolve-phase decision, auditable without re-reading source docs.</p>
+      <p>Every Resolve-stage decision, auditable without re-reading source docs.</p>
     </a>
   </div>
 

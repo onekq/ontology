@@ -21,6 +21,7 @@
   </p>
 
   <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
     <a class="current" href="01-discover.html">1. Discover</a>
     <a href="02-draft.html">2. Draft</a>
     <a href="03-resolve.html">3. Resolve</a>
@@ -44,10 +45,12 @@
       <tr><td>REQ-002 (torque)</td><td>Requirements</td><td>Satisfied by Rev C only. MTR-100R (Rev B by default) is sold as a compatible replacement without re-verification against this requirement.</td><td>Conflict — compliance stakes</td></tr>
       <tr><td>REQ-009 (corrosion)</td><td>Requirements</td><td>Satisfied-by field names FST-004-2, but BOM doesn't mark which mount points are "exposed," so which line items should actually be FST-004-2 is unclear.</td><td>Conflict</td></tr>
       <tr><td>REQ-014 (ingress protection)</td><td>Requirements, ECN log</td><td>Satisfied-by link points at a drawing that predates an undocumented gasket material swap; nothing flags the link as stale.</td><td>Conflict</td></tr>
+      <tr><td>Rotor QC checkpoint</td><td>Work instruction</td><td>Station 2 confirms "magnets present" by visual check only — doesn't check grade or count, so it can't distinguish a Rev B rotor from a Rev C rotor. Directly relevant to REQ-002's torque compliance question, which nothing on the floor actually re-verifies.</td><td>Conflict — compliance stakes</td></tr>
+      <tr><td>Station cycle times</td><td>Work instruction, Production Planning capacity table</td><td>Two teams maintain separate numbers for the same stations. Rotor Install: 4.5 min (WI) vs. 3.5 min (Planning). Housing Assembly: 5.5 min (WI) vs. 5.0 min (Planning).</td><td>Conflict</td></tr>
     </tbody>
   </table>
 
-  <p>Fourteen entries logged, eleven flagged as conflicts. None resolved yet — that's Stage 3.</p>
+  <p>Sixteen entries logged, thirteen flagged as conflicts. None resolved yet — that's Stage 3.</p>
 </div>
 </body>
 </html>

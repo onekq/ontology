@@ -1,8 +1,8 @@
 # Manufacturing / Supply Chain — Ontology Recipe
 
-If you're an agent (Claude Code, Codex, or similar) that's been pointed at this page: this is your entrypoint. Read `../../shared/core/unfold.md` first for the general method, then come back here for what's specific to manufacturing/supply-chain ontologies.
+If you're an agent (Claude Code, Codex, or similar) that's been pointed at this page: this is your entrypoint. Read `../../shared/core/build.md` first for the general method, then come back here for what's specific to manufacturing/supply-chain ontologies.
 
-**If the user has their own real source material** (BOMs, supplier catalogs, engineering change logs, requirements registers), run the Unfold method against *those* files, not the demo material in `materials/` — that folder is a worked example, not your input. Ask the user where their files are before starting Discover.
+**If the user has their own real source material** (BOMs, supplier catalogs, engineering change logs, requirements registers), run the Build method against *those* files, not the demo material in `materials/` — that folder is a worked example, not your input. Ask the user where their files are before starting Discover, and ask what the ontology needs to be able to answer before that (Scope).
 
 ## Ground classes and relations in real ontologies, not invented vocabulary
 
@@ -30,6 +30,10 @@ Only invent a domain-specific relation when you've actually checked these four a
 
 6. **Stale requirement-satisfaction links.** A `requirementSatisfiedBy` pointer set once at requirement creation doesn't get revisited when the linked design changes. This is the conflict shape most likely to have real compliance stakes, not just modeling tidiness — treat it accordingly.
 
+7. **QC checkpoints that don't check what they need to.** A named checkpoint ("confirm X present") gives false confidence unless you model *exactly* what characteristic it measures — `hasProcessCharacteristic`, not just "there's a checkpoint here." A checkpoint that can't distinguish two part revisions is a real, common gap, not an edge case.
+
+8. **Two teams' plans disagreeing on the same number.** Don't reach for BOM-only material — a work instruction and a capacity/scheduling document are exactly as likely to disagree with each other as two departments' glossaries are. Model both as separate `PlanSpecification`s rather than picking one as correct.
+
 ## Suggested output
 
 A class hierarchy plus a relation set, reusing real vocabulary wherever it fits (see above) —
@@ -41,4 +45,4 @@ conflicts were resolved and how, without re-reading every source doc.
 
 ## Demo walkthrough
 
-See `stages/` for a worked example against the fake company "Cairn Drivetrain Co." (`materials/`) — a mid-drive e-bike motor manufacturer whose BOM, supplier catalog, engineering change log, and requirements register all disagree with each other on purpose, to show what Resolve-phase decisions actually look like against real ontology vocabulary.
+See `stages/` for a worked example against the fake company "Cairn Drivetrain Co." (`materials/`) — a mid-drive e-bike motor manufacturer whose BOM, supplier catalog, engineering change log, requirements register, and assembly work instruction all disagree with each other on purpose, to show what Resolve-stage decisions actually look like against real ontology vocabulary.

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope — Manufacturing — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .cq-status { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.55rem; border-radius: 999px; }
+  .cq-status.answerable { color: var(--accent); background: var(--accent-bg); }
+  .cq-status.gap { color: #a02020; background: #f6dede; }
+  @media (prefers-color-scheme: dark) { .cq-status.gap { color: #ff9d9d; background: #3a1e1e; } }
+  .cq-row { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; border-bottom:1px solid var(--border); padding: 0.7rem 0; }
+  .cq-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing</span>
+  <h1>Stage 0 — Scope</h1>
+  <p class="lede">
+    Before reading a single source document, write the questions the finished ontology needs to
+    be able to answer — <a href="https://en.wikipedia.org/wiki/Ontology_engineering">competency
+    questions</a> (Grüninger &amp; Fox 1995, popularized by Noy &amp; McGuinness). This is the
+    field's actual standard first move. Skipping it is how an ontology ends up internally tidy
+    but unable to answer the question anyone actually needed answered.
+  </p>
+
+  <div class="stage-nav">
+    <a class="current" href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>Cairn Drivetrain's competency questions</h2>
+  <p>Written before Discover, checked again in Stage 4 — Validate. Status shows whether the
+  <em>current</em> ontology can answer it, not whether it's a good question.</p>
+
+  <div class="cq-row">
+    <span>Is a given MTR-100R unit expected to meet the same torque spec as MTR-100?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span>Which physical magnet spec does a given rotor identifier actually denote?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span>Which vendor cross-references for a fastener are verified equivalents vs. disputed?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span>Does a given fastener need to be the corrosion-resistant variant?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span>Is a given assembly built in-house or bought as a kit?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span>When someone searches "Controller," do they mean the part or the QA role?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span>When someone says "Housing," do they mean the motor part or the shipping crate?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span>Which requirements are currently satisfied by the design, and which links might be stale?</span>
+    <span class="cq-status answerable">Answerable</span>
+  </div>
+  <div class="cq-row">
+    <span><strong>Would a build-process QC checkpoint actually catch a rotor spec mismatch between what's installed and what the BOM says should be installed?</strong></span>
+    <span class="cq-status gap">Gap</span>
+  </div>
+  <div class="cq-row">
+    <span><strong>Does the assembly line's stated cycle time match what production scheduling assumes it can build per shift?</strong></span>
+    <span class="cq-status gap">Gap</span>
+  </div>
+
+  <h2>What the two gaps mean</h2>
+  <p>
+    Everything answerable above came from the BOM, supplier catalog, change log, and requirements
+    register — all catalog-shaped source material. Neither gap can be closed by that material,
+    because neither is about <em>what parts exist</em> — they're about <em>the process that
+    builds them</em> and <em>whether that process actually checks what it's supposed to check</em>.
+    That's not a coincidence: it's why <code>materials/06-assembly-work-instruction</code> exists.
+    Stage 1 picks up from here.
+  </p>
+
+  <p>Next: <a href="01-discover.html">Stage 1 — Discover</a>.</p>
+</div>
+</body>
+</html>

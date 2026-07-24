@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Cairn Drivetrain Co.</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Manufacturing — Result</span>
+  <h1>Cairn Drivetrain Co. — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in the
+    <a href="https://github.com/iofoundry/ontology">IOF Core Ontology</a> plus W3C PROV-O, W3C
+    SKOS, and QUDT where IOF Core doesn't reach. See <a href="../stages/03-resolve.html">Stage 3
+    — Resolve</a> for the reasoning behind each choice, and the
+    <a href="changelog.html">changelog</a> for a flat list of what was decided. Machine-readable:
+    <a href="ontology.ttl">ontology.ttl</a> (raw markdown: <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Product</code></td><td><span class="src-tag domain">domain</span></td><td>A top-level sellable unit.</td></tr>
+      <tr><td><code>Assembly</code></td><td><span class="src-tag real">IOF Core</span></td><td>A <code>MaterialArtifact</code> with a component part at all times.</td></tr>
+      <tr><td><code>PurchasedKit</code></td><td><span class="src-tag domain">domain</span></td><td>A unit bought as one line item from a vendor — Procurement's meaning of "assembly," which IOF Core's structural <code>Assembly</code> doesn't cover.</td></tr>
+      <tr><td><code>Part</code></td><td><span class="src-tag domain">domain</span></td><td>A leaf-level component.</td></tr>
+      <tr><td><code>Identifier</code></td><td><span class="src-tag real">IOF Core</span></td><td>Denotes a thing via <code>denotes</code>/<code>designates</code>. Not the thing itself — critical for the ROT-320 case, where one display string denoted two different physical parts.</td></tr>
+      <tr><td><code>Manufacturer</code></td><td><span class="src-tag real">IOF Core</span></td><td>An <code>Organization</code> bearing <code>ManufacturerRole</code>.</td></tr>
+      <tr><td><code>Supplier</code></td><td><span class="src-tag real">IOF Core</span></td><td>An <code>Organization</code> bearing <code>SupplierRole</code> — distinct from <code>Manufacturer</code>; one org can hold both roles, or only one.</td></tr>
+      <tr><td><code>MotorControlUnit</code></td><td><span class="src-tag domain">domain</span></td><td>Canonical name for CTL-400 (alias: <code>ControllerBoardAssembly</code>).</td></tr>
+      <tr><td><code>MotorHousing</code></td><td><span class="src-tag domain">domain</span></td><td>Cast aluminum motor enclosure (HSG-500).</td></tr>
+      <tr><td><code>ShippingContainer</code></td><td><span class="src-tag domain">domain</span></td><td>Outer logistics/freight crate — unrelated to <code>MotorHousing</code>.</td></tr>
+      <tr><td><code>AssemblyProcess</code></td><td><span class="src-tag real">IOF Core</span></td><td>A process that produces an <code>Assembly</code>. First used for Station 2, not needed by the catalog-only material.</td></tr>
+      <tr><td><code>MeasurementProcess</code> / <code>ProcessCharacteristic</code></td><td><span class="src-tag real">IOF Core</span></td><td>A process that measures something, and the specific thing it measures. Models Station 2's QC checkpoint precisely enough to state what it does and doesn't check.</td></tr>
+      <tr><td><code>PlanSpecification</code></td><td><span class="src-tag real">IOF Core</span></td><td>An information content entity describing a plan — used for both the work instruction's and Production Planning's cycle-time figures, kept as two instances rather than one.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>hasComponentPartAtSomeTime</code></td><td><span class="src-tag real">IOF Core</span></td><td><code>Product</code>/<code>Assembly</code> → <code>Part</code>/<code>Assembly</code></td><td>Used instead of <code>AtAllTimes</code> wherever a part is scoped to one product line, not globally true</td></tr>
+      <tr><td><code>wasDerivedFrom</code></td><td><span class="src-tag real">PROV-O</span></td><td><code>Product</code> → <code>Product</code></td><td>MTR-100R → MTR-100</td></tr>
+      <tr><td><code>wasRevisionOf</code></td><td><span class="src-tag real">PROV-O</span></td><td><code>Identifier</code> → <code>Identifier</code></td><td>ROT-320-RevC → ROT-320-RevB</td></tr>
+      <tr><td><code>exactMatch</code> / <code>closeMatch</code></td><td><span class="src-tag real">SKOS</span></td><td><code>Part</code> → vendor cross-reference</td><td>Confidence-graded equivalence; a disproven match (Value Bolt) gets neither</td></tr>
+      <tr><td><code>hasRole</code></td><td><span class="src-tag real">IOF Core</span></td><td><code>Organization</code> → <code>ManufacturerRole</code>/<code>SupplierRole</code></td><td>Manufacturer left unfilled where genuinely unknown, not defaulted to the vendor</td></tr>
+      <tr><td><code>alternativeTo</code></td><td><span class="src-tag domain">domain</span></td><td><code>Part</code> → <code>Part</code></td><td>FST-004 ↔ FST-004-2; not a standard predicate, no clean IOF/PROV/SKOS fit</td></tr>
+      <tr><td><code>mayCorrespondTo</code></td><td><span class="src-tag domain">domain</span></td><td><code>Assembly</code> → <code>PurchasedKit</code></td><td>Optional, unused by any current instance — see Known gaps</td></tr>
+      <tr><td><code>requirementSatisfiedBy</code></td><td><span class="src-tag real">IOF Core</span></td><td><code>RequirementSpecification</code> → <code>DesignSpecification</code></td><td>Treated as re-verify-on-change, not a static pointer (Conflict 8)</td></tr>
+      <tr><td><code>hasProcessCharacteristic</code></td><td><span class="src-tag real">IOF Core</span></td><td><code>MeasurementProcess</code> → <code>ProcessCharacteristic</code></td><td>Station 2's checkpoint points at "magnet presence," not "rotor identifier" (Conflict 9)</td></tr>
+      <tr><td><code>containsOccurrenceOf</code></td><td><span class="src-tag real">IOF Core</span></td><td><code>AssemblyProcess</code> → <code>MeasurementProcess</code></td><td>Station 2 contains its own QC checkpoint as a sub-process</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>MTR-100</strong> (<code>Product</code>) — <code>hasComponentPartAtSomeTime</code> → STA-200, ROT-320-RevC, MotorControlUnit, MotorHousing (scoped to main production line)</li>
+    <li><strong>MTR-100R</strong> (<code>Product</code>) — <code>wasDerivedFrom</code> → MTR-100; <code>hasComponentPartAtSomeTime</code> → ROT-320-RevB</li>
+    <li><strong>ROT-320-RevC</strong> (<code>Identifier</code>, denotes the 8×N42 magnet part) — <code>wasRevisionOf</code> → ROT-320-RevB (denotes the 6×N38 part — a different physical part sharing the old display string)</li>
+    <li><strong>FST-004</strong> — <code>exactMatch</code> → Meridian MF-SC-0412Z; <code>closeMatch</code> → Tri-Star TS-4120 (12mm vs. 12.7mm, quantified via QUDT); no match property → Value Bolt VB-M412SH (confirmed wrong head type)</li>
+    <li><strong>FST-004</strong> — <code>alternativeTo</code> → FST-004-2 (zinc-nickel, outdoor/corrosion contexts)</li>
+    <li><strong>REQ-002</strong> — <code>requirementSatisfiedBy</code> → ROT-320-RevC only; flagged for re-verification wherever a downstream product (MTR-100R) resolves to ROT-320-RevB instead</li>
+    <li><strong>Station 2 — Rotor Install</strong> (<code>AssemblyProcess</code>) — <code>containsOccurrenceOf</code> → a <code>MeasurementProcess</code> whose <code>hasProcessCharacteristic</code> is "magnet presence" — explicitly not "which <code>Identifier</code>," the queryable form of Conflict 9's gap</li>
+    <li><strong>Two cycle-time <code>PlanSpecification</code>s</strong> for the same stations (work instruction vs. capacity table) — kept as two instances with disagreeing figures, not reconciled into one number</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p><strong><code>mayCorrespondTo</code> is declared but has no worked instance.</strong> No part in the current source material is genuinely a <code>PurchasedKit</code> — STA-200 is explicitly not one (built in-house). The relation exists for when a future part actually needs it, not as a proven pattern yet.</p>
+  <p><strong><code>ShippingContainer</code> is declared but has no instance</strong>, for the same reason: no source document describes a concrete shipping crate as a trackable part with its own identifier. It resolves the naming collision from the department glossary; it doesn't yet model a real thing.</p>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code> and which are class-only, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>

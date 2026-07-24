@@ -2,7 +2,7 @@
 
 Each entry settles one conflict logged in Stage 1 (Discover) and resolved in Stage 3 (Resolve).
 Vocabulary in **bold** is from a real published ontology, not invented for this project. This
-list itemizes 9 entries against Resolve's 8 conflicts — #3 and #4 below both come from
+list itemizes 11 entries against Resolve's 10 conflicts — #3 and #4 below both come from
 Resolve's single "Conflict 3" (vendor cross-references), split here because they're independently
 auditable decisions. "In ontology.ttl?" marks whether a worked instance exists in the machine-readable file, or only a class declaration.
 
@@ -17,6 +17,8 @@ auditable decisions. "In ontology.ttl?" marks whether a worked instance exists i
 | 7 | 6 | Yes |
 | 8 | 7 | MotorHousing yes; ShippingContainer class only, no source data to instantiate |
 | 9 | 8 | Yes |
+| 10 | 9 | Yes |
+| 11 | 10 | Yes |
 
 1. **MTR-100R** modeled as its own `Product` linked by **PROV-O's `wasDerivedFrom`** to MTR-100, not as a child part — it's independently tracked and, per REQ-002, doesn't always meet the same spec.
 2. **ROT-320**'s two physically different magnets (Rev B: 6×N38, Rev C: 8×N42) split into two **IOF Core `Identifier`** instances linked by **PROV-O's `wasRevisionOf`**, each `denotes`-ing a distinct part — the shared display string is not treated as a single identity. BOM relationships use **IOF Core's `hasComponentPartAtSomeTime`**, not `AtAllTimes`, since neither revision is globally true across product lines.
@@ -27,5 +29,7 @@ auditable decisions. "In ontology.ttl?" marks whether a worked instance exists i
 7. **"Controller"** resolved to `MotorControlUnit`, with `ControllerBoardAssembly` kept as a deprecated alias. No class for the QA job role.
 8. **"Housing"** split into unrelated `MotorHousing` (instantiated as HSG-500) and `ShippingContainer` (declared to resolve the naming collision, but not instantiated — no source material describes an actual trackable shipping-crate part).
 9. **REQ-002 / REQ-014**'s `requirementSatisfiedBy` links (**IOF Core**) treated as needing re-verification on change, not static pointers — directly motivated by REQ-002 currently being violated by a product still on the price list.
+10. **Station 2's QC checkpoint** modeled as an **IOF Core `MeasurementProcess`** whose `hasProcessCharacteristic` is explicitly "magnet presence" — not rotor identifier, not magnet count. Makes the gap (this check can't distinguish Rev B from Rev C) a queryable fact instead of something only visible by reading the work instruction closely.
+11. **Two disagreeing cycle-time figures** (work instruction vs. capacity table) kept as two separate **IOF Core `PlanSpecification`** instances rather than collapsed into one "correct" number — the disagreement between Production Engineering and Production Planning is itself the fact worth preserving.
 
 **Two items were explicitly logged as not resolved**, not silently dropped: partial classification-code coverage (a data-completeness gap, not a conflict), and REQ-009 (folded into #9 as the same underlying defect rather than fixed twice). See Stage 4 (Validate) for the full trace.

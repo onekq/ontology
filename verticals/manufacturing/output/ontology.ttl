@@ -24,6 +24,8 @@ cairn:alternativeTo a owl:ObjectProperty ;
 cairn:mayCorrespondTo a owl:ObjectProperty ;
     rdfs:domain iof:Assembly ; rdfs:range cairn:PurchasedKit ;
     rdfs:comment "Domain-specific, optional: an Assembly (structural, IOF Core) may or may not also be a PurchasedKit (commercial). No current Cairn Drivetrain part instantiates this - see comment on STA-200 below." .
+cairn:rotorInstallMinutes a owl:DatatypeProperty ; rdfs:domain iof:PlanSpecification ; rdfs:range xsd:decimal .
+cairn:housingAssemblyMinutes a owl:DatatypeProperty ; rdfs:domain iof:PlanSpecification ; rdfs:range xsd:decimal .
 
 # --- Conflict 1: MTR-100R -----------------------------------------------------
 
@@ -100,3 +102,30 @@ cairn:REQ-002 a iof:RequirementSpecification ;
     rdfs:comment "Rotor shall deliver minimum 45 Nm continuous torque at rated RPM." ;
     iof:requirementSatisfiedBy cairn:ROT-320-RevC-Part .
     # Deliberately NOT asserted as satisfied by ROT-320-RevB-Part / MTR-100R - see changelog.
+
+# --- Conflict 9: Station 2 QC checkpoint doesn't verify rotor identity -------
+
+cairn:Station2-RotorInstall a iof:AssemblyProcess ;
+    rdfs:label "Station 2 - Rotor Install" .
+
+cairn:Station2-MagnetPresenceCheck a iof:MeasurementProcess ;
+    iof:hasProcessCharacteristic cairn:MagnetPresence ;
+    rdfs:comment "Verifies magnets are present. Does NOT verify iof:Identifier (ROT-320-RevB vs RevC) or magnet count/grade - a real, queryable gap, not an assumption." .
+cairn:MagnetPresence a iof:ProcessCharacteristic ;
+    rdfs:label "magnet presence (not identifier, not count)" .
+
+cairn:Station2-RotorInstall iof:containsOccurrenceOf cairn:Station2-MagnetPresenceCheck .
+
+# --- Conflict 10: two disagreeing cycle-time plans ---------------------------
+
+cairn:WI-MTR100-01-CycleTimes a iof:PlanSpecification ;
+    rdfs:label "WI-MTR100-01 cycle times (Production Engineering)" ;
+    cairn:rotorInstallMinutes 4.5 ;
+    cairn:housingAssemblyMinutes 5.5 .
+
+cairn:CapacityTable-2024-08 a iof:PlanSpecification ;
+    rdfs:label "Station Capacity Assumptions, 2024-08 (Production Planning)" ;
+    cairn:rotorInstallMinutes 3.5 ;
+    cairn:housingAssemblyMinutes 5.0 .
+
+# Deliberately two instances, not one reconciled number - see changelog.

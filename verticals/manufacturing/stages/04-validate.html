@@ -16,11 +16,13 @@
   <span class="tag">Manufacturing</span>
   <h1>Stage 4 — Validate</h1>
   <p class="lede">
-    Check the resolved ontology against the Stage 1 inventory. Does every discovered term map to
-    something in the final structure, or was it silently dropped?
+    Check the resolved ontology against the Stage 1 inventory, and against the Stage 0 competency
+    questions. Does every discovered term map to something in the final structure, or was it
+    silently dropped? Can the ontology actually answer what Stage 0 asked it to?
   </p>
 
   <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
     <a href="01-discover.html">1. Discover</a>
     <a href="02-draft.html">2. Draft</a>
     <a href="03-resolve.html">3. Resolve</a>
@@ -43,8 +45,20 @@
       <tr><td>Housing</td><td><code>MotorHousing</code> / <code>ShippingContainer</code>, unrelated (Conflict 7)</td></tr>
       <tr><td>REQ-002, REQ-014</td><td><code>requirementSatisfiedBy</code> re-verification rule (Conflict 8)</td></tr>
       <tr><td>REQ-009</td><td>Not independently resolved — same underlying gap as Conflict 8 (stale satisfied-by link), not repeated as its own conflict. See below.</td></tr>
+      <tr><td>Rotor QC checkpoint</td><td><code>AssemblyProcess</code> + <code>MeasurementProcess</code> with an explicit <code>hasProcessCharacteristic</code> ("magnet presence," not identifier or count) (Conflict 9)</td></tr>
+      <tr><td>Station cycle times</td><td>Two <code>PlanSpecification</code> instances kept distinct rather than collapsed to one number (Conflict 10)</td></tr>
     </tbody>
   </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>
+    Both gaps flagged in <a href="00-competency-questions.html">Stage 0</a> are now answerable:
+    the ontology can represent that Station 2's checkpoint doesn't verify rotor identity (Conflict
+    9), and it can represent — rather than silently resolve — the cycle-time disagreement between
+    Production Engineering and Production Planning (Conflict 10). Neither gap required new source
+    material beyond what materials/06 already contained; both required IOF Core classes the
+    earlier BOM-only pass never had reason to use.
+  </p>
 
   <h2>Not resolved — logged, not dropped</h2>
   <p>
@@ -59,9 +73,9 @@
     "satisfied-by-link-goes-stale" defect.
   </p>
 
-  <p>See <a href="../output/ontology.md">the final ontology</a> (with a real
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
   <a href="../output/ontology.ttl">Turtle serialization</a>) and
-  <a href="../output/changelog.md">the resolution changelog</a>.</p>
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
 </div>
 </body>
 </html>

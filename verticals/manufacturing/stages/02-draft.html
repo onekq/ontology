@@ -24,6 +24,7 @@
   </p>
 
   <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
     <a href="01-discover.html">1. Discover</a>
     <a class="current" href="02-draft.html">2. Draft</a>
     <a href="03-resolve.html">3. Resolve</a>
@@ -53,6 +54,9 @@
       <tr><td><code>Supplier</code></td><td>An <code>Organization</code> bearing <code>SupplierRole</code> — a distinct role from <code>Manufacturer</code>. One organization can hold both, or only one.</td></tr>
       <tr><td><code>Identifier</code></td><td>Denotes a thing via the <code>denotes</code>/<code>designates</code> relations — the identifier itself is not the thing.</td></tr>
       <tr><td><code>RequirementSpecification</code> / <code>DesignSpecification</code></td><td>Distinct information content entities, linked by <code>requirementSatisfiedBy</code> / <code>satisfiesRequirement</code>.</td></tr>
+      <tr><td><code>AssemblyProcess</code></td><td>New in this draft, prompted by the work instruction: a process that produces an <code>Assembly</code>. Not used anywhere in Stages 1-4 of the earlier BOM-only pass — catalog material never needed it.</td></tr>
+      <tr><td><code>MeasurementProcess</code> / <code>ProcessCharacteristic</code></td><td>New: a process that measures a quality, and the characteristic being measured. Directly relevant to the Station 2 QC checkpoint — the gap isn't that no measurement process exists, it's that the one specified measures the wrong characteristic (presence, not grade/count).</td></tr>
+      <tr><td><code>PlanSpecification</code></td><td>New: covers the cycle-time/capacity numbers. IOF Core treats a plan as its own information content entity, distinct from the process it plans — useful here since the work instruction and the capacity table are exactly two competing <code>PlanSpecification</code>-shaped documents for the same stations.</td></tr>
     </tbody>
   </table>
 
@@ -81,10 +85,11 @@
       <tr><td><code>hasComponentPartAtSomeTime</code> / <code>AtAllTimes</code></td><td>IOF Core</td><td>Candidate for BOM parent/child — the "AtSomeTime" variant is the direct fix for Rev B/Rev C concurrently shipping</td></tr>
       <tr><td><code>wasDerivedFrom</code> / <code>wasRevisionOf</code></td><td>W3C PROV-O</td><td><code>[inferred, contested]</code> — candidates for MTR-100R↔MTR-100 and Rev B↔Rev C; IOF Core itself doesn't cover provenance, PROV-O does</td></tr>
       <tr><td><code>exactMatch</code> / <code>closeMatch</code></td><td>W3C SKOS</td><td><code>[inferred, contested]</code> — candidates for the three FST-004 vendor cross-references, at different confidence levels</td></tr>
+      <tr><td><code>hasProcessCharacteristic</code></td><td>IOF Core</td><td><code>[inferred, contested]</code> — candidate for linking the Station 2 measurement process to what it actually checks, once Resolve settles what that should be</td></tr>
     </tbody>
   </table>
 
-  <p>Three items are marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
+  <p>Four items are marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
 </div>
 </body>
 </html>
