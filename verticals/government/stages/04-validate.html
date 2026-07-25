@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Government — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Government</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">Check the resolved ontology against the Stage 1 inventory, and against the Stage 0 competency questions.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>SVC-2201 / SVC-2201-ON</td><td>One <code>PublicService</code>, two <code>Channel</code>s, domain <code>channelRequirementVariance</code> flag (Conflict 1)</td></tr>
+      <tr><td>org_unit_code / state_registry_id / federal_grant_id</td><td>Independent identifiers on <code>OrganizationalUnit</code> (Conflict 2)</td></tr>
+      <tr><td>hasCompetentAuthority (ORG-COMM-04)</td><td>Updated to ORG-ECON-01, plus a general org-change integrity check (Conflict 3)</td></tr>
+      <tr><td>Requirement/Evidence conflation</td><td>Real <code>Requirement</code> + two real <code>Evidence</code> instances (Conflict 4)</td></tr>
+      <tr><td>Event-triggered requirement ambiguity</td><td>State-registration date specified for <code>BusinessEvent</code> (Conflict 5)</td></tr>
+      <tr><td>"Department"</td><td>Real <code>OrganizationalUnit</code> vs. domain <code>NavigationCategory</code>, many-to-many linked (Conflict 6)</td></tr>
+      <tr><td>Rule document ($50 PDF)</td><td>Domain <code>lastGenerated</code>, flagged stale (Conflict 7)</td></tr>
+      <tr><td>REQ-701 (rule doc currency)</td><td>Not independently resolved — same underlying gap as Conflict 7. See below.</td></tr>
+      <tr><td>Cost value ($50 vs. $65)</td><td>Finance's fee schedule canonical, catalog value flaggable (Conflict 8)</td></tr>
+      <tr><td>REQ-702 (cost matches fee schedule)</td><td>Not independently resolved — same underlying gap as Conflict 8. See below.</td></tr>
+      <tr><td>REQ-703 / renewal checkpoint</td><td>Domain <code>reconcilesCompetentAuthorityAndCost: false</code> (Conflict 9)</td></tr>
+      <tr><td>Processing time SLA</td><td>Two domain <code>ProcessingTimeClaim</code> instances, not reconciled (Conflict 10)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>All ten from <a href="00-competency-questions.html">Stage 0</a> are answerable against the resolved structure — including the highest-stakes one: the ontology can now represent (and structurally flag future recurrences of) a service's competent authority going stale after an org reorganization, rather than silently misdirecting citizens.</p>
+
+  <h2>Not resolved — logged, not dropped</h2>
+  <p><strong>REQ-701:</strong> folded into Conflict 7 — both are the same "canonical fact changed, public document didn't" gap.</p>
+  <p><strong>REQ-702:</strong> folded into Conflict 8 — both are the same "catalog value vs. Finance's authoritative figure" gap.</p>
+
+  <h2>Eight verticals, one method</h2>
+  <p>
+    This is the eighth and final vertical in the original plan. Across manufacturing (IOF Core),
+    retail (GoodRelations/schema.org), financial services (FIBO), healthcare (FHIR), media/real
+    estate (ODRL), legal (Akoma Ntoso), insurance (schema.org's health-plan terms), and government
+    (W3C ORG + CPSV-AP), the same four-shape pattern kept recurring even though every vocabulary,
+    company, and conflict was different: a checkpoint whose name promises more than it checks;
+    a canonical fact that drifts from a public rendering of it; two teams' operational claims that
+    disagree with neither being wrong; and a parent identity conflict that, resolved first, fixes
+    one or more dependent conflicts for free. That recurrence across eight unrelated real
+    ontologies is itself a finding, not a coincidence — see <code>../../../methodology.html</code>
+    for the method these verticals share.
+  </p>
+
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>

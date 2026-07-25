@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Government — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Government</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">One conflict at a time, in dependency order. Vocabulary comes from W3C ORG and CPSV-AP — see Stage 2 for where each came from.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Are SVC-2201 and SVC-2201-ON the same service?</h3>
+      <p>Same underlying service, two channels — but the online channel silently doesn't support the veteran fee-waiver code the in-person channel does.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — CPSV-AP, used precisely</div>
+        One <code>PublicService</code>, with each delivery method as its own real CPSV-AP <code>Channel</code>. Add a domain <code>channelRequirementVariance</code> flag where a requirement (like the fee waiver) isn't uniformly supported across channels — the gap should be visible to whoever maintains the online form, not just discovered by a veteran being charged full price.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Conflict 2 of 10</span>
+      <h3>Org unit code, state registry ID, and federal grant ID don't always coexist</h3>
+      <p>ORG-ECON-01 has no federal grant ID yet.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — W3C ORG</div>
+        Keep all three independent on the <code>OrganizationalUnit</code> — ORG doesn't require any particular identifier scheme. Leave the missing grant ID absent rather than inferred.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10 — highest stakes</span>
+      <h3>The service catalog still points citizens to the wrong department</h3>
+      <p>The 2024 reorg updated the org chart and phone directory. It never updated <code>hasCompetentAuthority</code> on either service record.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — CPSV-AP + W3C ORG, used together</div>
+        Update <code>hasCompetentAuthority</code> on both service records to ORG-ECON-01, matching the real <code>subOrganizationOf</code>/<code>hasSubOrganization</code> change in the org hierarchy. Beyond this one fix, add a general integrity check: any <code>PublicService</code> whose <code>hasCompetentAuthority</code> wasn't touched within a reasonable window of a relevant org-hierarchy change should be flagged — same "systemic check, not just a one-off fix" discipline as legal's activeModifications/passiveModifications integrity check.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>A requirement and its evidence are written as if they were two requirements</h3>
+      <p>"Must be a resident" and "must provide a utility bill" are listed as equals, when the second only proves the first.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — CPSV-AP, no invention needed</div>
+        Model residency as a real <code>Requirement</code> and the utility bill as one accepted real <code>Evidence</code> instance for it — with a lease agreement as a second, equally valid <code>Evidence</code> instance for the same <code>Requirement</code>. CPSV-AP's own Requirement/Evidence split fixes this conflict directly; it was never a modeling gap, only a documentation one.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 10</span>
+      <h3>"30 days of the triggering event" doesn't say which event date counts</h3>
+      <p>For a BusinessEvent (ownership change), staff have used both the sale date and the state-registration date in practice.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — CPSV-AP</div>
+        <code>LifeEvent</code> and <code>BusinessEvent</code> are already distinct real classes — the ambiguity was never about modeling, only about which date the <code>BusinessEvent</code> instance's own timestamp should record. Recommend the state-registration date specifically, since it's objectively verifiable and independently timestamped, unlike a privately-agreed sale date.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 10</span>
+      <h3>Does "Department" mean a real org unit or a website category?</h3>
+      <p>Website categories don't map 1:1 to real organizational units — some span several, some split one.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — W3C ORG + domain</div>
+        HR's meaning stays the real <code>OrganizationalUnit</code>. The website's meaning gets a domain <code>NavigationCategory</code> class, explicitly many-to-many linked to <code>OrganizationalUnit</code> — documenting the actual overlap/split pattern instead of leaving it implicit and untracked.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10 — the fourth confirmed instance of this pattern</span>
+      <h3>The linked Rule document still shows the old fee</h3>
+      <p>Generated 2022 at $50; the Board approved $65 in 2025. Never regenerated.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — CPSV-AP + domain</div>
+        Give the <code>Rule</code> document a domain <code>lastGenerated</code> date, flagged stale against the Board's approved change date — the same "canonical fact updates, public rendering doesn't" shape as manufacturing's work-instruction/BOM drift, legal's Manifestation conflict, and insurance's marketing brochure conflict. Four unrelated domains, same failure mode — confirmed pattern, not coincidence.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 10</span>
+      <h3>The catalog's Cost doesn't match Finance's fee schedule</h3>
+      <p>Catalog: $50. Finance: $65, same 2025 increase.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — CPSV-AP</div>
+        Treat Finance's fee schedule as canonical for <code>Cost</code>, and model the catalog's value as derived from it with a staleness flag when they diverge — same "one system is definitionally authoritative" reasoning as media's royalty-percentage and legal's jurisdiction conflicts, not a "keep both" case.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10</span>
+      <h3>The annual review checkpoint doesn't reconcile authority or cost</h3>
+      <p>"Confirm service description reviewed" verifies reading, not reconciling.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Add a domain <code>reconcilesCompetentAuthorityAndCost: false</code> flag on the checkpoint — the same cross-domain checkpoint-gap pattern that's now appeared in every single vertical this project has built.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>The published processing time doesn't hold during renewal season</h3>
+      <p>Published: 5 business days, year-round. Actual, January–March: 11 business days average.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Model two domain <code>ProcessingTimeClaim</code> instances — published and actual, seasonal — rather than reconciled into one figure, the same operational-disagreement pattern as every prior vertical's SLA conflict.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>

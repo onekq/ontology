@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Government — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Government</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">Read every source document and log every term, code, and relationship — without resolving conflicts yet.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>SVC-2201 / SVC-2201-ON</td><td>Public service & org registry</td><td>Same service, two channels. Online channel has no field for the FW-VET fee-waiver code that the in-person channel recognizes.</td><td>Conflict</td></tr>
+      <tr><td>org_unit_code / state_registry_id / federal_grant_id</td><td>Public service & org registry</td><td>Three reference systems; ORG-ECON-01 has no federal grant ID yet.</td><td>Conflict</td></tr>
+      <tr><td>hasCompetentAuthority (ORG-COMM-04)</td><td>Public service & org registry, Competent authority & reorg records</td><td>Both service records still list ORG-COMM-04; the 2024 reorg moved licensing to ORG-ECON-01. Org chart and phone directory were updated; the service catalog wasn't.</td><td>Conflict — highest stakes</td></tr>
+      <tr><td>Requirement/Evidence conflation</td><td>Requirements & evidence records</td><td>"Provide a utility bill" is written as if it were its own requirement, when it's actually the evidence for the residency requirement.</td><td>Conflict</td></tr>
+      <tr><td>Event-triggered requirement ambiguity</td><td>Requirements & evidence records</td><td>"30 days of the triggering event" isn't specific about which date counts for a BusinessEvent (sale date vs. registration date).</td><td>Conflict</td></tr>
+      <tr><td>"Department"</td><td>Glossary</td><td>HR/Org Chart: a real OrganizationalUnit. Website team: a navigation category that doesn't map 1:1 to real org units.</td><td>Conflict</td></tr>
+      <tr><td>Rule document ($50 PDF)</td><td>Rule & cost documentation requirements</td><td>Generated 2022; doesn't reflect the 2025 fee increase to $65.</td><td>Conflict</td></tr>
+      <tr><td>REQ-701 (rule doc currency)</td><td>Requirements register</td><td>Satisfied-by is the one-time PDF generated at catalog entry, never regenerated.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>Cost value ($50 vs. $65)</td><td>Rule & cost documentation requirements</td><td>Catalog's Cost field still shows $50; Finance's fee schedule shows $65.</td><td>Conflict</td></tr>
+      <tr><td>REQ-702 (cost matches fee schedule)</td><td>Requirements register</td><td>Satisfied-by is the Cost value entered at setup, never reconciled against Finance.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>REQ-703 / renewal checkpoint</td><td>Requirements register, Renewal & processing process</td><td>"Confirm service description reviewed" doesn't verify competent authority, cost, or rule-document currency.</td><td>Conflict</td></tr>
+      <tr><td>Processing time SLA</td><td>Renewal & processing process</td><td>Published: 5 business days. Actual, renewal season: 11 business days average. Never reconciled.</td><td>Conflict</td></tr>
+    </tbody>
+  </table>
+
+  <p>Twelve entries logged, ten flagged as standalone conflicts (two point at the same underlying gap as an adjacent entry — a Validate-stage observation, not decided here).</p>
+</div>
+</body>
+</html>

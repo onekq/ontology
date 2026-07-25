@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Government — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Government</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    Grounded in two real, open standards: the <a href="https://www.w3.org/TR/vocab-org/">W3C
+    Organization Ontology</a> (ORG) for organizational structure, and the EU's
+    <a href="https://semiceu.github.io/CPSV-AP/releases/3.0.0/">Core Public Service Vocabulary
+    Application Profile</a> (CPSV-AP) for public service description.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>Two standards, deliberately combined</h2>
+  <p>
+    Neither vocabulary covers the whole domain alone. ORG models who the organization is
+    (departments, hierarchy, reporting lines); CPSV-AP models what it does (services, rules,
+    requirements, cost). A government ontology needs both — the same "combine two real, narrower
+    ontologies rather than force-fit one" move already made once for insurance (schema.org) but
+    here needed twice, deliberately, from the start.
+  </p>
+
+  <h2>Classes adopted</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>OrganizationalUnit</code></td><td><strong>W3C ORG</strong></td><td>"An Organization such as a department or support unit which is part of some larger Organization." Resolves HR's meaning of "Department" directly.</td></tr>
+      <tr><td><code>PublicService</code></td><td><strong>CPSV-AP</strong></td><td>"A mandatory or discretionary set of activities performed... by or on behalf of a public organisation."</td></tr>
+      <tr><td><code>Rule</code></td><td><strong>CPSV-AP</strong></td><td>The document setting out a service's specific rules/procedures — including fee schedules.</td></tr>
+      <tr><td><code>Requirement</code> / <code>Evidence</code></td><td><strong>CPSV-AP</strong></td><td>Deliberately distinct: "Requirement... condition or prerequisite... to be proven by Evidence." The spec itself names exactly the Discover-stage conflation.</td></tr>
+      <tr><td><code>Cost</code></td><td><strong>CPSV-AP</strong></td><td>"Any costs related to the execution of a Public Service that the Agent consuming it needs to pay."</td></tr>
+      <tr><td><code>LifeEvent</code> / <code>BusinessEvent</code></td><td><strong>CPSV-AP</strong></td><td>Two distinct real trigger-event classes — already separate concepts, which is why Conflict 5's ambiguity is a documentation gap, not a modeling one.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations adopted</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>hasCompetentAuthority</code></td><td><strong>CPSV-AP</strong></td><td>Links a Public Service to the responsible Public Organization — the exact relation Conflict 3's reorg broke.</td></tr>
+      <tr><td><code>holdsRequirement</code></td><td><strong>CPSV-AP</strong></td><td>Links a service to its Requirements — real property name, not "hasRequirement" as might be guessed.</td></tr>
+      <tr><td><code>hasSubOrganization</code> / <code>subOrganizationOf</code></td><td><strong>W3C ORG</strong></td><td>The real hierarchical relation the 2024 reorg actually changed.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where neither standard reaches</h2>
+  <p>
+    Neither ORG nor CPSV-AP models "a website navigation category," "a channel-specific fee-waiver
+    field," or "a fee-schedule reconciliation process." Those need domain-specific vocabulary,
+    checked against both standards first.
+  </p>
+
+  <h2>Candidate relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>channel-specific requirement variance</td><td>domain</td><td><code>[inferred, contested]</code> — neither CPSV-AP's <code>Channel</code> nor ORG models a channel silently supporting a narrower requirement set than another</td></tr>
+      <tr><td>website navigation category</td><td>domain</td><td><code>[inferred, contested]</code> — distinct from <code>OrganizationalUnit</code>, not a synonym for it</td></tr>
+    </tbody>
+  </table>
+
+  <p>Two items marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
+</div>
+</body>
+</html>
