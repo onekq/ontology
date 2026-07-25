@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Insurance — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">Read every source document and log every term, code, and relationship — without resolving conflicts yet.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>89432CA0010001 / 89432CA0010002</td><td>Plan registry</td><td>Same base plan, same SERFF filing, different cost-sharing variation — not cross-indexed as a plan family anywhere.</td><td>Conflict</td></tr>
+      <tr><td>HIOS Plan ID / internal code / SERFF #</td><td>Plan registry</td><td>Three reference systems; Bronze PPO has no SERFF number at all yet.</td><td>Conflict</td></tr>
+      <tr><td>Atorvastatin formulary tier</td><td>Formulary & cost-sharing records</td><td>Thistlebrook's record: Tier 2. Meridian Rx's (PBM) own system: Tier 3, after a 2025 contract change.</td><td>Conflict — highest stakes</td></tr>
+      <tr><td>Outpatient PT coinsurance timing</td><td>Formulary & cost-sharing records</td><td>Plan spec: after deductible. Claims system default: before deductible — a 2023 configuration error.</td><td>Conflict</td></tr>
+      <tr><td>Dr. Vasquez network status</td><td>Network & provider status records</td><td>HealthPlanNetwork record: in-network. Provider Relations: terminated 2025-04-01. Claims still processing at in-network rates.</td><td>Conflict</td></tr>
+      <tr><td>"Plan"</td><td>Glossary</td><td>Sales: anything quotable, even pre-filing. Compliance: only an approved, HIOS-assigned HealthInsurancePlan.</td><td>Conflict</td></tr>
+      <tr><td>Marketing brochure currency</td><td>Network & provider status records</td><td>benefitsSummaryUrl/healthPlanMarketingUrl both point to 2023 brochures; 2024 rate change not reflected.</td><td>Conflict</td></tr>
+      <tr><td>REQ-603 (marketing currency)</td><td>Requirements register</td><td>Satisfied-by is a one-time brochure generation step, never re-run.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>REQ-601 (filed vs. approved)</td><td>Requirements register</td><td>Registry doesn't distinguish "Filed" from "Approved" SERFF status; Bronze PPO already quoted with no filing at all.</td><td>Conflict</td></tr>
+      <tr><td>Renewal checkpoint</td><td>Renewal & customer service process</td><td>"Confirm plan documents updated" doesn't verify formulary tiers were reconciled against the PBM.</td><td>Conflict</td></tr>
+      <tr><td>REQ-602 (formulary sync)</td><td>Requirements register</td><td>Satisfied-by is the formulary record created at setup, never re-checked mid-year.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>Call center SLA</td><td>Renewal & customer service process</td><td>Published: under 5 minutes. Actual, open enrollment: 12 minutes average. Never reconciled.</td><td>Conflict</td></tr>
+    </tbody>
+  </table>
+
+  <p>Twelve entries logged, ten flagged as standalone conflicts (two point at the same underlying gap as an adjacent entry — a Validate-stage observation, not decided here).</p>
+</div>
+</body>
+</html>

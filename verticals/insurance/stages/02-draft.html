@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Insurance — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    Grounded in <a href="https://schema.org/HealthInsurancePlan">schema.org's health-insurance
+    vocabulary</a> — real, open, and created for a real regulatory reason: in 2015 the US Centers
+    for Medicare &amp; Medicaid Services (CMS) mandated that health insurers publish
+    machine-readable plan and network data, and schema.org's terms were developed to meet that
+    need.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>Why this domain, not ACORD</h2>
+  <p>
+    ACORD is the real, dominant insurance data-exchange standards body, but its specifications
+    are largely membership-gated XML message schemas, not openly published RDF/OWL. A separate
+    check of <code>insuranceontology.com</code> (an independent, single-vendor project) found it
+    real but thin and "still in development" — not comparable to IOF Core, GoodRelations, FIBO,
+    FHIR, ODRL, or Akoma Ntoso's maturity. schema.org's CMS-driven health-plan vocabulary is the
+    strongest openly-verifiable option for this vertical, at the cost of being narrower — it
+    covers health insurance plan/network/formulary data specifically, not general P&amp;C or life
+    insurance.
+  </p>
+
+  <h2>Classes adopted from schema.org</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Definition (from the spec)</th></tr></thead>
+    <tbody>
+      <tr><td><code>HealthInsurancePlan</code></td><td>A specific health insurance product, identified by a real <code>healthPlanId</code> — "the 14-character, HIOS-generated Plan ID number."</td></tr>
+      <tr><td><code>HealthPlanNetwork</code></td><td>"A US-style health insurance plan network."</td></tr>
+      <tr><td><code>HealthPlanFormulary</code></td><td>"Specifies the costs and coverage of prescription drugs for a health insurance plan."</td></tr>
+      <tr><td><code>HealthPlanCostSharingSpecification</code></td><td>Cost-sharing terms, including <code>healthPlanCoinsuranceOption</code> ("whether the coinsurance applies before or after deductible") and <code>healthPlanCopay</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations adopted from schema.org</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>usesHealthPlanIdStandard</code></td><td>"The standard for interpreting the Plan ID. The preferred is 'HIOS.'" Real, and directly relevant to Conflict 2's identifier independence.</td></tr>
+      <tr><td><code>includesHealthPlanFormulary</code> / <code>includesHealthPlanNetwork</code></td><td>Links a plan to its formulary and network.</td></tr>
+      <tr><td><code>healthPlanDrugTier</code></td><td>"The tier(s) of drugs offered by this formulary or insurance plan" — directly names the Conflict 3 gap.</td></tr>
+      <tr><td><code>benefitsSummaryUrl</code> / <code>healthPlanMarketingUrl</code></td><td>Real, and both can drift stale relative to the plan's actual current terms (Conflict 7).</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where schema.org doesn't reach</h2>
+  <p>
+    schema.org models the plan/network/formulary data CMS required published, but has no notion
+    of "a SERFF filing status," "a plan variation family," or "a PBM's own separate tier system."
+    Those need domain-specific vocabulary, checked against schema.org first.
+  </p>
+
+  <h2>Candidate relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>plan-variation family grouping</td><td>domain</td><td><code>[inferred, contested]</code> — no schema.org element models "shares a base plan with"; Resolve proposes a domain relation</td></tr>
+      <tr><td>SERFF filing status (Filed vs. Approved)</td><td>domain</td><td><code>[inferred, contested]</code> — schema.org's <code>healthPlanId</code> says nothing about regulatory approval state</td></tr>
+    </tbody>
+  </table>
+
+  <p>Two items marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
+</div>
+</body>
+</html>

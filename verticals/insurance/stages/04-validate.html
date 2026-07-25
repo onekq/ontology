@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Insurance — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">Check the resolved ontology against the Stage 1 inventory, and against the Stage 0 competency questions.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>89432CA0010001 / 89432CA0010002</td><td>Two <code>HealthInsurancePlan</code> instances, linked by domain <code>PlanFamily</code> (Conflict 1)</td></tr>
+      <tr><td>HIOS Plan ID / internal code / SERFF #</td><td>Independent identifiers; missing SERFF left absent (Conflict 2)</td></tr>
+      <tr><td>Atorvastatin formulary tier</td><td><code>healthPlanDrugTier</code> + domain <code>PBMTierRecord</code>, flagged <code>tierMismatch: true</code> (Conflict 3)</td></tr>
+      <tr><td>Outpatient PT coinsurance timing</td><td><code>healthPlanCoinsuranceOption</code> asserted per spec; domain <code>claimsConfigMismatch: true</code> on the claims system (Conflict 4)</td></tr>
+      <tr><td>Dr. Vasquez network status</td><td>Domain <code>effectiveThrough</code> + <code>processedAgainstStaleNetworkStatus: true</code> (Conflict 5)</td></tr>
+      <tr><td>"Plan"</td><td>Domain <code>QuotableOffering</code> vs. real <code>HealthInsurancePlan</code> (Conflict 6)</td></tr>
+      <tr><td>Marketing brochure currency</td><td>Domain <code>lastGenerated</code>, flagged stale (Conflict 7)</td></tr>
+      <tr><td>REQ-603 (marketing currency)</td><td>Not independently resolved — same underlying gap as Conflict 7. See below.</td></tr>
+      <tr><td>REQ-601 (filed vs. approved)</td><td>Domain <code>SERFFFilingStatus</code> enumeration (Conflict 8)</td></tr>
+      <tr><td>Renewal checkpoint</td><td>Domain <code>reconcilesFormularyTiers: false</code> (Conflict 9)</td></tr>
+      <tr><td>REQ-602 (formulary sync)</td><td>Not independently resolved — same underlying gap as Conflict 9. See below.</td></tr>
+      <tr><td>Call center SLA</td><td>Two domain <code>ServiceLevelClaim</code> instances, not reconciled (Conflict 10)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>All ten from <a href="00-competency-questions.html">Stage 0</a> are answerable against the resolved structure — including the highest-stakes one: the ontology can now represent that a plan's official formulary tier and a PBM's actual billing tier have diverged, rather than presenting one number as if it were uncontested.</p>
+
+  <h2>Not resolved — logged, not dropped</h2>
+  <p><strong>REQ-603:</strong> folded into Conflict 7 — both are the same "posted document never regenerated after a rate change" gap.</p>
+  <p><strong>REQ-602:</strong> folded into Conflict 9 — both are the same "renewal process doesn't verify formulary sync" gap.</p>
+
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>

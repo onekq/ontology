@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Insurance — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">One conflict at a time, in dependency order. Vocabulary comes from schema.org's health-insurance terms — see Stage 2 for where each came from.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Are 89432CA0010001 and 89432CA0010002 the same plan or different ones?</h3>
+      <p>Same SERFF filing, different cost-sharing variation. Nothing cross-indexes them as a family.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + domain</div>
+        Keep each as its own real <code>HealthInsurancePlan</code> instance — they are legally distinct products with distinct HIOS IDs — linked by a domain <code>PlanFamily</code> grouping, since schema.org has no "variation of" relation. Same shape as the Product/ProductGroup and Work/Expression splits in prior verticals.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Conflict 2 of 10</span>
+      <h3>HIOS Plan ID, internal code, and SERFF tracking number don't always coexist</h3>
+      <p>Bronze PPO has no SERFF number at all yet, but is already being quoted.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org</div>
+        Keep all three independent — schema.org's own <code>usesHealthPlanIdStandard</code> property implies HIOS is a preferred, not exclusive, standard. Leave the missing SERFF number absent rather than inferred; it's a real, meaningful gap given Conflict 8.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10 — highest stakes</span>
+      <h3>Thistlebrook's formulary tier and the PBM's actual billing tier disagree</h3>
+      <p>Atorvastatin: Tier 2 in Thistlebrook's official record, Tier 3 at the pharmacy counter after Meridian Rx's 2025 contract change.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + domain</div>
+        Keep <code>healthPlanDrugTier</code> (Thistlebrook's official value) and add a domain <code>PBMTierRecord</code> for Meridian Rx's actual billing value, flagged <code>tierMismatch: true</code> — don't silently trust either as correct. This is the conflict with real financial stakes for members being billed incorrectly.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>Coinsurance timing disagrees between the plan spec and the claims system</h3>
+      <p>Spec: after deductible. Claims system default for this service category: before deductible, a 2023 configuration error.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org</div>
+        Assert <code>healthPlanCoinsuranceOption: after deductible</code> per the real, filed plan spec — that's the authoritative source. Flag the claims system's default as a domain <code>claimsConfigMismatch: true</code> needing correction, not an equally valid alternate reading.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 10</span>
+      <h3>A provider is billed in-network after their contract ended</h3>
+      <p>HealthPlanNetwork record: in-network. Provider Relations: terminated 2025-04-01.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + domain</div>
+        Give the <code>HealthPlanNetwork</code> membership a domain <code>effectiveThrough</code> date matching Provider Relations' real contract end, and flag any claim processed after that date as <code>processedAgainstStaleNetworkStatus: true</code> — surfacing the specific claims affected, not just the general policy gap.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 10</span>
+      <h3>Does "Plan" mean anything quotable, or only an approved product?</h3>
+      <p>Sales quotes pre-filing plans as if they were final. Compliance reserves the term for approved, HIOS-assigned plans.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + domain</div>
+        Sales' meaning becomes a domain <code>QuotableOffering</code>; Compliance's stays the real <code>HealthInsurancePlan</code>, which a <code>QuotableOffering</code> is only promoted to once SERFF approval and HIOS assignment both complete. Same "loose commercial term vs. strict legal term" pattern as Offer/Agreement and Party/LegalPerson in prior verticals.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10 — same pattern as Legal's Manifestation drift</span>
+      <h3>Marketing brochures still show last year's rates</h3>
+      <p><code>benefitsSummaryUrl</code>/<code>healthPlanMarketingUrl</code> point at 2023 documents; the 2024 rate change isn't reflected.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + domain</div>
+        Give the linked document a domain <code>lastGenerated</code> date, flagged stale relative to the plan's most recent approved rate-change date — the same "public rendering drifts from canonical source" shape as the legal vertical's posted-PDF conflict, now confirmed as a genuinely recurring cross-domain pattern, not a one-off.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 10</span>
+      <h3>Nothing distinguishes "Filed" from "Approved"</h3>
+      <p>The registry records a SERFF tracking number as soon as one exists — Bronze PPO has none at all and is already being sold.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Add a domain <code>SERFFFilingStatus</code> (Filed/Approved/Rejected) as its own tracked value, distinct from merely having a tracking number. Neither ACORD's gated specs nor schema.org's health-plan terms cover regulatory approval workflow — checked first, then invented deliberately, same discipline as every prior vertical's domain-specific fallback.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10</span>
+      <h3>The renewal checkpoint doesn't reconcile formulary tiers</h3>
+      <p>"Confirm plan documents updated" verifies regeneration, not that the underlying tiers are actually current.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Add a domain <code>reconcilesFormularyTiers: false</code> flag on the checkpoint — same cross-domain checkpoint-gap pattern as every prior vertical (manufacturing's QC check, retail's returns inspection, finance's KYC refresh, healthcare's care-plan review, media's attribution duty, legal's records request).
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>The published hold-time SLA doesn't hold during open enrollment</h3>
+      <p>Published: under 5 minutes, year-round. Actual, October–December: 12 minutes average.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Model two domain <code>ServiceLevelClaim</code> instances — the published year-round figure and the actual seasonal one — rather than reconciled into a single number, same principle as every prior vertical's operational-disagreement conflict.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>
