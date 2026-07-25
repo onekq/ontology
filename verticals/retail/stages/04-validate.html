@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Retail — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail / E-commerce</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">
+    Check the resolved ontology against the Stage 1 inventory, and against the Stage 0
+    competency questions.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>SKU (product vs. offer)</td><td><code>Product.sku</code> vs. separate <code>Offering.seller_sku</code> (Conflict 1)</td></tr>
+      <tr><td>ALD-BP-CASCADE-60-SG redesign</td><td><code>prov:wasRevisionOf</code> linking two <code>Product</code> instances sharing one GTIN, flagged as a GS1-guidance violation (Conflict 2)</td></tr>
+      <tr><td>OutdoorLiquidators contradiction</td><td><code>OfferItemCondition = RefurbishedCondition</code> + domain <code>descriptionContradictsCondition</code> flag (Conflict 3)</td></tr>
+      <tr><td>MPN coverage gap</td><td>Left absent, <code>identifierCompleteness: partial</code> — not inferred (Conflict 4)</td></tr>
+      <tr><td>Category crosswalk</td><td>Two category trees kept, linked by domain <code>priorCategoryOf</code> (Conflict 5)</td></tr>
+      <tr><td>"Listing"</td><td><code>AggregateOffer</code> (Marketing) vs. <code>gr:Offering</code> (Marketplace Ops) — both real, no new class (Conflict 6)</td></tr>
+      <tr><td>PROMO-114 / PROMO-121</td><td>Two <code>gr:UnitPriceSpecification</code> instances, overlap left as an open business question (Conflict 7)</td></tr>
+      <tr><td>REQ-101 (hazmat)</td><td>Domain <code>PolicyRequirement</code> + <code>policySatisfiedBy</code>, re-verify-on-recategorization rule (Conflict 8)</td></tr>
+      <tr><td>REQ-102 (refurbished badge)</td><td>Not independently resolved — same underlying gap as Conflict 3. See below.</td></tr>
+      <tr><td>REQ-103 (capacity accuracy)</td><td>Not independently resolved — same underlying gap as Conflict 2. See below.</td></tr>
+      <tr><td>Returns inspection checkpoint</td><td><code>schema:ReturnAction</code> + domain <code>verifiesAgainstOriginalOrder: false</code> (Conflict 9)</td></tr>
+      <tr><td>Fulfillment SLA</td><td>Two domain <code>DeliveryEstimate</code> instances, not reconciled (Conflict 10)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>All ten from <a href="00-competency-questions.html">Stage 0</a> are answerable against the resolved structure above — each maps to exactly one Resolve-stage decision, which is itself a check that Stage 0 was scoped at the right grain (not too broad to be useless, not so narrow it missed something Discover later surfaced).</p>
+
+  <h2>Not resolved — logged, not dropped</h2>
+  <p><strong>REQ-102:</strong> folded into Conflict 3's fix — both are the same "condition field vs. reality" defect, on the same offer.</p>
+  <p><strong>REQ-103:</strong> folded into Conflict 2's fix — both are the same "catalog spec vs. actual current product" defect, on the same SKU.</p>
+
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>

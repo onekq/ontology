@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Retail — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail / E-commerce</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">
+    Read every source document and log every term, code, and relationship — without resolving
+    conflicts yet.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>SKU</td><td>Product catalog, Marketplace offers, Glossary</td><td>Alderleaf's own catalog uses SKU per product variant. Marketplace sellers each submit their own "seller_sku" for the same GTIN. schema.org's own definition of <code>sku</code> covers both meanings without distinguishing them.</td><td>Conflict</td></tr>
+      <tr><td>ALD-BP-CASCADE-60-SG</td><td>Product catalog</td><td>Lists "60L," MPN CT60-SG. Manufacturer redesigned the frame in 2025 (actual 55L, MPN CT55-SG) without issuing a new GTIN. Catalog never updated.</td><td>Conflict</td></tr>
+      <tr><td>GTIN 00612345678905 offers</td><td>Marketplace offers</td><td>Three sellers, three conditions claimed (New, New, Refurbished) — and the Refurbished seller's own description text says "brand new... never used."</td><td>Conflict</td></tr>
+      <tr><td>MPN coverage</td><td>Product catalog</td><td>Present on most rows; absent on the Trailmix Cook Pot, sourced from a marketplace seller who never supplied one.</td><td>Note</td></tr>
+      <tr><td>Category assignment</td><td>Product catalog, Category crosswalk</td><td>Post-merger codes (e.g. OUT-HIK-PACK-01) exist on catalog rows, but legacy tree names ("Camping &gt; Backpacks") are still referenced by unmigrated BI dashboards.</td><td>Conflict</td></tr>
+      <tr><td>Listing</td><td>Glossary</td><td>Marketing: the storefront product page (one per product). Marketplace Ops: a specific seller's offer (one per seller).</td><td>Conflict</td></tr>
+      <tr><td>PROMO-114 / PROMO-121</td><td>Promotions log</td><td>Overlap 2026-07-01 to 2026-07-15 on the same variant, one a discount-off-list, the other a flat override. No stacking rule stated.</td><td>Conflict</td></tr>
+      <tr><td>REQ-101 (hazmat)</td><td>Storefront requirements</td><td>Satisfied-by points at a category flag the actual lithium-battery product (headlamp) doesn't carry, because it's filed under a different category.</td><td>Conflict — compliance stakes</td></tr>
+      <tr><td>REQ-102 (refurbished badge)</td><td>Storefront requirements</td><td>Satisfied-by field (item_condition) is the same field that contradicts itself in the Marketplace offers material.</td><td>Conflict</td></tr>
+      <tr><td>REQ-103 (capacity accuracy)</td><td>Storefront requirements</td><td>Satisfied-by field (variant_attr) is the same field that's stale per the ALD-BP-CASCADE-60-SG redesign.</td><td>Conflict</td></tr>
+      <tr><td>Returns inspection checkpoint</td><td>Returns & fulfillment</td><td>"Confirm item present, box present" — doesn't check the returned item's SKU/GTIN against the original order.</td><td>Conflict</td></tr>
+      <tr><td>Fulfillment SLA</td><td>Returns & fulfillment</td><td>Marketing: "ships within 1 business day." Warehouse Ops: average 1.5 business days. Never reconciled.</td><td>Conflict</td></tr>
+    </tbody>
+  </table>
+
+  <p>Twelve entries logged, ten flagged as standalone conflicts (two — REQ-102 and REQ-103 — point at the same underlying gaps as other entries; that's a Validate-stage observation, not decided here).</p>
+</div>
+</body>
+</html>

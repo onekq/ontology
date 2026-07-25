@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Retail — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail / E-commerce</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">
+    One conflict at a time, in dependency order. Reveal the recommended answer, then move on.
+    Vocabulary comes from GoodRelations, schema.org, W3C SKOS, and W3C PROV-O — see Stage 2 for
+    where each came from, and why IOF Core's pattern (used in manufacturing) isn't reused here.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>When someone says "SKU," do they mean the product or a specific seller's offer?</h3>
+      <p>Alderleaf's catalog uses SKU per product variant. Each marketplace seller submits their own SKU for the same GTIN. schema.org's own definition of <code>sku</code> covers both meanings without distinguishing them — this is a real, documented ambiguity in the standard vocabulary itself, not something specific to Alderleaf.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org, made more precise than the standard</div>
+        Keep <code>sku</code> as a property of <code>Product</code> (Alderleaf's own catalog identifier), and give each <code>Offering</code> its own separate <code>seller_sku</code> property. schema.org doesn't force this distinction, but nothing stops an implementer from making it — and every downstream conflict in this walkthrough depends on not conflating the two.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 1</span>
+      <h3>ALD-BP-CASCADE-60-SG still says "60L" after a silent frame redesign</h3>
+      <p>Manufacturer Whitcombe Gear redesigned the frame in 2025 — actual capacity is now 55L, under their own new part number CT55-SG — but issued no new GTIN. Alderleaf's catalog still shows 60L and the old MPN.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — W3C PROV-O</div>
+        Model the redesigned product as a distinct <code>Product</code> instance linked by <code>prov:wasRevisionOf</code> to the original — same shared GTIN, but not treated as identical specs. Flag the shared-GTIN-across-a-material-change itself as a data-quality issue: GS1's own guidance says a new GTIN should be issued for a materially different product. That guidance wasn't followed; the ontology should surface that rather than silently trust the GTIN as a stable identity.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10</span>
+      <h3>OutdoorLiquidators' offer contradicts itself</h3>
+      <p>Its <code>item_condition</code> field says "Refurbished." Its own description text says "brand new... never used." Both fields come from the same seller.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        This isn't the same shape as manufacturing's vendor cross-reference conflict (that was about whether two <em>different</em> sources describe the <em>same</em> real-world part — a genuine SKOS matching problem). Here one seller's own two fields disagree with each other. Assert <code>schema:OfferItemCondition = RefurbishedCondition</code> as the structured field of record, and add a domain-specific <code>descriptionContradictsCondition: true</code> flag rather than silently trusting either field. Forcing this into <code>skos:closeMatch</code> just to reuse the manufacturing pattern would have been the wrong fit.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>SKU, GTIN, and MPN don't always agree on how many identifiers "the same item" has</h3>
+      <p>Most catalog rows have all three. The Trailmix Cook Pot has no MPN at all — sourced from a marketplace seller who never supplied one.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org</div>
+        Keep <code>sku</code>, <code>gtin13</code>, and <code>mpn</code> as three separate, independent properties (schema.org's actual design — it doesn't require all three, or assume any one implies the others). For the missing MPN: leave it absent and add <code>identifierCompleteness: partial</code> rather than inferring or fabricating a value.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 10</span>
+      <h3>Two category trees exist for the same products after a catalog merger</h3>
+      <p>Post-merger codes (e.g. <code>OUT-HIK-PACK-01</code>) exist on catalog rows, but legacy tree names ("Camping &gt; Backpacks") are still referenced by unmigrated BI dashboards.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Keep both category trees as separate instances linked by a domain-specific <code>priorCategoryOf</code> relation, rather than deleting the legacy one. The unmigrated dashboards are a real, current consumer of the old tree — collapsing to just the new one would break something that still depends on the old one existing.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 10</span>
+      <h3>Does "Listing" mean the storefront page or a seller's offer?</h3>
+      <p>Marketing: one storefront page per product. Marketplace Ops: one per seller per product.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + GoodRelations, no new class needed</div>
+        Unlike manufacturing's "Assembly" conflict (which needed a new domain-specific class for Procurement's meaning), both meanings here already have a real standard class: Marketing's "listing" is a storefront page backed by <code>schema:AggregateOffer</code>; Marketplace Ops' "listing" is a <code>gr:Offering</code>. No invention required — the ambiguity was just two teams not knowing the other one's term already existed.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10</span>
+      <h3>Two promotions overlap on the same variant</h3>
+      <p>PROMO-114 ($20 off list, through 2026-07-15) and PROMO-121 (flat $99.99, from 2026-07-01) are both valid 2026-07-01 through 2026-07-15 for the Moss Green variant.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — GoodRelations</div>
+        Model both as separate <code>gr:UnitPriceSpecification</code> instances with their own <code>validFrom</code>/<code>validThrough</code> — don't merge or pick a winner. The ontology's job is to make the overlap queryable; which promotion actually applies at checkout is a business stacking-order rule, not a fact the ontology itself can resolve. Flagged as a known open question, not silently decided.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 10 — highest stakes</span>
+      <h3>The Cascade Headlamp's hazmat requirement is satisfied by the wrong category</h3>
+      <p>REQ-101 requires a hazardous-shipping notice for lithium-battery products. It's satisfied by a flag on <code>Electronics &gt; Batteries</code> — but the headlamp is filed under <code>Outdoor Gear &gt; Lighting</code>, which has no such flag. A real product with a real shipping restriction currently displays no notice.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Neither GoodRelations nor schema.org models compliance requirements as a first-class concept, so this needs a domain-specific <code>PolicyRequirement</code> class with a <code>policySatisfiedBy</code> relation — checked against both real vocabularies first; neither fit, so invented deliberately rather than by default (same discipline as manufacturing's <code>alternativeTo</code>). Treat <code>policySatisfiedBy</code> as needing re-verification whenever a product's category changes, not as a static pointer — this is the conflict where the gap has real shipping-compliance consequences, not just modeling tidiness.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10</span>
+      <h3>The returns inspection checkpoint can't catch a substituted item</h3>
+      <p>"Confirm item present, box present" passes identically whether the returned item matches the original order's SKU/GTIN or not.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + domain-specific</div>
+        Model the return as a real <code>schema:ReturnAction</code> (with <code>object</code>, <code>agent</code>, <code>actionProcess</code>) rather than inventing a bespoke process class — schema.org already covers returns specifically. The gap itself — the inspection step doesn't verify identity — needs a domain-specific <code>verifiesAgainstOriginalOrder: false</code> flag on that step, since neither schema.org nor GoodRelations models "what a process step actually checks" at that granularity. Same shape as manufacturing's QC-checkpoint conflict, different vocabulary because the domain-general parts (the action itself) already have a real, better-fitting standard class here.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>Marketing and Warehouse Ops don't agree on the fulfillment SLA</h3>
+      <p>Marketing: "ships within 1 business day." Warehouse Ops: average 1.5 business days for non-priority orders. Never reconciled.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Model both as separate <code>DeliveryEstimate</code> instances (domain-specific — neither real vocabulary here covers operational planning) rather than reconciled into one number. Same principle as manufacturing's cycle-time conflict: the disagreement between the two teams is the fact worth keeping, not something to average away.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>

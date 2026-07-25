@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Retail — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail / E-commerce</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    Grounded in <a href="http://www.heppnetz.de/projects/goodrelations/primer/">GoodRelations</a>
+    (Hepp) and <a href="https://schema.org/Product">schema.org's</a> commerce vocabulary — the
+    real, actively-deployed ontologies for this domain, not invented vocabulary.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>A different real pattern than manufacturing</h2>
+  <p>
+    The <a href="../../manufacturing/stages/02-draft.html">manufacturing vertical</a> grounds in
+    IOF Core, which reifies identifiers as their own <code>Identifier</code> entities that
+    <code>denote</code> things (a BFO-derived pattern). GoodRelations and schema.org do not do
+    this — <code>sku</code>, <code>gtin13</code>, and <code>mpn</code> are plain datatype
+    properties directly on a product or offer. Copying the manufacturing pattern here would be
+    grounding in the wrong tradition for this domain. The right move is to use whichever real
+    ontology's actual pattern fits — not to reuse the previous vertical's pattern by default.
+  </p>
+
+  <h2>Classes adopted</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Product</code> / <code>ProductGroup</code></td><td><strong>schema.org</strong></td><td>The abstract item and its variant-bearing group. Cascade Trail Backpack is a <code>ProductGroup</code>; each capacity/color combination is a <code>Product</code> that <code>isVariantOf</code> it.</td></tr>
+      <tr><td><code>Offering</code></td><td><strong>GoodRelations</strong></td><td>"The public... announcement by a <code>BusinessEntity</code> to provide... a certain <code>ProductOrService</code>." One per seller per product — this is the formal name for what Marketplace Ops calls a "listing."</td></tr>
+      <tr><td><code>BusinessEntity</code></td><td><strong>GoodRelations</strong></td><td>The seller making an <code>Offering</code> — Alderleaf Direct, TrailGearCo, OutdoorLiquidators are each one.</td></tr>
+      <tr><td><code>AggregateOffer</code></td><td><strong>schema.org</strong></td><td>Rolls up multiple <code>Offering</code>s for the same product into a price range — this is what a storefront page (Marketing's "listing") actually displays.</td></tr>
+      <tr><td><code>UnitPriceSpecification</code></td><td><strong>GoodRelations</strong></td><td>A price with <code>validFrom</code>/<code>validThrough</code> — covers both promotions directly.</td></tr>
+      <tr><td><code>OfferItemCondition</code></td><td><strong>schema.org</strong></td><td>Enumeration: <code>NewCondition</code>, <code>RefurbishedCondition</code>, <code>UsedCondition</code>. A real, already-standard vocabulary for the condition conflict — nothing to invent here.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Candidate relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>sku</code> / <code>gtin13</code> / <code>mpn</code></td><td><strong>schema.org</strong></td><td>Direct datatype properties, not reified — see note above</td></tr>
+      <tr><td><code>isVariantOf</code></td><td><strong>schema.org</strong></td><td>Candidate for the ProductGroup→variant structure</td></tr>
+      <tr><td><code>gr:offers</code> / <code>gr:includesObject</code></td><td><strong>GoodRelations</strong></td><td>BusinessEntity→Offering, Offering→Product</td></tr>
+      <tr><td><code>validFrom</code> / <code>validThrough</code></td><td><strong>GoodRelations</strong></td><td>Candidate for the PROMO-114/121 overlap — doesn't by itself resolve which promotion wins, only makes the overlap queryable</td></tr>
+      <tr><td><code>exactMatch</code> / <code>closeMatch</code></td><td><strong>W3C SKOS</strong></td><td><code>[inferred, contested]</code> — reused from manufacturing's pattern for condition-claim confidence, since SKOS's confidence-graded matching isn't domain-specific</td></tr>
+      <tr><td><code>wasRevisionOf</code></td><td><strong>W3C PROV-O</strong></td><td><code>[inferred, contested]</code> — reused for the 60L→55L silent redesign, same reasoning as manufacturing's rotor revision</td></tr>
+    </tbody>
+  </table>
+
+  <p>Two items reuse patterns from the manufacturing vertical (SKOS, PROV-O) because those are domain-neutral W3C vocabularies — that's different from reusing IOF Core, which is manufacturing-specific and deliberately not reused here.</p>
+</div>
+</body>
+</html>
