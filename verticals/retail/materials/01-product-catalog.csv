@@ -1,0 +1,6 @@
+product_group,sku,gtin,mpn,variant_attr,category_code,effective_from,effective_to,notes
+Cascade Trail Backpack,ALD-BP-CASCADE-45-SG,00612345678905,CT45-SG,45L / Slate Grey,OUT-HIK-PACK-01,2024-02-01,,
+Cascade Trail Backpack,ALD-BP-CASCADE-45-MG,00612345678912,CT45-MG,45L / Moss Green,OUT-HIK-PACK-01,2024-02-01,,
+Cascade Trail Backpack,ALD-BP-CASCADE-60-SG,00612345678929,CT60-SG,60L / Slate Grey,OUT-HIK-PACK-01,2024-02-01,,"Manufacturer (Whitcombe Gear) redesigned this product's frame in 2025 - actual current capacity is 55L, and Whitcombe's own part number for the redesign is CT55-SG. No new GTIN was issued. This catalog row still shows the original 60L spec and CT60-SG MPN."
+Cascade Headlamp 300,ALD-LT-HEADLAMP-01,00612345679100,HL-300,300 lumen / rechargeable lithium battery,OUT-LGT-HEAD-01,2023-11-15,,Category OUT-LGT-HEAD-01 (Outdoor Gear > Lighting) carries no hazmat flag despite the lithium battery.
+Trailmix Cook Pot 1.5L,ALD-CK-POT15,00612345680210,,1.5L / stainless,KIT-COOK-POT-01,2022-06-01,,No MPN on file - sourced from a marketplace seller who never supplied one.

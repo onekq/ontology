@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Returns & Fulfillment Process — Alderleaf</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .station { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; background: var(--card); }
+  .qc-flag { background: var(--accent-bg); border-left: 3px solid var(--accent); padding: 0.5rem 0.8rem; border-radius: 6px; margin: 0.6rem 0; font-size: 0.92rem; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail — Source material</span>
+  <h1>Returns & Fulfillment Process Notes</h1>
+  <p class="lede">Maintained by Warehouse Ops. Revision tracking on this document covers process steps only, not kept in sync with Marketing's storefront copy. (<a href="06-returns-fulfillment.md">raw export</a>)</p>
+
+  <h2>Returns Processing Checklist</h2>
+  <div class="station"><strong>1. Receive return.</strong> Log tracking number, match to original order.</div>
+  <div class="station">
+    <strong>2. Inspect.</strong> Confirm item present, box present.
+    <div class="qc-flag">Does not verify the returned item's SKU/GTIN matches the original order — a wrong or substituted item passes this checkpoint identically to a correct one.</div>
+  </div>
+  <div class="station"><strong>3. Disposition decision.</strong> Resellable-as-new → restock. Opened/used → refurbish-and-relist as "Refurbished." Damaged → dispose.</div>
+  <div class="station"><strong>4. Process refund.</strong></div>
+
+  <h2>Fulfillment SLA</h2>
+  <table>
+    <thead><tr><th>Source</th><th>Figure</th></tr></thead>
+    <tbody>
+      <tr><td>Marketing storefront copy</td><td>"Ships within 1 business day"</td></tr>
+      <tr style="background:var(--accent-bg);"><td>Warehouse Ops capacity note (updated quarterly)</td><td>Average 1.5 business days for non-priority orders</td></tr>
+    </tbody>
+  </table>
+  <p>The two figures have never been reconciled — Marketing owns the storefront copy, Warehouse Ops owns the capacity model, and neither reviews the other's number.</p>
+</div>
+</body>
+</html>

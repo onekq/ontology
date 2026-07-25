@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storefront Requirements — Alderleaf</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail — Source material</span>
+  <h1>Storefront Requirements Register <span style="font-weight:400;color:var(--muted)">(excerpt)</span></h1>
+  <p class="lede">Maintained by Compliance/Product. Each requirement has a "Satisfied by" field set once and rarely revisited. (<a href="05-storefront-requirements.md">raw export</a>)</p>
+
+  <div class="conflict">
+    <span class="label">REQ-101 — Hazardous shipping notice</span>
+    <h3>Any product containing a lithium battery must display a hazardous-shipping restriction notice at checkout.</h3>
+    <p><strong>Satisfied by:</strong> the <code>hazmat_flag</code> on category <code>Electronics &gt; Batteries</code>.</p>
+    <p>The Cascade Headlamp 300 contains a rechargeable lithium battery but is categorized under <code>Outdoor Gear &gt; Lighting</code>, which carries no hazmat flag. The requirement is satisfied for the category it names, and violated for a real product that should trigger it.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-102 — Refurbished condition badge</span>
+    <h3>Any offer with condition "Refurbished" must display a distinct condition badge and a modified return window.</h3>
+    <p><strong>Satisfied by:</strong> the <code>item_condition</code> field on each offer.</p>
+    <p>OutdoorLiquidators' offer has <code>item_condition = Refurbished</code> but its own description text claims "brand new... never used" — the field satisfying this requirement contradicts the seller's own listing copy.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-103 — Capacity accuracy</span>
+    <h3>Every backpack variant must display its actual current capacity in liters.</h3>
+    <p><strong>Satisfied by:</strong> the <code>variant_attr</code> field on the product catalog.</p>
+    <p>ALD-BP-CASCADE-60-SG still lists "60L" after the manufacturer's 2025 frame redesign quietly reduced actual capacity to 55L under the same GTIN. Nobody re-checked this requirement after the redesign.</p>
+  </div>
+</div>
+</body>
+</html>

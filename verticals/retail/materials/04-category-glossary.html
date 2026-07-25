@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Category Taxonomy & Glossary — Alderleaf</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail — Source material</span>
+  <h1>Category Taxonomy & Glossary Snapshot</h1>
+  <p class="lede">Two artifacts, neither reconciled against the other. (<a href="04-category-glossary.md">raw export</a>)</p>
+
+  <h2>Category crosswalk (post-merger)</h2>
+  <p>Alderleaf acquired TrailMart's catalog in 2025. The migration script assigned new category
+  codes to TrailMart's products but did not touch Alderleaf's existing catalog — so the same
+  kind of product now lives under two different trees depending on which system it originated in.</p>
+  <table>
+    <thead><tr><th>Product</th><th>Legacy tree (pre-2025)</th><th>Current tree (post-2025 code)</th></tr></thead>
+    <tbody>
+      <tr><td>Cascade Trail Backpack</td><td>Camping &gt; Backpacks</td><td>Outdoor Gear &gt; Hiking &gt; Packs (<code>OUT-HIK-PACK-01</code>)</td></tr>
+      <tr><td>Trailmix Cook Pot 1.5L</td><td>Camping &gt; Cookware</td><td>Kitchen &gt; Cookware &gt; Camp (<code>KIT-COOK-POT-01</code>)</td></tr>
+    </tbody>
+  </table>
+  <p>Legacy BI dashboards still report against the old tree names. Nobody has re-pointed them.</p>
+
+  <h2>Marketing wiki — "Listing"</h2>
+  <p>The storefront page for a product — one per product (or product group), regardless of how many sellers offer it.</p>
+
+  <h2>Marketplace Ops wiki — "Listing"</h2>
+  <p>A specific seller's offer for a product — one per seller per product, meaning a single storefront page can correspond to several "listings" in this sense (see <a href="02-marketplace-offers.html">Marketplace Offers Feed</a>: three sellers, three listings, one storefront page).</p>
+</div>
+</body>
+</html>

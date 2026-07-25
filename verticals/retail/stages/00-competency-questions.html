@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope — Retail — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .cq-status { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.55rem; border-radius: 999px; }
+  .cq-status.answerable { color: var(--accent); background: var(--accent-bg); }
+  .cq-row { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; border-bottom:1px solid var(--border); padding: 0.7rem 0; }
+  .cq-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail / E-commerce</span>
+  <h1>Stage 0 — Scope</h1>
+  <p class="lede">
+    Written before touching any source material — the questions the finished ontology needs to
+    be able to answer (Grüninger &amp; Fox 1995; Noy &amp; McGuinness). See the
+    <a href="https://github.com/onekq/ontology/tree/main/verticals/manufacturing">manufacturing
+    vertical</a> for why this stage exists at all: skipping it is how you end up with an ontology
+    that's internally tidy but can't answer the question anyone actually needed answered.
+  </p>
+
+  <div class="stage-nav">
+    <a class="current" href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>Alderleaf's competency questions</h2>
+  <p>Written before Discover, checked again in Stage 4 — Validate.</p>
+
+  <div class="cq-row"><span>When a report says "SKU," does it mean the product or a specific seller's listing of it?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Does a given product variant's listed capacity/spec match what's actually shipping under that identifier today?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>For a product with multiple sellers, which offers are genuinely the same item, and which are only claimed to be?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Given a SKU, a GTIN, and an MPN for "the same" item, are all three actually describing the same identity?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Is a product's current category assignment the pre-merger one, the post-merger one, or both?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>When someone says "listing," do they mean the storefront product page or a specific seller's offer?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>On a given date, which promotional price actually applies to a given product?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Does a product containing a lithium battery correctly carry a hazardous-shipping restriction?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Would the returns inspection checkpoint actually catch a returned item that isn't the same item that was shipped?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Does the advertised fulfillment time match what the warehouse can actually deliver?</span><span class="cq-status answerable">Target</span></div>
+
+  <p style="margin-top:1.5rem;">Next: <a href="01-discover.html">Stage 1 — Discover</a>.</p>
+</div>
+</body>
+</html>

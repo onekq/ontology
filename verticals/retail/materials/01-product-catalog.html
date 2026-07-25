@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Catalog — Alderleaf</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail — Source material</span>
+  <h1>Product Catalog Export</h1>
+  <p class="lede">
+    Exported from Alderleaf's PIM (product information management) system. <code>sku</code>,
+    <code>gtin</code>, <code>mpn</code>, and category code are all real catalog fields, and all
+    inconsistently populated — same as a real export would be.
+    (<a href="01-product-catalog.csv">raw .csv export</a>)
+  </p>
+
+  <table>
+    <thead><tr><th>Product Group</th><th>SKU</th><th>GTIN</th><th>MPN</th><th>Variant</th><th>Category</th><th>Effective</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Cascade Trail Backpack</td><td>ALD-BP-CASCADE-45-SG</td><td>00612345678905</td><td>CT45-SG</td><td>45L / Slate Grey</td><td>OUT-HIK-PACK-01</td><td>2024-02-01 →</td><td></td></tr>
+      <tr><td>Cascade Trail Backpack</td><td>ALD-BP-CASCADE-45-MG</td><td>00612345678912</td><td>CT45-MG</td><td>45L / Moss Green</td><td>OUT-HIK-PACK-01</td><td>2024-02-01 →</td><td></td></tr>
+      <tr class="flagged"><td>Cascade Trail Backpack</td><td>ALD-BP-CASCADE-60-SG</td><td>00612345678929</td><td>CT60-SG</td><td>60L / Slate Grey</td><td>OUT-HIK-PACK-01</td><td>2024-02-01 →</td><td>Manufacturer (Whitcombe Gear) redesigned this product's frame in 2025 — actual current capacity is <strong>55L</strong>, and Whitcombe's own part number for the redesign is <strong>CT55-SG</strong>. No new GTIN was issued. This row still shows the original 60L spec and CT60-SG MPN.</td></tr>
+      <tr class="flagged"><td>Cascade Headlamp 300</td><td>ALD-LT-HEADLAMP-01</td><td>00612345679100</td><td>HL-300</td><td>300 lumen / rechargeable lithium battery</td><td>OUT-LGT-HEAD-01</td><td>2023-11-15 →</td><td>Category OUT-LGT-HEAD-01 (Outdoor Gear &gt; Lighting) carries no hazmat flag despite the lithium battery.</td></tr>
+      <tr><td>Trailmix Cook Pot 1.5L</td><td>ALD-CK-POT15</td><td>00612345680210</td><td>—</td><td>1.5L / stainless</td><td>KIT-COOK-POT-01</td><td>2022-06-01 →</td><td>No MPN on file — sourced from a marketplace seller who never supplied one.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
