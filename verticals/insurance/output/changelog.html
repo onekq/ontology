@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Thistlebrook Health Plans</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published vocabulary, not invented for
+    this project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>Yes</td></tr>
+      <tr><td>6</td><td>6</td><td>No instance needed — resolved by Conflict 1's pattern</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes</td></tr>
+      <tr><td>8</td><td>8</td><td>Yes</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>Plan vs. plan-variation</strong> resolved by keeping two real <strong><code>HealthInsurancePlan</code></strong> instances, linked by a domain <code>PlanFamily</code>.</li>
+    <li><strong>HIOS/internal/SERFF identifier independence</strong> kept as three separate identifiers — <strong>schema.org's own <code>usesHealthPlanIdStandard</code></strong> implies HIOS isn't the only possible standard.</li>
+    <li><strong>Formulary tier mismatch</strong> resolved by keeping <strong><code>healthPlanDrugTier</code></strong> alongside a domain <code>PBMTierRecord</code>, flagged <code>tierMismatch: true</code>.</li>
+    <li><strong>Coinsurance timing conflation</strong> resolved by asserting <strong><code>healthPlanCoinsuranceOption: after deductible</code></strong> per the real filed spec.</li>
+    <li><strong>Network membership drift</strong> resolved with a domain <code>effectiveThrough</code> date and <code>processedAgainstStaleNetworkStatus: true</code>.</li>
+    <li><strong>"Plan" ambiguity</strong> resolved with a domain <code>QuotableOffering</code> promoted to real <strong><code>HealthInsurancePlan</code></strong> only on approval.</li>
+    <li><strong>Stale marketing documents</strong> flagged with a domain <code>lastGenerated</code> date — the same pattern as legal's Manifestation conflict, confirmed recurring across domains.</li>
+    <li><strong>Filed vs. Approved status</strong> resolved with a domain <code>SERFFFilingStatus</code> — neither ACORD nor schema.org model this; invented deliberately.</li>
+    <li><strong>Renewal checkpoint gap</strong> flagged with a domain <code>reconcilesFormularyTiers: false</code>.</li>
+    <li><strong>Call center SLA disagreement</strong> kept as two domain <code>ServiceLevelClaim</code> instances.</li>
+  </ol>
+
+  <p><strong>Two items were explicitly logged as not resolved separately</strong>: REQ-603 (folded into #7) and REQ-602 (folded into #9). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <h2>A note on scope</h2>
+  <p>This vertical covers health insurance specifically, because schema.org's real vocabulary doesn't extend further. General P&amp;C, life, or commercial insurance would need ACORD directly or a source not yet identified.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

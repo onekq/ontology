@@ -1,0 +1,101 @@
+@prefix tb:     <https://onekq.github.io/ontology/verticals/insurance/ontology#> .
+@prefix schema: <https://schema.org/> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Domain classes/properties not covered by schema.org ---------------------
+
+tb:PlanFamily a owl:Class ;
+    rdfs:comment "Groups plan variations sharing one SERFF filing. schema.org has no 'variation of' relation." .
+tb:QuotableOffering a owl:Class ;
+    rdfs:comment "Sales' looser 'Plan' meaning - anything quotable, including pre-filing. Promoted to schema:HealthInsurancePlan on SERFF approval." .
+tb:SERFFFilingStatus a owl:Class ;
+    rdfs:comment "Filed/Approved/Rejected. Neither ACORD's gated specs nor schema.org model regulatory filing workflow." .
+tb:ServiceLevelClaim a owl:Class ;
+    rdfs:comment "An operational turnaround/hold-time claim." .
+tb:PBMTierRecord a owl:Class ;
+    rdfs:comment "A Pharmacy Benefit Manager's own record of a drug's billing tier, separate from the plan's official schema:healthPlanDrugTier." .
+
+tb:tierMismatch a owl:DatatypeProperty ; rdfs:domain tb:PBMTierRecord ; rdfs:range xsd:boolean .
+tb:claimsConfigMismatch a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+tb:effectiveThrough a owl:DatatypeProperty ; rdfs:range xsd:date .
+tb:processedAgainstStaleNetworkStatus a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+tb:lastGenerated a owl:DatatypeProperty ; rdfs:range xsd:date .
+tb:reconcilesFormularyTiers a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+tb:memberOfFamily a owl:ObjectProperty ; rdfs:domain schema:HealthInsurancePlan ; rdfs:range tb:PlanFamily .
+tb:filingStatus a owl:ObjectProperty ; rdfs:range tb:SERFFFilingStatus .
+
+# --- Conflict 1: plan vs plan-variation --------------------------------------
+
+tb:PlanFamily-Gold a tb:PlanFamily ; rdfs:label "Thistlebrook Gold PPO family" .
+
+tb:Plan-89432CA0010001 a schema:HealthInsurancePlan ;
+    schema:healthPlanId "89432CA0010001" ;
+    schema:usesHealthPlanIdStandard "HIOS" ;
+    rdfs:label "Thistlebrook Gold PPO - Standard" ;
+    tb:memberOfFamily tb:PlanFamily-Gold .
+
+tb:Plan-89432CA0010002 a schema:HealthInsurancePlan ;
+    schema:healthPlanId "89432CA0010002" ;
+    schema:usesHealthPlanIdStandard "HIOS" ;
+    rdfs:label "Thistlebrook Gold PPO - Variation 2" ;
+    tb:memberOfFamily tb:PlanFamily-Gold .
+
+# --- Conflict 2 / 8: identifiers, filing status -----------------------------
+
+tb:Offering-Bronze a tb:QuotableOffering ;
+    rdfs:label "Thistlebrook Bronze PPO (as quoted by Sales)" ;
+    tb:filingStatus tb:FilingStatus-NoneFiled ;
+    rdfs:comment "No SERFF tracking number exists. Not yet a schema:HealthInsurancePlan." .
+tb:FilingStatus-NoneFiled a tb:SERFFFilingStatus ; rdfs:label "none filed" .
+
+# --- Conflict 3: formulary tier mismatch -------------------------------------
+
+tb:Formulary-Gold a schema:HealthPlanFormulary .
+tb:Plan-89432CA0010001 schema:includesHealthPlanFormulary tb:Formulary-Gold .
+
+tb:Atorvastatin a owl:NamedIndividual ;
+    rdfs:label "Atorvastatin (generic)" ;
+    schema:healthPlanDrugTier "2" .
+
+tb:PBMRecord-Atorvastatin a tb:PBMTierRecord ;
+    rdfs:comment "Meridian Rx's actual billing tier, post-2025 contract change." ;
+    schema:healthPlanDrugTier "3" ;
+    tb:tierMismatch true .
+
+# --- Conflict 4: coinsurance timing conflation -------------------------------
+
+tb:CostSharing-OutpatientPT a schema:HealthPlanCostSharingSpecification ;
+    schema:healthPlanCoinsuranceOption "after deductible" .
+
+tb:ClaimsConfig-OutpatientPT a owl:NamedIndividual ;
+    rdfs:comment "2023 configuration error: applies coinsurance before deductible for this category." ;
+    tb:claimsConfigMismatch true .
+
+# --- Conflict 5: network membership drift ------------------------------------
+
+tb:Network-Gold a schema:HealthPlanNetwork .
+tb:Plan-89432CA0010001 schema:includesHealthPlanNetwork tb:Network-Gold .
+
+tb:ProviderMembership-Vasquez a owl:NamedIndividual ;
+    rdfs:label "Dr. Elena Vasquez network membership" ;
+    tb:effectiveThrough "2025-04-01"^^xsd:date ;
+    tb:processedAgainstStaleNetworkStatus true .
+
+# --- Conflict 7: stale marketing document ------------------------------------
+
+tb:MarketingDoc-Gold-2023 a owl:NamedIndividual ;
+    rdfs:comment "schema:healthPlanMarketingUrl target for Plan-89432CA0010001." ;
+    tb:lastGenerated "2023-01-01"^^xsd:date .
+
+# --- Conflict 9: renewal checkpoint gap --------------------------------------
+
+tb:RenewalCheckpoint-ConfirmDocsUpdated a owl:NamedIndividual ;
+    rdfs:label "Confirm plan documents updated" ;
+    tb:reconcilesFormularyTiers false .
+
+# --- Conflict 10: disagreeing service-level claims ---------------------------
+
+tb:ServiceLevelClaim-Published a tb:ServiceLevelClaim ; rdfs:label "Published: under 5 minutes, year-round" .
+tb:ServiceLevelClaim-OpenEnrollmentActual a tb:ServiceLevelClaim ; rdfs:label "Actual, Oct-Dec: 12 minutes average" .

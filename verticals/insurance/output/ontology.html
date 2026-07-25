@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Thistlebrook Health Plans</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance — Result</span>
+  <h1>Thistlebrook Health Plans — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in
+    <a href="https://schema.org/HealthInsurancePlan">schema.org's health-insurance vocabulary</a>
+    — created in response to a real 2015 CMS regulatory requirement for machine-readable health
+    plan data. See <a href="../stages/03-resolve.html">Stage 3 — Resolve</a> for the reasoning,
+    and the <a href="changelog.html">changelog</a> for a flat list of decisions. Machine-readable:
+    <a href="ontology.ttl">ontology.ttl</a> (raw markdown: <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>Why schema.org, not ACORD</h2>
+  <p>ACORD is the dominant real insurance data-exchange standard, but its specs are largely membership-gated XML message schemas, not openly published RDF/OWL. A separate check of <code>insuranceontology.com</code> found it real but thin and still in development. schema.org's CMS-driven health-plan vocabulary was the strongest openly-verifiable option — narrower (health insurance specifically) but genuinely real and well-documented.</p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>HealthInsurancePlan</code></td><td><span class="src-tag real">schema.org</span></td><td>A specific health insurance product, identified by a real 14-character HIOS Plan ID.</td></tr>
+      <tr><td><code>HealthPlanNetwork</code></td><td><span class="src-tag real">schema.org</span></td><td>"A US-style health insurance plan network."</td></tr>
+      <tr><td><code>HealthPlanFormulary</code></td><td><span class="src-tag real">schema.org</span></td><td>Drug cost/coverage specification for a plan.</td></tr>
+      <tr><td><code>HealthPlanCostSharingSpecification</code></td><td><span class="src-tag real">schema.org</span></td><td>Cost-sharing terms including coinsurance timing.</td></tr>
+      <tr><td><code>PlanFamily</code></td><td><span class="src-tag domain">domain</span></td><td>Groups plan variations sharing one SERFF filing.</td></tr>
+      <tr><td><code>QuotableOffering</code></td><td><span class="src-tag domain">domain</span></td><td>Sales' looser "Plan" meaning, promoted on approval.</td></tr>
+      <tr><td><code>SERFFFilingStatus</code></td><td><span class="src-tag domain">domain</span></td><td>Filed/Approved/Rejected.</td></tr>
+      <tr><td><code>ServiceLevelClaim</code></td><td><span class="src-tag domain">domain</span></td><td>An operational turnaround/hold-time claim.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>usesHealthPlanIdStandard</code></td><td><span class="src-tag real">schema.org</span></td><td><code>HealthInsurancePlan</code></td><td>Supports keeping identifiers independent (Conflict 2)</td></tr>
+      <tr><td><code>includesHealthPlanFormulary</code> / <code>includesHealthPlanNetwork</code></td><td><span class="src-tag real">schema.org</span></td><td><code>HealthInsurancePlan</code></td><td></td></tr>
+      <tr><td><code>healthPlanDrugTier</code></td><td><span class="src-tag real">schema.org</span></td><td><code>HealthPlanFormulary</code></td><td>(Conflict 3)</td></tr>
+      <tr><td><code>healthPlanCoinsuranceOption</code></td><td><span class="src-tag real">schema.org</span></td><td><code>HealthPlanCostSharingSpecification</code></td><td>(Conflict 4)</td></tr>
+      <tr><td><code>benefitsSummaryUrl</code> / <code>healthPlanMarketingUrl</code></td><td><span class="src-tag real">schema.org</span></td><td><code>HealthInsurancePlan</code></td><td>(Conflict 7)</td></tr>
+      <tr><td><code>tierMismatch</code></td><td><span class="src-tag domain">domain</span></td><td><code>PBMTierRecord</code></td><td>(Conflict 3)</td></tr>
+      <tr><td><code>claimsConfigMismatch</code></td><td><span class="src-tag domain">domain</span></td><td>claims config</td><td>(Conflict 4)</td></tr>
+      <tr><td><code>effectiveThrough</code> / <code>processedAgainstStaleNetworkStatus</code></td><td><span class="src-tag domain">domain</span></td><td><code>HealthPlanNetwork</code></td><td>(Conflict 5)</td></tr>
+      <tr><td><code>lastGenerated</code></td><td><span class="src-tag domain">domain</span></td><td>linked document</td><td>(Conflict 7)</td></tr>
+      <tr><td><code>reconcilesFormularyTiers</code></td><td><span class="src-tag domain">domain</span></td><td>checkpoint</td><td>(Conflict 9)</td></tr>
+      <tr><td><code>memberOfFamily</code></td><td><span class="src-tag domain">domain</span></td><td><code>HealthInsurancePlan</code> → <code>PlanFamily</code></td><td>(Conflict 1)</td></tr>
+      <tr><td><code>filingStatus</code></td><td><span class="src-tag domain">domain</span></td><td><code>QuotableOffering</code> → <code>SERFFFilingStatus</code></td><td>(Conflict 8)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>89432CA0010001 / 89432CA0010002</strong> — two <code>HealthInsurancePlan</code>s, same <code>PlanFamily</code></li>
+    <li><strong>89432CA0030001</strong> (Bronze PPO) — <code>SERFFFilingStatus: none filed</code>, only a <code>QuotableOffering</code></li>
+    <li><strong>Atorvastatin</strong> — <code>healthPlanDrugTier: 2</code>, paired <code>PBMTierRecord</code> at tier 3, <code>tierMismatch: true</code></li>
+    <li><strong>Outpatient PT cost-sharing</strong> — <code>healthPlanCoinsuranceOption: after deductible</code>; claims config flagged mismatched</li>
+    <li><strong>Dr. Vasquez's network membership</strong> — <code>effectiveThrough: 2025-04-01</code>; later claims flagged</li>
+    <li><strong>Marketing document</strong> — <code>lastGenerated: 2023</code>, stale</li>
+    <li><strong>Renewal checkpoint</strong> — <code>reconcilesFormularyTiers: false</code></li>
+    <li><strong>Two <code>ServiceLevelClaim</code>s</strong> — published and actual hold times, kept separate</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p><strong>This vertical covers health insurance specifically</strong> — schema.org's real vocabulary doesn't extend to general P&C, life, or commercial lines. A vertical for those would need ACORD directly (with its access constraints) or another source not yet identified.</p>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code>, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>
