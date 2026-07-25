@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Healthcare — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">Read every source document and log every term, code, and relationship — without resolving conflicts yet.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>MRN-100234 / MRN-100891</td><td>Patient registry</td><td>Same DOB, same SSN last 4, same insurance member ID, misspelled name variant — clearly the same person (Dana Osei/Ossei), never linked.</td><td>Conflict</td></tr>
+      <tr><td>Duplicate-check flag (REQ-303)</td><td>Requirements register</td><td>System flagged these two MRNs as a possible duplicate in 2023. Flag never actioned by staff.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>MRN / SSN / insurance member ID</td><td>Patient registry</td><td>Three identifier systems; Tomas Reyes has no SSN on file (a minor); family-plan member IDs share a prefix across dependents.</td><td>Conflict</td></tr>
+      <tr><td>Reyes family member-ID mixup</td><td>Patient registry</td><td>A 2024 lab result was routed to the wrong Reyes family member before staff caught the mismatch.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>COND-8802 (entered-in-error)</td><td>Encounter & condition records</td><td>clinical_status = active, verification_status = entered-in-error. Downstream reporting reads only clinical_status.</td><td>Conflict — compliance/safety stakes</td></tr>
+      <tr><td>COND-8801 dual coding</td><td>Encounter & condition records</td><td>ICD-10 code updated since 2019 to be more specific; the clinical terminology mapping was never re-synced and is now broader/less specific.</td><td>Conflict</td></tr>
+      <tr><td>ALG-201 (Penicillin, high criticality)</td><td>Allergy & medication log</td><td>Recorded only on MRN-100234. MRN-100891 (increasingly treated as the "current" record) has no allergy history at all.</td><td>Conflict — safety stakes</td></tr>
+      <tr><td>"Active"</td><td>Glossary</td><td>Nursing: patient currently admitted. Billing/Coding: a condition's clinical status.</td><td>Conflict</td></tr>
+      <tr><td>"Encounter"</td><td>Glossary</td><td>Front Desk: any scheduled slot, including no-shows. Clinical/Billing: only a visit that actually happened.</td><td>Note — ties to ENC-5001 below</td></tr>
+      <tr><td>ENC-5001 (in-progress)</td><td>Encounter & condition records</td><td>Clinically finished weeks ago; never marked complete.</td><td>Conflict</td></tr>
+      <tr><td>REQ-301 (consent purpose)</td><td>Requirements register</td><td>Satisfied-by consent covers "billing," not the "care coordination" purpose it's being used for.</td><td>Conflict</td></tr>
+      <tr><td>REQ-302 (medication reconciliation)</td><td>Requirements register, Care coordination process</td><td>Satisfied-by checkpoint confirms contact, not reconciliation.</td><td>Conflict</td></tr>
+      <tr><td>Referral SLA</td><td>Care coordination process</td><td>Scheduling: 3 business days. Specialty clinic intake: 6 business days average. Never reconciled.</td><td>Conflict</td></tr>
+    </tbody>
+  </table>
+
+  <p>Thirteen entries logged, ten flagged as standalone conflicts (three point at the same underlying gap as an adjacent entry — a Validate-stage observation, not decided here).</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Healthcare — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">One conflict at a time, in dependency order. Vocabulary comes from HL7 FHIR — see Stage 2 for where each came from.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Are MRN-100234 and MRN-100891 the same patient?</h3>
+      <p>Same DOB, same SSN last 4, same insurance member ID, a misspelled name variant — and a duplicate-check flag from 2023 that was never actioned (REQ-303).</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FHIR, used precisely</div>
+        Use <code>Patient.link</code> exactly as FHIR intends: MRN-100234 (the more clinically complete record) keeps <code>type: replaces</code> pointing at MRN-100891; MRN-100891 gets <code>type: replaced-by</code> pointing back. Any query for "the current patient" resolves to MRN-100234 — which is also what fixes Conflict 5 automatically, without new vocabulary.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 1</span>
+      <h3>MRN, SSN, and insurance member ID don't cleanly identify one person each</h3>
+      <p>Tomas Reyes has no SSN on file (a minor). Family-plan member IDs share a prefix across dependents, and a 2024 lab result was routed to the wrong family member because of it.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FHIR + domain</div>
+        Keep all three as independent <code>Patient</code> identifiers — FHIR doesn't require all three either. Add a domain <code>FamilyPolicyGroup</code> class linking Elena and Tomas Reyes explicitly, so "shares a member-ID prefix with" becomes a queryable fact instead of something a human has to notice from the ID string itself.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10 — highest stakes</span>
+      <h3>A condition entered in error is still being counted as active</h3>
+      <p>COND-8802's <code>clinicalStatus</code> is "active." Its <code>verificationStatus</code> is "entered-in-error." The population-health reporting system reads only the first field.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FHIR, used precisely</div>
+        Both fields already exist in FHIR precisely to prevent this. The fix isn't new vocabulary — it's a rule that any consumer treating <code>clinicalStatus</code> as meaningful must first check <code>verificationStatus</code> is not <code>entered-in-error</code> or <code>refuted</code>. This is the conflict where the ontology was already capable of representing the truth; a downstream system just wasn't using the fields FHIR gives it.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>A condition's billing code and clinical code have drifted apart</h3>
+      <p>COND-8801's ICD-10 code was refined in 2019 guidance updates; its clinical terminology mapping was never re-synced and is now broader/less specific.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FHIR</div>
+        Keep both codings on the same <code>Condition.code</code> — FHIR's <code>CodeableConcept</code> is designed to carry multiple codings for one concept. Add a domain <code>codingLastSynced</code> date so staleness is a visible, queryable fact rather than a silently-trusted mapping.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 10 — resolved by Conflict 1</span>
+      <h3>The Penicillin allergy disappears when Dana's more recently active record is queried</h3>
+      <p>ALG-201 is recorded only against MRN-100234.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — already settled in Conflict 1</div>
+        No new work needed: once <code>Patient.link</code> correctly marks MRN-100234 as the surviving record, any system that respects the link resolves to it — and its <code>AllergyIntolerance</code> record — automatically. This is exactly why Conflict 1 was resolved first, in dependency order.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 10</span>
+      <h3>Does "active" mean the patient is admitted, or that a condition is current?</h3>
+      <p>Nursing and Billing/Coding use the same word for two different real FHIR fields.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — no invention needed</div>
+        Nursing's meaning is <code>Encounter.status</code>. Billing's is <code>Condition.clinicalStatus</code>. Both already exist as distinct real FHIR fields — the ambiguity was purely in the shared English word, not in any modeling gap.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10</span>
+      <h3>ENC-5001 is still "in-progress" weeks after it clinically ended — and Front Desk's "encounter" isn't FHIR's</h3>
+      <p>Nobody marked the encounter complete. Separately, Front Desk uses "encounter" to include no-shows, which FHIR's real <code>Encounter</code> resource never covers.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FHIR + domain</div>
+        ENC-5001 should have <code>status: finished</code> with a real <code>period.end</code> — flag any <code>in-progress</code> encounter with a stale <code>period.start</code> as needing closure, a queryable pattern rather than a silent staff oversight. Separately, give Front Desk's broader meaning its own domain <code>ScheduledSlot</code> class — FHIR's <code>Encounter</code> was never meant to include no-shows, so forcing it to would be wrong, not just imprecise.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 10</span>
+      <h3>A data-sharing consent is being used for a purpose it wasn't scoped for</h3>
+      <p>CONSENT-401 covers "billing." Referral sharing has been proceeding under it for "care coordination" anyway.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FHIR</div>
+        Require the requested purpose of use to be checked against the <code>Consent</code> resource's actual recorded scope before any data share — re-verified per use, not assumed valid because a consent of some kind exists on file. A consent record existing at all isn't the same fact as it covering the specific use being made of it.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10</span>
+      <h3>The care plan review checkpoint doesn't reconcile medications</h3>
+      <p>"Confirm patient contacted" passes regardless of whether the medication list was actually checked.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Add a <code>reconcilesMedicationList: false</code> flag on this checkpoint, same pattern as every prior vertical's checkpoint-gap conflict (manufacturing's QC check, retail's returns inspection, finance's KYC refresh). A checkpoint's name implying more than it verifies is a recurring, cross-domain failure mode — not a healthcare-specific one.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>Scheduling and specialty intake disagree on referral turnaround</h3>
+      <p>Scheduling: 3 business days. Intake's own tracking: 6 business days average. Never reconciled.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Model both as separate, timestamped <code>ReferralSLA</code> instances rather than reconciled into one number — same principle as every prior vertical's cross-team operational-disagreement conflict. The gap between stated and actual turnaround is the fact worth keeping visible, not averaging away.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>

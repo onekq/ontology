@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Healthcare — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    Grounded in <a href="https://www.hl7.org/fhir/">HL7 FHIR</a> (Fast Healthcare Interoperability
+    Resources) — chosen deliberately over SNOMED CT, which is license-restricted in many
+    jurisdictions and would have made the "verify the real spec" research step harder to do
+    openly, the way it worked for IOF Core, GoodRelations, and FIBO.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>A structurally different real ontology than the first three</h2>
+  <p>
+    FHIR is event/encounter-centric — a patient's record is a timeline of discrete resources
+    (encounters, conditions, observations), not a static class taxonomy the way IOF Core, GoodRelations,
+    or FIBO mostly are. That shape shows up directly in this vertical's conflicts: several are about
+    a resource's <em>status over time</em> (an encounter that never closed, a condition whose
+    verification status changed after the fact) rather than about which class something belongs to.
+  </p>
+
+  <h2>Classes adopted from FHIR</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Definition (from the spec)</th></tr></thead>
+    <tbody>
+      <tr><td><code>Patient</code></td><td>The subject of care. Real element <code>link</code> exists specifically for "duplicate or merged patient records," with types <code>replaces</code>/<code>replaced-by</code>/<code>refer</code>/<code>seealso</code>.</td></tr>
+      <tr><td><code>Encounter</code></td><td>An interaction between patient and provider — has its own <code>status</code>, separate from any condition's status.</td></tr>
+      <tr><td><code>Condition</code></td><td>Has two independent status fields: <code>clinicalStatus</code> (active/inactive/resolved/...) and <code>verificationStatus</code> (unconfirmed/confirmed/refuted/<strong>entered-in-error</strong>/...). These are real, distinct fields — a downstream system reading only one is a genuine, common integration bug.</td></tr>
+      <tr><td><code>AllergyIntolerance</code></td><td>Has its own <code>criticality</code> field (low/high/unable-to-assess), independent of any Condition.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where FHIR doesn't reach</h2>
+  <p>
+    FHIR models clinical and administrative resources exhaustively, but has no notion of "a family
+    insurance policy's shared member-ID prefix," "a scheduling SLA," or "a care-plan review
+    checklist step." Those need domain-specific vocabulary, checked against FHIR first rather than
+    assumed absent — same discipline as every prior vertical.
+  </p>
+
+  <h2>Candidate relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>link</code> (type <code>replaces</code>)</td><td><strong>FHIR</strong></td><td><code>[inferred, contested]</code> — candidate for merging MRN-100234/MRN-100891; Resolve confirms direction and whether allergy/condition data carries over automatically or must be manually reconciled</td></tr>
+      <tr><td><code>clinicalStatus</code> / <code>verificationStatus</code></td><td><strong>FHIR</strong></td><td>Both already exist on <code>Condition</code> — the conflict isn't a missing field, it's a downstream system reading only one of two real fields</td></tr>
+      <tr><td>family-policy grouping</td><td>domain</td><td><code>[inferred, contested]</code> — no FHIR element models "shares a member-ID prefix with"; Resolve proposes a domain relation</td></tr>
+    </tbody>
+  </table>
+
+  <p>Two items marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
+</div>
+</body>
+</html>

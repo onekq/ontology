@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Healthcare — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">Check the resolved ontology against the Stage 1 inventory, and against the Stage 0 competency questions.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>MRN-100234 / MRN-100891</td><td><code>Patient.link</code> (<code>replaces</code> / <code>replaced-by</code>) (Conflict 1)</td></tr>
+      <tr><td>Duplicate-check flag (REQ-303)</td><td>Not independently resolved — same underlying gap as Conflict 1. See below.</td></tr>
+      <tr><td>MRN / SSN / insurance member ID</td><td>Independent <code>Patient</code> identifiers + domain <code>FamilyPolicyGroup</code> (Conflict 2)</td></tr>
+      <tr><td>Reyes family member-ID mixup</td><td>Resolved by Conflict 2's <code>FamilyPolicyGroup</code> — no separate work</td></tr>
+      <tr><td>COND-8802 (entered-in-error)</td><td>Consumer rule: check <code>verificationStatus</code> before trusting <code>clinicalStatus</code> (Conflict 3)</td></tr>
+      <tr><td>COND-8801 dual coding</td><td>Both codings kept on one <code>CodeableConcept</code>, domain <code>codingLastSynced</code> flag (Conflict 4)</td></tr>
+      <tr><td>ALG-201</td><td>Resolved by Conflict 1's <code>Patient.link</code> — no separate work (Conflict 5)</td></tr>
+      <tr><td>"Active"</td><td><code>Encounter.status</code> vs. <code>Condition.clinicalStatus</code> — both already real, no new class (Conflict 6)</td></tr>
+      <tr><td>"Encounter"</td><td>Domain <code>ScheduledSlot</code> for Front Desk's broader meaning, distinct from FHIR's <code>Encounter</code> (Conflict 7)</td></tr>
+      <tr><td>ENC-5001 (in-progress)</td><td>Flagged as stale-open, needing closure (Conflict 7)</td></tr>
+      <tr><td>REQ-301 (consent purpose)</td><td>Purpose-of-use checked against <code>Consent</code> scope per use (Conflict 8)</td></tr>
+      <tr><td>REQ-302 (medication reconciliation)</td><td>Domain <code>reconcilesMedicationList: false</code> flag (Conflict 9)</td></tr>
+      <tr><td>Referral SLA</td><td>Two domain <code>ReferralSLA</code> instances, not reconciled (Conflict 10)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>All ten from <a href="00-competency-questions.html">Stage 0</a> are answerable against the resolved structure — including the one with direct patient-safety stakes: the ontology can now represent that a condition marked "active" was actually entered in error, rather than silently letting one field imply more than it should.</p>
+
+  <h2>Not resolved — logged, not dropped</h2>
+  <p><strong>REQ-303:</strong> folded into Conflict 1 — the unactioned duplicate flag and the unmerged records are the same underlying failure, not two separate ones.</p>
+  <p><strong>Reyes family mixup:</strong> folded into Conflict 2 — the mixup is a symptom of the missing <code>FamilyPolicyGroup</code> structure, not a separate defect once that's added.</p>
+  <p><strong>ALG-201 visibility:</strong> folded into Conflict 1 for the same reason as REQ-303 — fixing the merge fixes the visibility.</p>
+
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>
