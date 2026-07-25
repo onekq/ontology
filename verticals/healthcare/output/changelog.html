@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Millbrook Health</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published ontology, not invented for this
+    project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>No new triples — resolved via Conflict 1's <code>link</code></td></tr>
+      <tr><td>6</td><td>6</td><td>No instance needed — resolved by citing two existing real fields</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes</td></tr>
+      <tr><td>8</td><td>8</td><td>No instance — a per-use consumer rule, not a static fact</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>MRN-100234/MRN-100891 duplicate</strong> resolved with <strong>FHIR's own <code>Patient.link</code></strong> (<code>replaces</code>/<code>replaced-by</code>) — the real mechanism built for exactly this.</li>
+    <li><strong>Family-plan member ID mixup</strong> resolved with a domain <code>FamilyPolicyGroup</code> — no FHIR element models shared-policy grouping, checked first.</li>
+    <li><strong>Entered-in-error condition counted as active</strong> resolved by a consumer rule: check <strong>FHIR's <code>verificationStatus</code></strong> before trusting <strong><code>clinicalStatus</code></strong> — both fields already existed.</li>
+    <li><strong>Dual coding drift</strong> resolved by keeping both codings on one <code>Condition.code</code> (<strong>FHIR's <code>CodeableConcept</code></strong>) plus a domain <code>codingLastSynced</code> flag.</li>
+    <li><strong>Lost allergy visibility</strong> required no new work — Conflict 1's fix resolves it automatically.</li>
+    <li><strong>"Active"</strong> required no new work — both real FHIR fields already existed, distinctly.</li>
+    <li><strong>Stale open encounter + Front Desk's "encounter"</strong> resolved with a domain <code>staleOpenEncounter</code> flag and a separate domain <code>ScheduledSlot</code> class.</li>
+    <li><strong>Consent purpose mismatch</strong> resolved as a re-verify-per-use rule against <strong>FHIR's <code>Consent</code></strong> scope, not a static fact.</li>
+    <li><strong>Care plan checkpoint gap</strong> flagged with a domain <code>reconcilesMedicationList: false</code> property.</li>
+    <li><strong>Referral SLA disagreement</strong> kept as two domain <code>ReferralSLA</code> instances rather than reconciled.</li>
+  </ol>
+
+  <p><strong>Three items were explicitly logged as not resolved separately</strong>: REQ-303 (folded into #1), the Reyes mixup (folded into #2), and ALG-201's visibility (folded into #1). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

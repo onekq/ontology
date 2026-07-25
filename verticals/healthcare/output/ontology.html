@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Millbrook Health</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare — Result</span>
+  <h1>Millbrook Health — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in
+    <a href="https://www.hl7.org/fhir/">HL7 FHIR</a> (chosen over SNOMED CT specifically because
+    FHIR is fully open). See <a href="../stages/03-resolve.html">Stage 3 — Resolve</a> for the
+    reasoning, and the <a href="changelog.html">changelog</a> for a flat list of decisions.
+    Machine-readable: <a href="ontology.ttl">ontology.ttl</a> (raw markdown:
+    <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Patient</code></td><td><span class="src-tag real">FHIR</span></td><td>The subject of care.</td></tr>
+      <tr><td><code>Encounter</code></td><td><span class="src-tag real">FHIR</span></td><td>An interaction between patient and provider — only visits that actually happened.</td></tr>
+      <tr><td><code>Condition</code></td><td><span class="src-tag real">FHIR</span></td><td>Has independent <code>clinicalStatus</code> and <code>verificationStatus</code> fields.</td></tr>
+      <tr><td><code>AllergyIntolerance</code></td><td><span class="src-tag real">FHIR</span></td><td>Has its own <code>criticality</code> field, independent of any <code>Condition</code>.</td></tr>
+      <tr><td><code>FamilyPolicyGroup</code></td><td><span class="src-tag domain">domain</span></td><td>Links dependents on a shared insurance policy — no FHIR element models this.</td></tr>
+      <tr><td><code>ScheduledSlot</code></td><td><span class="src-tag domain">domain</span></td><td>Front Desk's broader "encounter" meaning (including no-shows) — kept separate from FHIR's <code>Encounter</code>.</td></tr>
+      <tr><td><code>ReferralSLA</code></td><td><span class="src-tag domain">domain</span></td><td>An operational turnaround claim.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>link</code> (<code>replaces</code>/<code>replaced-by</code>)</td><td><span class="src-tag real">FHIR</span></td><td><code>Patient</code> → <code>Patient</code></td><td>The real mechanism for duplicate/merged records (Conflict 1)</td></tr>
+      <tr><td><code>clinicalStatus</code> / <code>verificationStatus</code></td><td><span class="src-tag real">FHIR</span></td><td><code>Condition</code></td><td>Both already real and distinct — the fix is a consumer rule (Conflict 3)</td></tr>
+      <tr><td><code>criticality</code></td><td><span class="src-tag real">FHIR</span></td><td><code>AllergyIntolerance</code></td><td></td></tr>
+      <tr><td><code>codingLastSynced</code></td><td><span class="src-tag domain">domain</span></td><td><code>Condition</code> (date)</td><td>Flags a stale coding mapping (Conflict 4)</td></tr>
+      <tr><td><code>memberOf</code></td><td><span class="src-tag domain">domain</span></td><td><code>Patient</code> → <code>FamilyPolicyGroup</code></td><td>Makes shared member-ID prefixes queryable (Conflict 2)</td></tr>
+      <tr><td><code>reconcilesMedicationList</code></td><td><span class="src-tag domain">domain</span></td><td>checkpoint (boolean)</td><td><code>false</code> where a checkpoint doesn't actually check this (Conflict 9)</td></tr>
+      <tr><td><code>staleOpenEncounter</code></td><td><span class="src-tag domain">domain</span></td><td><code>Encounter</code> (boolean)</td><td>Flags an <code>in-progress</code> encounter with no recent activity (Conflict 7)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>MRN-100234</strong> (<code>Patient</code>) — <code>link</code> → MRN-100891, type <code>replaces</code>; <code>AllergyIntolerance</code> ALG-201 (Penicillin, criticality high)</li>
+    <li><strong>MRN-100891</strong> (<code>Patient</code>) — <code>link</code> → MRN-100234, type <code>replaced-by</code></li>
+    <li><strong>Elena Reyes / Tomas Reyes</strong> — both <code>memberOf</code> the same <code>FamilyPolicyGroup</code></li>
+    <li><strong>COND-8802</strong> — <code>clinicalStatus: active</code>, <code>verificationStatus: entered-in-error</code> — both asserted, neither hidden</li>
+    <li><strong>COND-8801</strong> — two codings on one <code>Condition.code</code>, <code>codingLastSynced: 2019</code></li>
+    <li><strong>ENC-5001</strong> — flagged as a stale open encounter</li>
+    <li><strong>Two <code>ReferralSLA</code> instances</strong> — Scheduling's (3 days) and Intake's (6 days), kept separate</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p><strong>This Turtle file uses the real FHIR namespace but a simplified triple structure</strong> — real FHIR RDF wraps every literal in a <code>fhir:v</code> blank node (e.g. <code>fhir:status [ fhir:v "final" ]</code>) for FHIR-tooling-specific reasons. This file uses plain literals for readability. The vocabulary is real; the serialization style is a disclosed simplification, not an inaccuracy about what FHIR models.</p>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code>, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>

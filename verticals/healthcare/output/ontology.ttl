@@ -1,0 +1,94 @@
+@prefix mh:     <https://onekq.github.io/ontology/verticals/healthcare/ontology#> .
+@prefix fhir:   <http://hl7.org/fhir/> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# NOTE on serialization style: real FHIR RDF wraps every literal value in a
+# fhir:v blank node (e.g. fhir:status [ fhir:v "final" ]) - see hl7.org/fhir/rdf.html.
+# This file uses plain literals instead, for readability, while keeping the
+# real fhir: namespace and real element names. Disclosed simplification, not
+# a claim this is byte-identical to a real FHIR RDF export.
+
+# --- Domain classes/properties not covered by FHIR --------------------------
+
+mh:FamilyPolicyGroup a owl:Class ;
+    rdfs:comment "Links dependents on a shared insurance policy. No FHIR element models this." .
+mh:ScheduledSlot a owl:Class ;
+    rdfs:comment "Front Desk's broader 'encounter' meaning, including no-shows - deliberately kept separate from fhir:Encounter, which never covers no-shows." .
+mh:ReferralSLA a owl:Class ;
+    rdfs:comment "An operational turnaround claim. Same honest fallback as prior verticals' cross-team disagreement conflicts." .
+mh:memberOf a owl:ObjectProperty ; rdfs:domain fhir:Patient ; rdfs:range mh:FamilyPolicyGroup .
+mh:codingLastSynced a owl:DatatypeProperty ; rdfs:domain fhir:Condition ; rdfs:range xsd:gYear .
+mh:reconcilesMedicationList a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+mh:staleOpenEncounter a owl:DatatypeProperty ; rdfs:domain fhir:Encounter ; rdfs:range xsd:boolean .
+
+# --- Conflict 1: duplicate patient records -----------------------------------
+
+mh:Patient-MRN100234 a fhir:Patient ;
+    rdfs:label "Dana Osei (MRN-100234)" ;
+    fhir:link mh:Link-100234-replaces .
+mh:Link-100234-replaces a owl:NamedIndividual ;
+    rdfs:comment "type: replaces" ;
+    fhir:other mh:Patient-MRN100891 .
+
+mh:Patient-MRN100891 a fhir:Patient ;
+    rdfs:label "Dana Ossei (MRN-100891)" ;
+    fhir:link mh:Link-100891-replacedby .
+mh:Link-100891-replacedby a owl:NamedIndividual ;
+    rdfs:comment "type: replaced-by" ;
+    fhir:other mh:Patient-MRN100234 .
+
+# --- Conflict 2: family policy group -----------------------------------------
+
+mh:FamilyGroup-Reyes a mh:FamilyPolicyGroup ; rdfs:label "Reyes family policy KHP-77410" .
+mh:Patient-ElenaReyes a fhir:Patient ; rdfs:label "Elena Reyes" ; mh:memberOf mh:FamilyGroup-Reyes .
+mh:Patient-TomasReyes a fhir:Patient ; rdfs:label "Tomas Reyes" ; mh:memberOf mh:FamilyGroup-Reyes .
+
+# --- Conflict 3: clinicalStatus vs verificationStatus ------------------------
+
+mh:Condition-8802 a fhir:Condition ;
+    rdfs:label "I10 - essential hypertension (MRN-100891)" ;
+    fhir:clinicalStatus "active" ;
+    fhir:verificationStatus "entered-in-error" ;
+    rdfs:comment "Both fields asserted, neither hidden. Any consumer must check verificationStatus before trusting clinicalStatus." .
+
+# --- Conflict 4: dual coding drift --------------------------------------------
+
+mh:Condition-8801 a fhir:Condition ;
+    rdfs:label "E11.9 - Type 2 diabetes, unspecified (MRN-100234)" ;
+    fhir:clinicalStatus "active" ;
+    fhir:verificationStatus "confirmed" ;
+    mh:codingLastSynced "2019"^^xsd:gYear ;
+    rdfs:comment "ICD-10 coding and clinical terminology coding present on the same Condition.code, per FHIR's CodeableConcept design. codingLastSynced flags that the clinical mapping predates the current ICD-10 guidance." .
+
+# --- Conflict 5: allergy visibility (resolved by Conflict 1, no new triples) -
+
+mh:Allergy-201 a fhir:AllergyIntolerance ;
+    rdfs:label "Penicillin" ;
+    fhir:criticality "high" ;
+    fhir:verificationStatus "confirmed" ;
+    fhir:patient mh:Patient-MRN100234 .
+# Resolves for MRN-100891 too via mh:Patient-MRN100891 fhir:link -> MRN-100234.
+
+# --- Conflict 7: stale open encounter + ScheduledSlot ------------------------
+
+mh:Encounter-5001 a fhir:Encounter ;
+    fhir:status "in-progress" ;
+    mh:staleOpenEncounter true ;
+    rdfs:comment "period.start 2024-01-10, no period.end - clinically finished weeks ago per the chart." .
+
+# --- Conflict 9: care plan checkpoint gap ------------------------------------
+
+mh:CarePlanCheckpoint-ConfirmContacted a owl:NamedIndividual ;
+    rdfs:label "Confirm patient contacted" ;
+    mh:reconcilesMedicationList false .
+
+# --- Conflict 10: disagreeing referral SLAs ----------------------------------
+
+mh:ReferralSLA-Scheduling a mh:ReferralSLA ;
+    rdfs:label "Scheduling's stated turnaround" ;
+    rdfs:comment "3 business days" .
+mh:ReferralSLA-Intake a mh:ReferralSLA ;
+    rdfs:label "Specialty clinic intake's tracked average" ;
+    rdfs:comment "6 business days" .
