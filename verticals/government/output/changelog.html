@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Elmsworth County</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Government — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published standard, not invented for this
+    project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>Yes</td></tr>
+      <tr><td>6</td><td>6</td><td>Yes</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes</td></tr>
+      <tr><td>8</td><td>8</td><td>Yes</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>SVC-2201 / SVC-2201-ON</strong> modeled as one <strong>CPSV-AP <code>PublicService</code></strong> with two real <code>Channel</code> instances; a domain <code>channelRequirementVariance</code> flag marks the online channel's missing fee-waiver support.</li>
+    <li><strong>Org unit code / state registry ID / federal grant ID</strong> kept as independent domain properties — <strong>W3C ORG</strong> imposes no identifier scheme. The missing grant ID is left absent, not inferred.</li>
+    <li><strong><code>hasCompetentAuthority</code></strong> corrected to ORG-ECON-01, matching the real <strong>W3C ORG <code>subOrganizationOf</code>/<code>hasSubOrganization</code></strong> structure. The 2024 reorg itself modeled as a real <strong>ORG <code>ChangeEvent</code></strong> (a <strong>PROV-O <code>Activity</code></strong> subclass) with real <code>originalOrganization</code>/<code>resultingOrganization</code> properties, plus a general integrity check for future reorgs of the same shape.</li>
+    <li><strong>Requirement/Evidence conflation</strong> fixed directly by <strong>CPSV-AP's</strong> own real <code>Requirement</code>/<code>Evidence</code>/<code>supportsRequirement</code> split — no invention needed.</li>
+    <li><strong>Event-triggered requirement date</strong> specified as the state-registration date for <code>BusinessEvent</code> triggers — never a modeling gap, only an unspecified detail.</li>
+    <li><strong>"Department"</strong> split into HR's real <strong>W3C ORG <code>OrganizationalUnit</code></strong> and the website's domain <code>NavigationCategory</code>, explicitly linked many-to-many.</li>
+    <li><strong>Rule document drift</strong> resolved with a domain <code>lastGenerated</code> flag — the fourth confirmed instance of the "canonical fact updates, public rendering doesn't" pattern.</li>
+    <li><strong>Cost vs. fee schedule</strong> resolved by treating Finance's schedule as canonical, with the catalog value derived and flaggable.</li>
+    <li><strong>Review checkpoint gap</strong> flagged with a domain <code>reconcilesCompetentAuthorityAndCost: false</code>.</li>
+    <li><strong>Processing time disagreement</strong> kept as two domain <code>ProcessingTimeClaim</code> instances, not reconciled into one figure.</li>
+  </ol>
+
+  <p><strong>Two items were explicitly logged as not resolved separately</strong>: REQ-701 (folded into #7) and REQ-702 (folded into #8). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <h2>A refinement carried through from output</h2>
+  <p>ORG's real <code>ChangeEvent</code> class — a subclass of <strong>W3C PROV-O's <code>Activity</code></strong> — turned out to be a more precise fit for the 2024 reorg than Resolve's plainer description. See <a href="ontology.html">the resolved ontology</a> for the disclosure.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

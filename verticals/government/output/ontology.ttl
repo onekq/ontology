@@ -1,0 +1,115 @@
+@prefix ec:    <https://onekq.github.io/ontology/verticals/government/ontology#> .
+@prefix org:   <http://www.w3.org/ns/org#> .
+@prefix cpsv:  <http://purl.org/vocab/cpsv#> .
+@prefix m8g:   <http://data.europa.eu/m8g/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+# NOTE: cpsv: (PublicService, Rule) is the base CPSV namespace; m8g: is the
+# CPSV-AP extension namespace (Requirement, Evidence, Cost, Channel,
+# LifeEvent, BusinessEvent, hasCompetentAuthority, holdsRequirement) - two
+# distinct real namespaces, both verified against the real CPSV-AP 3.0.0 spec.
+
+# --- Domain classes/properties not covered by ORG / CPSV-AP -----------------
+
+ec:NavigationCategory a owl:Class ;
+    rdfs:comment "The website's 'Department' meaning - many-to-many linked to org:OrganizationalUnit, not a synonym for it." .
+ec:channelRequirementVariance a owl:DatatypeProperty ; rdfs:domain m8g:Channel ; rdfs:range xsd:boolean .
+ec:lastGenerated a owl:DatatypeProperty ; rdfs:domain cpsv:Rule ; rdfs:range xsd:date .
+ec:reconcilesCompetentAuthorityAndCost a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+ec:linkedToCategory a owl:ObjectProperty ; rdfs:domain org:OrganizationalUnit ; rdfs:range ec:NavigationCategory .
+ec:stateRegistryId a owl:DatatypeProperty ; rdfs:domain org:OrganizationalUnit ; rdfs:range xsd:string .
+ec:federalGrantId a owl:DatatypeProperty ; rdfs:domain org:OrganizationalUnit ; rdfs:range xsd:string .
+
+# --- Conflict 1: channel-instance ambiguity ----------------------------------
+
+ec:Service-BusinessLicenseRenewal a cpsv:PublicService ;
+    rdfs:label "Business License Renewal" .
+
+ec:Channel-InPerson a m8g:Channel ;
+    rdfs:label "In-Person" ;
+    rdfs:comment "Recognizes fee-waiver code FW-VET." .
+ec:Channel-Online a m8g:Channel ;
+    rdfs:label "Online Portal" ;
+    ec:channelRequirementVariance true ;
+    rdfs:comment "No field for FW-VET - veterans applying online are charged full price." .
+
+# --- Conflict 2/3: org identifiers, ChangeEvent, competent authority --------
+
+ec:Org-County a org:Organization ;
+    rdfs:label "Elmsworth County Government" .
+
+ec:Org-Commerce a org:OrganizationalUnit ;
+    rdfs:label "Department of Commerce" ;
+    ec:stateRegistryId "SR-88213" ;
+    ec:federalGrantId "FED-GR-33210" ;
+    org:subOrganizationOf ec:Org-County .
+ec:Org-EconDev a org:OrganizationalUnit ;
+    rdfs:label "Department of Economic Development" ;
+    ec:stateRegistryId "SR-91045" ;
+    org:subOrganizationOf ec:Org-County .
+# federalGrantId deliberately absent for Org-EconDev - not inferred (Conflict 2).
+
+ec:Org-County org:hasSubOrganization ec:Org-Commerce, ec:Org-EconDev .
+
+ec:Reorg2024 a org:ChangeEvent, prov:Activity ;
+    rdfs:label "2024 County Reorganization" ;
+    org:originalOrganization ec:Org-Commerce ;
+    org:resultingOrganization ec:Org-EconDev ;
+    prov:startedAtTime "2024-07-01"^^xsd:date .
+
+ec:Service-BusinessLicenseRenewal m8g:hasCompetentAuthority ec:Org-EconDev .
+# Corrected from ec:Org-Commerce, which the service catalog incorrectly
+# retained after Reorg2024 - see changelog.
+
+# --- Conflict 4: Requirement vs Evidence --------------------------------------
+
+ec:Req-Residency a m8g:Requirement ;
+    rdfs:label "Must be a county resident or have a registered business address in the county." .
+ec:Evidence-UtilityBill a m8g:Evidence ;
+    rdfs:label "Utility bill dated within the last 60 days" ;
+    m8g:supportsRequirement ec:Req-Residency .
+ec:Evidence-LeaseAgreement a m8g:Evidence ;
+    rdfs:label "Lease agreement" ;
+    m8g:supportsRequirement ec:Req-Residency .
+
+ec:Service-BusinessLicenseRenewal cpsv:hasInput ec:Req-Residency .
+
+# --- Conflict 5: event-triggered requirement date ----------------------------
+
+ec:Req-30DayFiling a m8g:Requirement ;
+    rdfs:label "Renewal must be filed within 30 days of the triggering event." ;
+    rdfs:comment "For m8g:BusinessEvent triggers, the triggering date is the state-registration date, not the private sale date - specified here to close the ambiguity." .
+
+# --- Conflict 6: Department / NavigationCategory -----------------------------
+
+ec:NavCategory-BusinessServices a ec:NavigationCategory ;
+    rdfs:label "Business Services (website navigation)" .
+ec:Org-Commerce ec:linkedToCategory ec:NavCategory-BusinessServices .
+ec:Org-EconDev ec:linkedToCategory ec:NavCategory-BusinessServices .
+
+# --- Conflict 7: Rule document drift -----------------------------------------
+
+ec:Rule-FeeSchedule a cpsv:Rule ;
+    rdfs:label "Business License fee schedule" ;
+    ec:lastGenerated "2022-01-01"^^xsd:date ;
+    rdfs:comment "Lists $50. Board approved $65 in 2025; document never regenerated." .
+ec:Service-BusinessLicenseRenewal cpsv:follows ec:Rule-FeeSchedule .
+
+# --- Conflict 8: Cost vs fee schedule -----------------------------------------
+
+ec:Cost-BusinessLicenseRenewal a m8g:Cost ;
+    rdfs:comment "Catalog value: $50. Finance's authoritative fee schedule: $65 (2025 increase). Finance is canonical." .
+
+# --- Conflict 9: review checkpoint gap ----------------------------------------
+
+ec:ReviewCheckpoint-ConfirmDescriptionReviewed a owl:NamedIndividual ;
+    rdfs:label "Confirm service description reviewed" ;
+    ec:reconcilesCompetentAuthorityAndCost false .
+
+# --- Conflict 10: disagreeing processing-time claims -------------------------
+
+ec:ProcessingTimeClaim-Published a owl:NamedIndividual ; rdfs:label "Published: 5 business days" .
+ec:ProcessingTimeClaim-RenewalSeasonActual a owl:NamedIndividual ; rdfs:label "Actual, renewal season: 11 business days average" .

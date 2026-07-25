@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Elmsworth County</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Government — Result</span>
+  <h1>Elmsworth County — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in the
+    <a href="https://www.w3.org/TR/vocab-org/">W3C Organization Ontology</a> (ORG) and the
+    <a href="https://semiceu.github.io/CPSV-AP/releases/3.0.0/">Core Public Service Vocabulary
+    Application Profile</a> (CPSV-AP, EU ISA² programme). See
+    <a href="../stages/03-resolve.html">Stage 3 — Resolve</a> for the reasoning, and the
+    <a href="changelog.html">changelog</a> for a flat list of decisions. Machine-readable:
+    <a href="ontology.ttl">ontology.ttl</a> (raw markdown: <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>A refinement found while writing this file</h2>
+  <p>While preparing this output, a more precise real property emerged than Draft/Resolve used: ORG's <code>ChangeEvent</code> class — "represents an event which resulted in a major change to an organization such as a merger or complete restructuring," a real subclass of <strong>W3C PROV-O's <code>Activity</code></strong> — with real <code>originalOrganization</code>/<code>resultingOrganization</code> properties. Used below in place of the plainer description in Resolve. Same "catch a better real fit during the output pass, disclose it" discipline as media's payAmount/percentage correction.</p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Organization</code></td><td><span class="src-tag real">W3C ORG</span></td><td>The county government itself — parent of every <code>OrganizationalUnit</code>.</td></tr>
+      <tr><td><code>OrganizationalUnit</code></td><td><span class="src-tag real">W3C ORG</span></td><td>A department or support unit within a larger organization.</td></tr>
+      <tr><td><code>ChangeEvent</code></td><td><span class="src-tag real">W3C ORG</span></td><td>A major organizational change — subclass of <strong>PROV-O's <code>Activity</code></strong>.</td></tr>
+      <tr><td><code>PublicService</code></td><td><span class="src-tag real">CPSV-AP</span></td><td>A service performed by or on behalf of a public organisation.</td></tr>
+      <tr><td><code>Rule</code></td><td><span class="src-tag real">CPSV-AP</span></td><td>The document setting out a service's procedures, including fees.</td></tr>
+      <tr><td><code>Requirement</code> / <code>Evidence</code></td><td><span class="src-tag real">CPSV-AP</span></td><td>Deliberately distinct — a condition, and what proves it.</td></tr>
+      <tr><td><code>Cost</code></td><td><span class="src-tag real">CPSV-AP</span></td><td>What a service costs the consuming Agent.</td></tr>
+      <tr><td><code>LifeEvent</code> / <code>BusinessEvent</code></td><td><span class="src-tag real">CPSV-AP</span></td><td>Two distinct real trigger-event classes.</td></tr>
+      <tr><td><code>NavigationCategory</code></td><td><span class="src-tag domain">domain</span></td><td>The website's "Department" meaning — many-to-many linked to <code>OrganizationalUnit</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>hasCompetentAuthority</code></td><td><span class="src-tag real">CPSV-AP</span></td><td><code>PublicService</code> → <code>PublicOrganisation</code></td><td>Updated after the reorg (Conflict 3)</td></tr>
+      <tr><td><code>originalOrganization</code> / <code>resultingOrganization</code></td><td><span class="src-tag real">W3C ORG</span></td><td><code>ChangeEvent</code></td><td>The precise real link for the reorg (Conflict 3)</td></tr>
+      <tr><td><code>holdsRequirement</code></td><td><span class="src-tag real">CPSV-AP</span></td><td><code>PublicService</code> → <code>Requirement</code></td><td>Real property name (Conflict 4)</td></tr>
+      <tr><td><code>hasSubOrganization</code> / <code>subOrganizationOf</code></td><td><span class="src-tag real">W3C ORG</span></td><td><code>Organization</code></td><td>Elmsworth County → both departments (Conflict 3)</td></tr>
+      <tr><td><code>supportsRequirement</code></td><td><span class="src-tag real">CPSV-AP</span></td><td><code>Evidence</code> → <code>Requirement</code></td><td>(Conflict 4)</td></tr>
+      <tr><td><code>channelRequirementVariance</code></td><td><span class="src-tag domain">domain</span></td><td><code>Channel</code> (boolean)</td><td>(Conflict 1)</td></tr>
+      <tr><td><code>stateRegistryId</code> / <code>federalGrantId</code></td><td><span class="src-tag domain">domain</span></td><td><code>OrganizationalUnit</code> (string)</td><td>Kept independent, not merged (Conflict 2)</td></tr>
+      <tr><td><code>linkedToCategory</code></td><td><span class="src-tag domain">domain</span></td><td><code>OrganizationalUnit</code> → <code>NavigationCategory</code></td><td>Many-to-many (Conflict 6)</td></tr>
+      <tr><td><code>lastGenerated</code></td><td><span class="src-tag domain">domain</span></td><td><code>Rule</code> document</td><td>(Conflict 7)</td></tr>
+      <tr><td><code>reconcilesCompetentAuthorityAndCost</code></td><td><span class="src-tag domain">domain</span></td><td>checkpoint</td><td>(Conflict 9)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>SVC-2201 / SVC-2201-ON</strong> — one <code>PublicService</code>, two <code>Channel</code>s; online flagged <code>channelRequirementVariance: true</code></li>
+    <li><strong>ORG-COMM-04 / ORG-ECON-01</strong> — both real <code>subOrganizationOf</code> Elmsworth County Government; independent <code>stateRegistryId</code>s, only ORG-COMM-04 has a <code>federalGrantId</code></li>
+    <li><strong>Reorg2024</strong> (<code>ChangeEvent</code>, a real PROV-O <code>Activity</code>) — <code>originalOrganization</code> ORG-COMM-04, <code>resultingOrganization</code> ORG-ECON-01</li>
+    <li><strong>SVC-2201 / SVC-2201-ON</strong> — <code>hasCompetentAuthority</code> now ORG-ECON-01</li>
+    <li><strong>Residency <code>Requirement</code></strong> — two <code>Evidence</code> instances (utility bill, lease agreement)</li>
+    <li><strong>Rule document</strong> — <code>lastGenerated: 2022</code>, flagged stale</li>
+    <li><strong>Review checkpoint</strong> — <code>reconcilesCompetentAuthorityAndCost: false</code></li>
+    <li><strong>Two <code>ProcessingTimeClaim</code>s</strong> — published (5 days) and actual (11 days)</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code>, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>
