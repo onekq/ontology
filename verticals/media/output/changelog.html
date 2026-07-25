@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Amberlane Media</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Media / Real Estate — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published ontology, not invented for this
+    project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>Yes</td></tr>
+      <tr><td>6</td><td>6</td><td>Yes</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes</td></tr>
+      <tr><td>8</td><td>8</td><td>Yes</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>"License" ambiguity</strong> resolved with <strong>ODRL's real <code>Offer</code>/<code>Agreement</code></strong> distinction — Sales' meaning stays an Offer until countersignature.</li>
+    <li><strong>Asset ID / syndication ID / creator catalog # independence</strong> kept as separate identifiers (domain <code>syndicationId</code>/<code>creatorCatalogNo</code>, plus the ODRL asset URI itself) — genuinely missing ones left absent, not inferred.</li>
+    <li><strong>Permission granted without checking an active Prohibition</strong> resolved by asserting <strong>both <code>odrl:Permission</code> and <code>odrl:Prohibition</code></strong> on the same asset, flagged <code>conflictsWithProhibition: true</code> — ODRL allows this on purpose.</li>
+    <li><strong>"Sold" vs. signed "license" terms</strong> resolved using <strong>ODRL's real semantic distinction</strong>: <code>sell</code>/<code>give</code> delete the original asset; <code>license</code>/<code>use</code> don't.</li>
+    <li><strong>timeInterval drift</strong> resolved by treating rights-management as canonical, billing's copy as a derived, flagged record — a different shape than "keep both," since one system really is the source of truth.</li>
+    <li><strong>Spatial constraint violation</strong> resolved with a domain <code>UsageEvent</code>, flagged <code>withinSpatialConstraint: false</code>.</li>
+    <li><strong>Missing compliance-check mechanism</strong> flagged with a domain <code>hasScheduledComplianceCheck: false</code> on the Policy itself.</li>
+    <li><strong>Attribution duty never verified</strong> — kept <strong>ODRL's real <code>Duty</code></strong>, added a domain <code>dutyFulfillmentVerified: false</code> flag.</li>
+    <li><strong>Studio A double-booked</strong> resolved as two <strong><code>odrl:use</code> Permissions</strong> with overlapping real <code>odrl:constraint</code> — no fabricated "lease" action.</li>
+    <li><strong>Royalty percentage disagreement</strong> resolved the same way as #5: the countersigned contract's real <code>odrl:constraint</code> is canonical; Finance's figure modeled as a divergence-flaggable domain <code>PaymentRecord</code>.</li>
+  </ol>
+
+  <p><strong>One item was explicitly logged as not resolved separately</strong>: REQ-403 (folded into #10). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <h2>A correction made during this pass</h2>
+  <p><code>payAmount</code>/<code>percentage</code> were initially modeled as bare literal properties directly on <code>Duty</code>. On review, this misrepresented ODRL's real structure — these are <strong>Constraint left-operands</strong>, meant to appear inside an <code>odrl:constraint</code> blank node with <code>leftOperand</code>/<code>operator</code>/<code>rightOperand</code>. Fixed before publishing, the same cross-check discipline applied to every prior vertical's output.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

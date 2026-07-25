@@ -1,0 +1,135 @@
+@prefix amb:    <https://onekq.github.io/ontology/verticals/media/ontology#> .
+@prefix odrl:   <http://www.w3.org/ns/odrl/2/> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Domain classes/properties not covered by ODRL --------------------------
+
+amb:UsageEvent a owl:Class ;
+    rdfs:comment "A recorded instance of actual use, checked against a Policy's constraints. ODRL models the constraint, not the monitoring." .
+amb:ComplianceCheck a owl:Class ;
+    rdfs:comment "A recurring verification process - not an ODRL concept." .
+amb:PaymentRecord a owl:Class ;
+    rdfs:comment "Finance's running royalty figure, distinct from the contracted Duty term it should match." .
+amb:conflictsWithProhibition a owl:DatatypeProperty ; rdfs:domain odrl:Permission ; rdfs:range xsd:boolean .
+amb:internalLabelDisagreesWithTerms a owl:DatatypeProperty ; rdfs:domain odrl:Policy ; rdfs:range xsd:boolean .
+amb:withinSpatialConstraint a owl:DatatypeProperty ; rdfs:domain amb:UsageEvent ; rdfs:range xsd:boolean .
+amb:hasScheduledComplianceCheck a owl:DatatypeProperty ; rdfs:domain odrl:Policy ; rdfs:range xsd:boolean .
+amb:dutyFulfillmentVerified a owl:DatatypeProperty ; rdfs:domain odrl:Duty ; rdfs:range xsd:boolean .
+amb:lastSynced a owl:DatatypeProperty ; rdfs:range xsd:date .
+amb:reportedPercentage a owl:DatatypeProperty ; rdfs:domain amb:PaymentRecord ; rdfs:range xsd:decimal .
+amb:syndicationId a owl:DatatypeProperty ; rdfs:domain odrl:Asset ; rdfs:range xsd:string .
+amb:creatorCatalogNo a owl:DatatypeProperty ; rdfs:domain odrl:Asset ; rdfs:range xsd:string .
+
+# --- Conflict 1: Offer vs Agreement -------------------------------------------
+
+amb:Asset-40012 a odrl:Asset ;
+    rdfs:label "Harbor Sunrise" ;
+    amb:syndicationId "SYN-88213" ;
+    amb:creatorCatalogNo "JT-2019-0447" .
+amb:Asset-40013 a odrl:Asset ;
+    rdfs:label "Downtown Loft Interior" ;
+    amb:creatorCatalogNo "MR-2021-118" ;
+    rdfs:comment "No syndicationId - never syndicated to partner platforms. Left absent, not inferred." .
+
+# --- Conflict 3: Permission vs Prohibition on the same asset -----------------
+
+amb:POL-9001 a odrl:Agreement ;
+    odrl:action odrl:distribute ;
+    odrl:target amb:Asset-40012 ;
+    odrl:constraint [
+        odrl:leftOperand odrl:spatial ;
+        odrl:operator odrl:eq ;
+        odrl:rightOperand "North America"
+    ], [
+        odrl:leftOperand odrl:purpose ;
+        odrl:operator odrl:eq ;
+        odrl:rightOperand "editorial"
+    ], [
+        odrl:leftOperand odrl:timeInterval ;
+        odrl:operator odrl:eq ;
+        odrl:rightOperand "2024-01-01/2025-12-31"
+    ] ;
+    amb:conflictsWithProhibition true .
+
+amb:POL-9002 a odrl:Prohibition ;
+    odrl:action odrl:distribute ;
+    odrl:target amb:Asset-40012 ;
+    odrl:constraint [
+        odrl:leftOperand odrl:industry ;
+        odrl:operator odrl:isAnyOf ;
+        odrl:rightOperand "competing outdoor apparel brands"
+    ] ;
+    rdfs:comment "Predates POL-9001 (original Jamie Tran contract). Still active." .
+
+# --- Conflict 4: sell/give vs use/license conflation -------------------------
+
+amb:POL-9010 a odrl:Agreement ;
+    odrl:action odrl:license ;
+    odrl:target amb:Asset-40013 ;
+    amb:internalLabelDisagreesWithTerms true ;
+    rdfs:comment "Sales' internal note said 'sold' - signed terms say license, not sell/give. Asset was never transferred or deleted." .
+
+# --- Conflict 5: timeInterval drift (rights-mgmt canonical) ------------------
+
+amb:BillingCopy-POL9001 a owl:NamedIndividual ;
+    rdfs:label "Billing system's copy of POL-9001's window" ;
+    rdfs:comment "No end date entered - stale relative to rights-management's odrl:constraint above." ;
+    amb:lastSynced "2024-01-01"^^xsd:date .
+
+# --- Conflict 6: spatial constraint violation --------------------------------
+
+amb:UsageEvent-FR-DE-2025 a amb:UsageEvent ;
+    odrl:target amb:Asset-40012 ;
+    rdfs:comment "2025 print ad placement in France and Germany - outside POL-9001's North America spatial constraint." ;
+    amb:withinSpatialConstraint false .
+
+# --- Conflict 7: no recurring enforcement mechanism --------------------------
+
+amb:POL-9001 amb:hasScheduledComplianceCheck false .
+
+# --- Conflict 8: attribution duty fulfillment gap ----------------------------
+
+amb:Duty-Attribution-POL9001 a odrl:Duty ;
+    odrl:action odrl:attribute ;
+    rdfs:comment "Attribution duty on POL-9001 for creator Jamie Tran." ;
+    amb:dutyFulfillmentVerified false .
+
+# --- Conflict 9: Studio A double-booking (odrl:use, no invented lease action) -
+
+amb:StudioA a odrl:Asset ; rdfs:label "Studio A" .
+
+amb:Permission-InternalShoot a odrl:Permission ;
+    odrl:action odrl:use ;
+    odrl:target amb:StudioA ;
+    odrl:constraint [
+        odrl:leftOperand odrl:timeInterval ;
+        odrl:operator odrl:eq ;
+        odrl:rightOperand "2026-03-10T09:00/2026-03-10T17:00"
+    ] ;
+    rdfs:comment "Internal product photography (facilities calendar)." .
+
+amb:POL-9020 a odrl:Agreement ;
+    odrl:action odrl:use ;
+    odrl:target amb:StudioA ;
+    odrl:constraint [
+        odrl:leftOperand odrl:timeInterval ;
+        odrl:operator odrl:eq ;
+        odrl:rightOperand "2026-03-10T08:00/2026-03-10T14:00"
+    ] ;
+    rdfs:comment "Vantage Ad Group shoot (rights-management system). Overlaps amb:Permission-InternalShoot; neither system aware of the other." .
+
+# --- Conflict 10: royalty percentage disagreement ----------------------------
+
+amb:Duty-Royalty-POL9001 a odrl:Duty ;
+    odrl:constraint [
+        odrl:leftOperand odrl:percentage ;
+        odrl:operator odrl:eq ;
+        odrl:rightOperand "15"^^xsd:decimal
+    ] ;
+    rdfs:comment "15% - countersigned contract file, canonical." .
+
+amb:PaymentRecord-JamieTran-POL9001 a amb:PaymentRecord ;
+    amb:reportedPercentage "12"^^xsd:decimal ;
+    rdfs:comment "Finance's manually-entered figure - diverges from the contracted 15% on Duty-Royalty-POL9001." .

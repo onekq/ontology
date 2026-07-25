@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Amberlane Media</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Media / Real Estate — Result</span>
+  <h1>Amberlane Media — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in
+    <a href="https://www.w3.org/TR/odrl-model/">ODRL</a> (Open Digital Rights Language, W3C
+    Recommendation). See <a href="../stages/03-resolve.html">Stage 3 — Resolve</a> for the
+    reasoning, and the <a href="changelog.html">changelog</a> for a flat list of decisions.
+    Machine-readable: <a href="ontology.ttl">ontology.ttl</a> (raw markdown:
+    <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Policy</code></td><td><span class="src-tag real">ODRL</span></td><td>Umbrella concept, with subtypes <code>Set</code>, <code>Offer</code>, <code>Agreement</code>.</td></tr>
+      <tr><td><code>Permission</code></td><td><span class="src-tag real">ODRL</span></td><td>"The ability to exercise an Action over an Asset."</td></tr>
+      <tr><td><code>Prohibition</code></td><td><span class="src-tag real">ODRL</span></td><td>"The inability to exercise an Action over an Asset."</td></tr>
+      <tr><td><code>Duty</code></td><td><span class="src-tag real">ODRL</span></td><td>"The obligation to exercise an agreed Action."</td></tr>
+      <tr><td><code>Asset</code></td><td><span class="src-tag real">ODRL</span></td><td>Covers both a digital photo and a physical studio space.</td></tr>
+      <tr><td><code>UsageEvent</code></td><td><span class="src-tag domain">domain</span></td><td>A recorded instance of actual use, checked against a Policy's constraints.</td></tr>
+      <tr><td><code>ComplianceCheck</code></td><td><span class="src-tag domain">domain</span></td><td>A recurring verification process.</td></tr>
+      <tr><td><code>PaymentRecord</code></td><td><span class="src-tag domain">domain</span></td><td>Finance's running royalty figure, distinct from the contracted term.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>action</code></td><td><span class="src-tag real">ODRL</span></td><td><code>Rule</code></td><td><code>sell</code>/<code>give</code> delete the original asset; <code>license</code>/<code>use</code> don't (Conflict 4)</td></tr>
+      <tr><td><code>target</code></td><td><span class="src-tag real">ODRL</span></td><td><code>Rule</code> → <code>Asset</code></td><td></td></tr>
+      <tr><td><code>constraint</code> (<code>leftOperand</code>/<code>operator</code>/<code>rightOperand</code>)</td><td><span class="src-tag real">ODRL</span></td><td><code>Rule</code> → <code>Constraint</code></td><td>Real structure, not a simplification — used for <code>spatial</code>/<code>purpose</code>/<code>timeInterval</code> (Conflicts 3, 9) and <code>percentage</code> (Conflict 10)</td></tr>
+      <tr><td><code>syndicationId</code> / <code>creatorCatalogNo</code></td><td><span class="src-tag domain">domain</span></td><td><code>Asset</code></td><td>Missing ones left absent (Conflict 2)</td></tr>
+      <tr><td><code>lastSynced</code></td><td><span class="src-tag domain">domain</span></td><td>(date)</td><td>Flags a derived, possibly-stale record (Conflict 5)</td></tr>
+      <tr><td><code>conflictsWithProhibition</code></td><td><span class="src-tag domain">domain</span></td><td><code>Permission</code> (boolean)</td><td>Flags overlap without resolving which wins (Conflict 3)</td></tr>
+      <tr><td><code>internalLabelDisagreesWithTerms</code></td><td><span class="src-tag domain">domain</span></td><td><code>Policy</code> (boolean)</td><td>(Conflict 4)</td></tr>
+      <tr><td><code>withinSpatialConstraint</code></td><td><span class="src-tag domain">domain</span></td><td><code>UsageEvent</code> (boolean)</td><td>(Conflict 6)</td></tr>
+      <tr><td><code>hasScheduledComplianceCheck</code></td><td><span class="src-tag domain">domain</span></td><td><code>Policy</code> (boolean)</td><td>(Conflict 7)</td></tr>
+      <tr><td><code>dutyFulfillmentVerified</code></td><td><span class="src-tag domain">domain</span></td><td><code>Duty</code> (boolean)</td><td>(Conflict 8)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>POL-9001</strong> (<code>Agreement</code>) — action <code>distribute</code>, target AMB-40012, three real <code>odrl:constraint</code> blank nodes (spatial/purpose/timeInterval)</li>
+    <li><strong>POL-9002</strong> (<code>Prohibition</code>) — same asset, action, <code>industry isAnyOf</code> constraint; POL-9001 flagged <code>conflictsWithProhibition: true</code></li>
+    <li><strong>POL-9010</strong> — action <code>license</code> (not <code>sell</code>), <code>internalLabelDisagreesWithTerms: true</code></li>
+    <li><strong>UsageEvent-FR-DE-2025</strong> — <code>withinSpatialConstraint: false</code></li>
+    <li><strong>POL-9001</strong> — <code>hasScheduledComplianceCheck: false</code></li>
+    <li><strong>Duty-Attribution-POL9001</strong> — <code>dutyFulfillmentVerified: false</code></li>
+    <li><strong>Two <code>use</code> Permissions on Studio A</strong> — each with its own <code>timeInterval</code> constraint, overlapping, the double-booking made visible</li>
+    <li><strong>Duty-Royalty-POL9001</strong> — real <code>odrl:constraint</code>, <code>percentage eq 15</code></li>
+    <li><strong>PaymentRecord-JamieTran-POL9001</strong> — domain <code>reportedPercentage: 12</code>, diverging from the contracted 15%</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p><strong><code>UsageEvent</code>, <code>ComplianceCheck</code>, and <code>PaymentRecord</code> are domain classes, not ODRL ones</strong> — ODRL models rights and obligations, not monitoring/reconciliation processes. A real boundary of what the ontology covers, not an oversight.</p>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code>, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>
