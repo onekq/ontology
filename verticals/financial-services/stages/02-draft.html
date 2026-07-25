@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Financial Services — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    Grounded in <a href="https://github.com/edmcouncil/fibo">FIBO</a> (Financial Industry
+    Business Ontology, EDM Council — the same body behind IOF), plus W3C PROV-O for audit
+    trail, which is more central here than in either prior vertical.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>A naming collision between two real ontologies</h2>
+  <p>
+    FIBO has its own <code>BusinessEntity</code> class (in <code>BE/LegalEntities</code>) — a
+    completely different real ontology than GoodRelations, which also has a
+    <code>gr:BusinessEntity</code> (used in the retail vertical for sellers). Same name, two
+    unrelated real vocabularies, two different meanings. Worth flagging explicitly: "it's from a
+    real ontology" isn't by itself enough to disambiguate a term — which real ontology matters
+    just as much as whether it's real at all.
+  </p>
+
+  <h2>Classes adopted from FIBO</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Definition (from the ontology)</th></tr></thead>
+    <tbody>
+      <tr><td><code>LegalEntity</code> / <code>LegalPerson</code></td><td>A person (natural or organizational) recognized by law as having rights and obligations — the common FIBO base for anything that can be a borrower or owner.</td></tr>
+      <tr><td><code>LegallyCompetentNaturalPerson</code></td><td>An individual with legal capacity — Marcus Feld, Sonia Feld, Priya Anand.</td></tr>
+      <tr><td><code>LegalEntityIdentifier</code></td><td>"An organization identifier that uniquely identifies a legal person as defined in ISO 17442" — the real LEI standard.</td></tr>
+      <tr><td><code>EntityLegalForm</code></td><td>A jurisdiction-recognized legal form (LLC, LP, C Corp), identified via <code>EntityLegalFormIdentifier</code> per ISO 20275.</td></tr>
+      <tr><td><code>SpecialPurposeVehicle</code></td><td>A candidate for Bramwell Capital Partners LP — a pass-through vehicle whose own controllers are what beneficial-ownership tracing actually needs to reach. <code>[inferred, contested]</code> — Resolve confirms whether this label fits or whether Bramwell should just stay a plain <code>LegalPerson</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations adopted from FIBO</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>hasOwnershipPercentage</code></td><td>"the percentage ownership interest in the owned entity owned by owning entity, if known" — direct from FIBO's own definition.</td></tr>
+      <tr><td><code>isDirectlyConsolidatedBy</code></td><td>"the closest consolidating entity to that child in any applicable ownership hierarchy" — the layer Kestrel's file actually reaches.</td></tr>
+      <tr><td><code>isUltimatelyConsolidatedBy</code></td><td>"the most distant consolidating entity... in any applicable ownership hierarchy" — the layer REQ-201 actually requires and Kestrel's file doesn't reach. This precise distinction is the whole shape of Conflict 3.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where FIBO doesn't reach</h2>
+  <p>
+    FIBO models legal and ownership structure exhaustively but has no notion of "a Relationship
+    Manager's book of accounts," "a free-text approval note," or "a transaction-monitoring flag."
+    Those need domain-specific vocabulary, checked against FIBO first rather than assumed absent.
+  </p>
+
+  <h2>Candidate relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>wasAttributedTo</code> / <code>generatedAtTime</code></td><td>W3C PROV-O</td><td><code>[inferred, contested]</code> — candidates for REQ-202's audit-trail gap; domain-neutral, not FIBO-specific, reused the way SKOS/PROV-O were reused (not invented) in prior verticals</td></tr>
+      <tr><td><code>servicedBy</code></td><td>domain</td><td><code>[inferred, contested]</code> — candidate for Relationship Management's "Relationship" meaning, kept distinct from FIBO's ownership-relationship meaning</td></tr>
+    </tbody>
+  </table>
+
+  <p>Two items marked <em>contested</em> on purpose, plus the SPV classification above. Stage 3 resolves each explicitly.</p>
+</div>
+</body>
+</html>

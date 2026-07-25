@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Financial Services — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">
+    One conflict at a time, in dependency order. Vocabulary comes from FIBO and W3C PROV-O — see
+    Stage 2 for where each came from.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Does "Customer ID" identify the legal entity, or the account relationship a Relationship Manager services?</h3>
+      <p>Both meanings are in active use across the core banking system and the CRM.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FIBO + domain</div>
+        Keep <code>LegalEntity</code>/<code>LegalPerson</code> (FIBO) as the identity, and give the RM's book of accounts its own domain class, <code>AccountRelationship</code>, distinct from it. Same shape as the retail vertical's SKU/Offering split — most downstream conflicts depend on this distinction already being made.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 1</span>
+      <h3>LEI, Tax ID, and internal Customer ID don't always all exist for "the same" entity</h3>
+      <p>Bramwell has no Tax ID. Fennimore has no LEI. Individuals have neither.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FIBO</div>
+        Keep all three as independent properties on <code>LegalEntity</code> — FIBO itself doesn't require an LEI for every legal person (LEIs are only mandatory for certain regulated transactions). Leave genuinely absent identifiers absent rather than inferring them; flag with <code>identifierCompleteness</code>, same discipline as the retail vertical's missing-MPN case.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10 — highest stakes</span>
+      <h3>Larkspur's beneficial ownership is recorded only to the direct layer, not the ultimate one</h3>
+      <p>Bramwell Capital Partners LP holds 60% of Larkspur directly. Bramwell's own controlling individuals were never identified — REQ-201 requires identifying anyone with 25%+ <em>effective</em> ownership, not just direct ownership.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FIBO, used precisely</div>
+        Assert <code>Bramwell isDirectlyConsolidatedBy Larkspur</code> — that's a true, known fact. Do <strong>not</strong> assert <code>isUltimatelyConsolidatedBy</code> for anyone — it's genuinely unknown, and inventing a plausible-sounding ultimate owner would be worse than leaving the gap visible. Classify Bramwell as a <code>SpecialPurposeVehicle</code> specifically so "an SPV with no traced ultimate owner" becomes a queryable, flaggable pattern — this is the exact distinction FIBO's two consolidation properties exist to make, and using only the "direct" one here is what real KYC failures actually look like.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>Larkspur's jurisdiction is stale</h3>
+      <p>Core system: Delaware, set at 2019 onboarding. Actual, per 2024 Secretary of State filing: Nevada.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FIBO</div>
+        Model jurisdiction and <code>EntityLegalForm</code> as point-in-time facts with their own effective dates, not a single mutable field — the 2019 Delaware record and the 2024 Nevada record are both real, just at different times. The underlying process problem (legal entity data flows from onboarding, never from an ongoing state-filing feed) is a data-pipeline fix, not something the ontology itself can correct — but the ontology should at least stop presenting a single stale field as current fact.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 10</span>
+      <h3>Does "Relationship" mean an RM's book of accounts, or a formal ownership link?</h3>
+      <p>Relationship Management and Compliance use the same word for unrelated concepts.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — already settled in Draft</div>
+        <code>AccountRelationship</code> (domain, from Conflict 1) for Relationship Management's meaning; FIBO's <code>isDirectlyConsolidatedBy</code>/<code>isUltimatelyConsolidatedBy</code> family for Compliance's. No new class needed at Resolve time — Draft already separated them for a different reason, and that separation happens to resolve this conflict too.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 10</span>
+      <h3>Does "Party" mean any CRM contact, or a KYC-complete entity?</h3>
+      <p>Most CRM "parties" haven't been screened at all.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — FIBO + domain</div>
+        A domain <code>ProspectContact</code> class for the CRM meaning, promoted to FIBO's <code>LegalPerson</code>/<code>LegalEntity</code> only once KYC and screening actually complete. FIBO's own notion of a legal person already implies a real, identified entity — it was never meant to cover an unscreened prospect, so the CRM's looser concept needs its own class rather than being folded into FIBO's.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10</span>
+      <h3>Two interest rates are simultaneously on file for the same loan</h3>
+      <p>RATE-1 (7.25%, open-ended) and RATE-2 (6.85%, 2023-06-01 to 2023-12-31) both show as active during the overlap window.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        FIBO's interest-rate/pricing modules weren't researched deeply enough here to ground this in — rather than guess at a FIBO fit, use a domain <code>RateRecord</code> class with its own effective-date range, same honest fallback as manufacturing's <code>alternativeTo</code> and retail's <code>DeliveryEstimate</code>. Keep both records distinct; which one actually applied during the overlap is a servicing/legal question the ontology surfaces but doesn't resolve.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 10</span>
+      <h3>Loan approvals are only auditable by a human reading a note</h3>
+      <p>Approver and timestamp live in a free-text <code>notes</code> field, not structured data.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — W3C PROV-O</div>
+        Model each approval as a <code>prov:Activity</code> with <code>prov:wasAssociatedWith</code> (the approver) and <code>prov:endedAtTime</code> — real, structured, queryable provenance, replacing the by-convention text note. PROV-O is domain-neutral, reused here the same deliberate way SKOS and PROV-O were reused in manufacturing and retail, not because FIBO lacks an audit concept but because provenance genuinely isn't FIBO's job.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10 — depends on Conflict 3</span>
+      <h3>The annual KYC refresh checkpoint doesn't re-check beneficial ownership</h3>
+      <p>"Confirm still operating" passes regardless of whether the ownership structure changed — or, as with Larkspur, was ever fully traced to begin with.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Add a <code>reverifiesBeneficialOwnership: false</code> flag on this checkpoint step, same pattern as manufacturing's QC-checkpoint and retail's returns-inspection gaps — a named checkpoint that sounds like it covers something doesn't mean it does, and the ontology's job is to make that explicit rather than let the checkpoint's name imply more than it checks.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>Compliance's risk rating and Transaction Monitoring's flag disagree</h3>
+      <p>Compliance: "Low" risk, annual review. Transaction Monitoring: an unreviewed flag noting a transaction pattern inconsistent with Larkspur's stated business purpose.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Model the risk rating and the monitoring flag as two separate, timestamped assessments rather than reconciling them into one status — same principle as manufacturing's cycle-time conflict and retail's SLA conflict. An unreviewed flag contradicting a stale "Low" rating is itself the fact worth surfacing, not something to silently average away.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>

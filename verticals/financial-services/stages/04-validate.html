@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Financial Services — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">Check the resolved ontology against the Stage 1 inventory, and against the Stage 0 competency questions.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>Customer ID (entity vs. relationship)</td><td><code>LegalEntity</code> vs. domain <code>AccountRelationship</code> (Conflict 1)</td></tr>
+      <tr><td>LEI / Tax ID / internal ID</td><td>Independent properties, <code>identifierCompleteness</code> where genuinely absent (Conflict 2)</td></tr>
+      <tr><td>Larkspur's beneficial ownership</td><td><code>isDirectlyConsolidatedBy</code> asserted; <code>isUltimatelyConsolidatedBy</code> deliberately not asserted; <code>SpecialPurposeVehicle</code> classification (Conflict 3)</td></tr>
+      <tr><td>REQ-201 (25% threshold)</td><td>Not independently resolved — same underlying gap as Conflict 3. See below.</td></tr>
+      <tr><td>Larkspur's jurisdiction</td><td>Point-in-time jurisdiction/legal-form records with effective dates, not one mutable field (Conflict 4)</td></tr>
+      <tr><td>"Relationship"</td><td>Resolved by Conflict 1's split — no new work needed (Conflict 5)</td></tr>
+      <tr><td>"Party"</td><td>Domain <code>ProspectContact</code>, promoted to <code>LegalPerson</code> on KYC completion (Conflict 6)</td></tr>
+      <tr><td>RATE-1 / RATE-2</td><td>Two domain <code>RateRecord</code> instances, overlap left queryable (Conflict 7)</td></tr>
+      <tr><td>REQ-202 (audit trail)</td><td><code>prov:Activity</code> + <code>wasAssociatedWith</code> + <code>endedAtTime</code> (Conflict 8)</td></tr>
+      <tr><td>REQ-203 (annual refresh)</td><td>Domain <code>reverifiesBeneficialOwnership: false</code> flag on the checkpoint (Conflict 9)</td></tr>
+      <tr><td>Risk rating vs. monitoring</td><td>Two separate timestamped assessments, not reconciled (Conflict 10)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>All ten from <a href="00-competency-questions.html">Stage 0</a> are answerable against the resolved structure — including the one with real stakes: the ontology can now represent that Larkspur's ultimate beneficial owners are unidentified, rather than silently implying Bramwell is the end of the chain.</p>
+
+  <h2>Not resolved — logged, not dropped</h2>
+  <p><strong>REQ-201:</strong> folded into Conflict 3 — both are the same "direct vs. ultimate ownership" gap, viewed from the policy side and the data side respectively.</p>
+
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>

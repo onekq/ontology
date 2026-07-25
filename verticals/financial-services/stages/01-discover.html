@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Financial Services — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">Read every source document and log every term, code, and relationship — without resolving conflicts yet.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>Customer ID</td><td>Party registry, Glossary</td><td>Sometimes identifies the legal entity, sometimes the specific account relationship a Relationship Manager services.</td><td>Conflict</td></tr>
+      <tr><td>LEI / Tax ID / internal ID</td><td>Party registry</td><td>Most organizations have all three; Fennimore Retail Holdings has no LEI (not required for its loan product); Bramwell has no Tax ID (never directly borrowed); individuals have neither LEI nor Tax ID (expected).</td><td>Conflict</td></tr>
+      <tr><td>Larkspur's jurisdiction</td><td>Party registry, Entity change log</td><td>Core system: Delaware. Actual per 2024 Secretary of State filing: Nevada. Never synced.</td><td>Conflict</td></tr>
+      <tr><td>Beneficial ownership of Larkspur</td><td>Beneficial ownership file</td><td>Direct owners sum to 100% (Bramwell 60%, two individuals 40%). Bramwell's own controlling individuals were never identified.</td><td>Conflict — compliance stakes</td></tr>
+      <tr><td>REQ-201 (25% threshold)</td><td>KYC requirements</td><td>Satisfied at the direct-ownership layer; unmet at the effective/ultimate layer for Bramwell's 60% stake.</td><td>Conflict</td></tr>
+      <tr><td>Relationship</td><td>Glossary</td><td>Relationship Management: an employee's book of accounts. Compliance: a formal ownership/consolidation link between entities.</td><td>Conflict</td></tr>
+      <tr><td>Party</td><td>Glossary</td><td>CRM: any contact record, including prospects. Compliance: a legally screened, KYC-complete entity.</td><td>Conflict</td></tr>
+      <tr><td>RATE-1 / RATE-2</td><td>Entity & rate change log</td><td>Standard schedule (7.25%, open-ended) and a rate lock (6.85%, 2023-06-01 to 2023-12-31) both on file as active for the same window.</td><td>Conflict</td></tr>
+      <tr><td>REQ-202 (audit trail)</td><td>KYC requirements, Refresh/audit process</td><td>Approver identity and timestamp live only in a free-text notes field, not a structured, queryable one.</td><td>Conflict</td></tr>
+      <tr><td>REQ-203 (annual refresh)</td><td>KYC requirements, Refresh/audit process</td><td>The refresh checkpoint confirms the business is operating; it does not re-check beneficial ownership.</td><td>Conflict</td></tr>
+      <tr><td>Risk rating vs. monitoring</td><td>Refresh/audit process</td><td>Compliance rates Larkspur "Low." Transaction Monitoring's unreviewed flag says transaction pattern is inconsistent with stated business purpose.</td><td>Conflict</td></tr>
+    </tbody>
+  </table>
+
+  <p>Eleven entries logged, ten flagged as standalone conflicts (REQ-201 points at the same underlying gap as the beneficial-ownership entry above it — a Validate-stage observation, not decided here).</p>
+</div>
+</body>
+</html>
