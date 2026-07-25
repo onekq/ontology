@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulary & Cost-Sharing Records — Thistlebrook Health Plans</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance — Source material</span>
+  <h1>Formulary & Cost-Sharing Records — Thistlebrook Gold PPO</h1>
+  <p class="lede">(<a href="02-formulary-cost-sharing-records.md">raw export</a>)</p>
+
+  <div class="conflict">
+    <span class="label">Formulary drug tier — Atorvastatin (generic)</span>
+    <table>
+      <thead><tr><th>System</th><th>Tier</th></tr></thead>
+      <tbody>
+        <tr><td>Thistlebrook's official HealthPlanFormulary record</td><td>Tier 2 (lower copay)</td></tr>
+        <tr style="background:var(--accent-bg);"><td>Pharmacy Benefit Manager's (Meridian Rx) own system</td><td>Tier 3 (higher copay) — updated after a 2025 supplier contract change</td></tr>
+      </tbody>
+    </table>
+    <p>Thistlebrook's formulary record was never updated after Meridian Rx's tier change. Members are told Tier 2 pricing when they check the plan's official documents, but billed at Tier 3 at the pharmacy counter.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">Coinsurance timing — Outpatient physical therapy</span>
+    <p>Plan cost-sharing specification: coinsurance applies <strong>after</strong> the deductible is met (<code>healthPlanCoinsuranceOption: after deductible</code>).</p>
+    <p>Claims-processing system default: configured to apply coinsurance <strong>before</strong> deductible for this service category — an error introduced in 2023, never caught since most affected members hadn't yet met their deductible when claims were processed.</p>
+  </div>
+</div>
+</body>
+</html>

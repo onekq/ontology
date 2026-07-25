@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulatory Filing Requirements — Thistlebrook Health Plans</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance — Source material</span>
+  <h1>Regulatory Filing & Documentation Requirements Register <span style="font-weight:400;color:var(--muted)">(excerpt)</span></h1>
+  <p class="lede">Maintained by Compliance. Each requirement has a "Satisfied by" field set once and rarely revisited. (<a href="05-regulatory-filing-requirements.md">raw export</a>)</p>
+
+  <div class="conflict">
+    <span class="label">REQ-601 — Filing approval before effect</span>
+    <h3>A plan's rates and cost-sharing terms may not be billed as effective until the corresponding SERFF filing shows status "Approved," not merely "Filed."</h3>
+    <p><strong>Satisfied by:</strong> the SERFF tracking number existing in the plan registry.</p>
+    <p>The registry records a tracking number as soon as a filing is submitted — it does not distinguish "Filed" from "Approved." Thistlebrook Bronze PPO has no tracking number at all yet and is already being quoted by Sales.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-602 — Formulary synchronization</span>
+    <h3>The plan's official formulary tier for each drug must match the Pharmacy Benefit Manager's current billing tier.</h3>
+    <p><strong>Satisfied by:</strong> the formulary record created at plan-year setup.</p>
+    <p>Nothing re-runs this check when the PBM changes a drug's tier mid-year, as happened with Atorvastatin.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-603 — Marketing material currency</span>
+    <h3>Posted plan brochures and summaries must reflect the plan's current approved rates and cost-sharing terms.</h3>
+    <p><strong>Satisfied by:</strong> the brochure generation step run at initial plan-year setup.</p>
+    <p>Nothing re-runs this step when a rate change is later approved mid-cycle.</p>
+  </div>
+</div>
+</body>
+</html>

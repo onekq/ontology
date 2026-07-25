@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan Registry — Thistlebrook Health Plans</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Insurance — Source material</span>
+  <h1>Plan Registry</h1>
+  <p class="lede">
+    Exported from Thistlebrook's plan management system. <code>hios_plan_id</code> (the real,
+    14-character HIOS-generated federal Plan ID), <code>internal_plan_code</code>, and
+    <code>serff_tracking_no</code> (the real state rate/form filing system) are all real
+    reference fields, and all inconsistently populated — same as a real export would be.
+    (<a href="01-plan-registry.csv">raw .csv export</a>)
+  </p>
+  <table>
+    <thead><tr><th>HIOS Plan ID</th><th>Internal Code</th><th>SERFF Tracking #</th><th>Plan Name</th><th>Variation</th><th>Effective</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>89432CA0010001</td><td>TB-GOLD-STD</td><td>SERFF-CA-2024-08812</td><td>Thistlebrook Gold PPO</td><td>Standard</td><td>2024-01-01</td><td></td></tr>
+      <tr class="flagged"><td>89432CA0010002</td><td>TB-GOLD-V02</td><td>SERFF-CA-2024-08812</td><td>Thistlebrook Gold PPO</td><td>Variation 2 — reduced cost-sharing</td><td>2024-01-01</td><td>Shares the same SERFF filing as 89432CA0010001 — same base plan, different cost-sharing variation. Not cross-indexed anywhere as "the same plan family."</td></tr>
+      <tr><td>89432CA0020001</td><td>TB-SILVER-STD</td><td>SERFF-CA-2024-08815</td><td>Thistlebrook Silver PPO</td><td>Standard</td><td>2024-01-01</td><td></td></tr>
+      <tr class="flagged"><td>89432CA0030001</td><td>TB-BRONZE-STD</td><td>—</td><td>Thistlebrook Bronze PPO</td><td>Standard</td><td>—</td><td>No SERFF tracking number yet — broker sales materials already quote this plan, but it is still pending state filing.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

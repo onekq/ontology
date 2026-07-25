@@ -1,0 +1,5 @@
+hios_plan_id,internal_plan_code,serff_tracking_no,plan_name,plan_variation,market,effective_date,notes
+89432CA0010001,TB-GOLD-STD,SERFF-CA-2024-08812,Thistlebrook Gold PPO,Standard,Individual,2024-01-01,
+89432CA0010002,TB-GOLD-V02,SERFF-CA-2024-08812,Thistlebrook Gold PPO,Variation 2 - reduced cost-sharing,Individual,2024-01-01,"Shares the same SERFF filing as 89432CA0010001 - same base plan, different cost-sharing variation. Not cross-indexed anywhere as 'the same plan family.'"
+89432CA0020001,TB-SILVER-STD,SERFF-CA-2024-08815,Thistlebrook Silver PPO,Standard,Individual,2024-01-01,
+89432CA0030001,TB-BRONZE-STD,,Thistlebrook Bronze PPO,Standard,Individual,,"No SERFF tracking number yet - broker sales materials already quote this plan, but it is still pending state filing."
