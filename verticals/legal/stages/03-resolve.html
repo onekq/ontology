@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Legal — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">One conflict at a time, in dependency order. Vocabulary comes from Akoma Ntoso — see Stage 2 for where each came from.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Does "Ordinance 2019-14" mean the law, or its 2019 text specifically?</h3>
+      <p>It's used both ways, and the ambiguity only matters once an amendment exists.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso, used precisely</div>
+        Model the ordinance as an <code>FRBRWork</code>, with each dated text version as its own <code>FRBRExpression</code>. A bare citation resolves to the current Expression by default; citing a specific date resolves to that Expression specifically. This is exactly what the FRBR layering in Akoma Ntoso is for.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Conflict 2 of 10</span>
+      <h3>Clerk filing #, state citation, and code section are three separate reference schemes</h3>
+      <p>None is cross-indexed against the others in one place.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso</div>
+        Keep all three as independent identifiers on the <code>FRBRWork</code> — none is more authoritative than the others for lookup purposes. Cross-index them explicitly rather than picking one as canonical and treating the others as derived.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10 — highest stakes</span>
+      <h3>2023-07's activeModifications was recorded; 2019-14's passiveModifications wasn't</h3>
+      <p>Anyone looking up CLK-2019-014 directly has no signal that it's been amended.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso, used as intended</div>
+        Assert <code>passiveModifications</code> on CLK-2019-014 pointing back to CLK-2023-007 — the spec's bidirectional design exists precisely so a gap like this is structurally visible. Beyond fixing this one instance, add a domain integrity check: any Work with an <code>activeModifications</code> pointing at a target should require that target to carry a matching <code>passiveModifications</code>, flagged when it doesn't.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>TMC 9.04.010 was repealed but never given an @end date</h3>
+      <p>It still displays as in force in the codified text.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso, precise rule</div>
+        Assert <code>@end</code> on TMC 9.04.010's Expression at the 2021 repeal date, per the spec's own rule: an <code>@end</code> with no <code>@start</code> marks a repealed original fragment. Add a domain check flagging any Expression referenced by a repealing ordinance's <code>activeModifications</code> that lacks a corresponding <code>@end</code>.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 10</span>
+      <h3>The posted PDF doesn't reflect the current Expression</h3>
+      <p>Last regenerated 2022; the 2023-07 amendment isn't in it.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso</div>
+        Give the <code>FRBRManifestation</code> its own <code>lastGenerated</code> date (domain), and flag <code>manifestationStale: true</code> whenever that date precedes the Expression's most recent amendment date. The canonical Expression is correct; the Manifestation just hasn't caught up, and that gap should be queryable rather than discovered by a citizen reading outdated law.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 10</span>
+      <h3>"Code" and "Section" mean different things to different offices</h3>
+      <p>Clerk: the whole consolidated Code / a Municipal Code division. Enforcement/Records: one cited section / an unrelated filing-folder tab.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso + domain</div>
+        The Clerk's "Code" is a domain <code>CodifiedCode</code> aggregate over all current <code>FRBRExpression</code>s; Enforcement's is a single <code>FRBRWork</code>/section — both legitimate, already distinguishable once Conflict 1 is resolved. The Records Office's "Section" (a filing-folder tab) gets its own domain <code>FilingDivision</code> class, unrelated to the Municipal Code's real hierarchical <code>section</code> element — same "two real, unrelated concepts sharing a word" pattern as prior verticals' pure naming collisions.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10</span>
+      <h3>A cross-reference still uses pre-recodification numbering</h3>
+      <p>TMC 14.20.030 cites "Section 14.08.010," which no longer exists under that number.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso</div>
+        <code>ref</code> elements should target a stable, location-independent identifier per Akoma Ntoso's own naming convention — not a citation number that recodification can change out from under it. Flag any <code>ref</code> whose target citation predates the most recent recodification event as needing revalidation, rather than trusting old references to have survived unchanged.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 10</span>
+      <h3>"Enacted date" conflates three legally distinct dates</h3>
+      <p>Passed, published, and legally effective dates can differ under state law's waiting-period rules.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — Akoma Ntoso</div>
+        Record all three as distinct <code>lifecycle</code>/<code>temporalData</code> events rather than one flat "enacted_date" field — the spec's event-based model already accommodates this; the registry's single field was just a simplification that lost real, legally meaningful distinctions.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10</span>
+      <h3>The records-request checkpoint doesn't verify currency</h3>
+      <p>"Confirm document provided" passes whether the pulled document is current or superseded.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Add a domain <code>verifiedCurrentExpression: false</code> flag on this checkpoint — same cross-domain checkpoint-gap pattern as every prior vertical. A checkpoint named "confirm provided" doesn't imply "confirm current" unless it actually checks that.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>The published SLA doesn't match actual code-section request turnaround</h3>
+      <p>Published: 10 business days. Actual for code-section requests: 18 days average.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Model two domain <code>RequestSLA</code> instances — the published standard and the actual figure for code-section requests specifically — rather than reconciled into one number, same principle as every prior vertical's operational-disagreement conflict.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>

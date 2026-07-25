@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Legal — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">Read every source document and log every term, code, and relationship — without resolving conflicts yet.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>"Ordinance 2019-14" citation</td><td>Ordinance registry</td><td>Sometimes means the abstract law, sometimes the specific 2019 text — ambiguous once an amendment exists.</td><td>Conflict</td></tr>
+      <tr><td>Clerk filing # / state citation / code section</td><td>Ordinance registry</td><td>Three reference systems for the same ordinance; not cross-indexed in one place.</td><td>Conflict</td></tr>
+      <tr><td>activeModifications (2023-07) / passiveModifications (2019-14)</td><td>Amendment & modification log</td><td>2023-07 records that it amends 2019-14. 2019-14's own record has no corresponding passiveModifications entry.</td><td>Conflict — highest stakes</td></tr>
+      <tr><td>REQ-501 (lifecycle completeness)</td><td>Requirements register</td><td>Satisfied-by is the original enactment lifecycle entry; the 2023-07 amendment was never added.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>TMC 9.04.010 (repealed, no @end)</td><td>Ordinance registry, Amendment log</td><td>Repealed in 2021; original record has no end-of-validity marker and still displays as in force.</td><td>Conflict</td></tr>
+      <tr><td>Manifestation drift (TMC 14.20.030 PDF)</td><td>Codification & cross-reference records</td><td>Posted PDF last regenerated 2022; doesn't reflect the 2023-07 amendment.</td><td>Conflict</td></tr>
+      <tr><td>REQ-503 (Manifestation sync)</td><td>Requirements register</td><td>Satisfied-by is a one-time PDF generation step at codification, never re-run.</td><td>Conflict — ties to above</td></tr>
+      <tr><td>"Code"</td><td>Glossary</td><td>City Clerk: the whole consolidated Municipal Code. Code Enforcement: one cited section.</td><td>Conflict</td></tr>
+      <tr><td>"Section"</td><td>Glossary</td><td>City Clerk: a Municipal Code division. Records Office: a filing-folder tab, unrelated.</td><td>Conflict — same shape as above</td></tr>
+      <tr><td>Stale cross-reference (Section 14.08.010)</td><td>Codification & cross-reference records</td><td>Pre-2020 numbering; the section now referred to is TMC 14.20.010. Never updated at recodification.</td><td>Conflict</td></tr>
+      <tr><td>REQ-502 (effective date)</td><td>Requirements register</td><td>Registry's single "enacted_date" field doesn't distinguish passed, published, and legally effective dates.</td><td>Conflict</td></tr>
+      <tr><td>Records request checkpoint</td><td>Records request process</td><td>"Confirm document provided" doesn't verify the pulled document is the current Expression.</td><td>Conflict</td></tr>
+      <tr><td>Records request SLA</td><td>Records request process</td><td>Published: 10 business days. Actual for code-section requests: 18 business days average.</td><td>Conflict</td></tr>
+    </tbody>
+  </table>
+
+  <p>Thirteen entries logged, ten flagged as standalone conflicts (three point at the same underlying gap as an adjacent entry — a Validate-stage observation, not decided here).</p>
+</div>
+</body>
+</html>

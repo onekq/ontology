@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Legal — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    Grounded in <a href="https://docs.oasis-open.org/legaldocml/akn-core/v1.0/cs01/part1-vocabulary/akn-core-v1.0-cs01-part1-vocabulary.html">Akoma Ntoso</a>
+    (LegalDocML, OASIS standard) — real, open, and actively used by parliaments and legal systems
+    internationally to structure legislation.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>FRBR, reused correctly this time</h2>
+  <p>
+    Akoma Ntoso's <code>FRBRWork</code>/<code>FRBRExpression</code>/<code>FRBRManifestation</code>
+    layering is the same FRBR model referenced loosely elsewhere in library science, but here it's
+    a real, precise part of a ratified OASIS standard: <code>Work</code> is the abstract ordinance,
+    <code>Expression</code> is one dated/amended version of its text, <code>Manifestation</code> is
+    a specific rendering (the posted PDF, the canonical XML). This directly resolves the
+    "Ordinance 2019-14" ambiguity from Discover.
+  </p>
+
+  <h2>Classes adopted from Akoma Ntoso</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Definition (from the spec)</th></tr></thead>
+    <tbody>
+      <tr><td><code>FRBRWork</code></td><td>The abstract ordinance as a legal concept, independent of any specific text.</td></tr>
+      <tr><td><code>FRBRExpression</code></td><td>One specific, dated version of the ordinance's text — what changes when an amendment takes effect.</td></tr>
+      <tr><td><code>FRBRManifestation</code></td><td>A specific rendering of an Expression — a PDF, an XML file. Can drift out of sync with its Expression, as TMC 14.20.030's posted PDF did.</td></tr>
+      <tr><td>hierarchical elements (<code>section</code>, <code>article</code>, <code>paragraph</code>, ...)</td><td>Real, named structural elements — not a generic "part" concept invented for this vertical.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations and attributes adopted from Akoma Ntoso</h2>
+  <table>
+    <thead><tr><th>Relation/attribute</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>activeModifications</code> / <code>passiveModifications</code></td><td>What one provision does to another, and what's been done to a given provision, respectively. Real, and specifically two-sided — a gap in one doesn't mean a gap in the underlying law, just in the record.</td></tr>
+      <tr><td><code>@start</code> / <code>@end</code></td><td>Validity period attributes. Per the spec: "an <code>@end</code> attribute with no <code>@start</code> attribute mark a fragment that was part of the original document but has been repealed" — a precise, real rule, not an invented convention.</td></tr>
+      <tr><td><code>lifecycle</code> / <code>temporalData</code></td><td>The container for every event affecting a document, with dates and references to the generating instrument.</td></tr>
+      <tr><td><code>ref</code> (<code>@href</code>)</td><td>Cross-references between provisions.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where Akoma Ntoso doesn't reach</h2>
+  <p>
+    Akoma Ntoso models legal document structure exhaustively but has no notion of "a records
+    request SLA," "a filing-folder section," or "which office uses which vocabulary." Those need
+    domain-specific terms, checked against the spec first.
+  </p>
+
+  <h2>Candidate relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>passiveModifications</code> presence check</td><td><strong>Akoma Ntoso</strong></td><td><code>[inferred, contested]</code> — candidate for flagging CLK-2019-14's gap; Resolve confirms whether absence should be an explicit false-like flag or literally absent</td></tr>
+      <tr><td><code>@end</code> without <code>@start</code></td><td><strong>Akoma Ntoso</strong></td><td><code>[inferred, contested]</code> — candidate for TMC 9.04.010's missing repeal marker</td></tr>
+    </tbody>
+  </table>
+
+  <p>Two items marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
+</div>
+</body>
+</html>

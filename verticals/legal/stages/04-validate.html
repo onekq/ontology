@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Legal — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">Check the resolved ontology against the Stage 1 inventory, and against the Stage 0 competency questions.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>"Ordinance 2019-14" citation</td><td><code>FRBRWork</code> vs. <code>FRBRExpression</code> (Conflict 1)</td></tr>
+      <tr><td>Clerk filing # / state citation / code section</td><td>Independent identifiers, cross-indexed on the <code>FRBRWork</code> (Conflict 2)</td></tr>
+      <tr><td>activeModifications / passiveModifications gap</td><td><code>passiveModifications</code> asserted on CLK-2019-014, plus a general integrity check (Conflict 3)</td></tr>
+      <tr><td>REQ-501 (lifecycle completeness)</td><td>Not independently resolved — same underlying gap as Conflict 3. See below.</td></tr>
+      <tr><td>TMC 9.04.010 (repealed, no @end)</td><td>Real <code>@end</code> asserted per the spec's own repeal rule (Conflict 4)</td></tr>
+      <tr><td>Manifestation drift</td><td>Domain <code>lastGenerated</code> + <code>manifestationStale: true</code> (Conflict 5)</td></tr>
+      <tr><td>REQ-503 (Manifestation sync)</td><td>Not independently resolved — same underlying gap as Conflict 5. See below.</td></tr>
+      <tr><td>"Code"</td><td>Domain <code>CodifiedCode</code> aggregate vs. single <code>FRBRWork</code> (Conflict 6)</td></tr>
+      <tr><td>"Section"</td><td>Domain <code>FilingDivision</code> vs. real AKN hierarchical <code>section</code> (Conflict 6)</td></tr>
+      <tr><td>Stale cross-reference</td><td>Flagged for revalidation against the latest recodification event (Conflict 7)</td></tr>
+      <tr><td>REQ-502 (effective date)</td><td>Three distinct <code>lifecycle</code>/<code>temporalData</code> events instead of one field (Conflict 8)</td></tr>
+      <tr><td>Records request checkpoint</td><td>Domain <code>verifiedCurrentExpression: false</code> (Conflict 9)</td></tr>
+      <tr><td>Records request SLA</td><td>Two domain <code>RequestSLA</code> instances, not reconciled (Conflict 10)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>All ten from <a href="00-competency-questions.html">Stage 0</a> are answerable against the resolved structure — including the highest-stakes one: the ontology can now represent that an ordinance has been amended even when looked up by its own original citation directly, rather than requiring a researcher to separately search for later amending instruments.</p>
+
+  <h2>Not resolved — logged, not dropped</h2>
+  <p><strong>REQ-501:</strong> folded into Conflict 3 — both are the same "amendment not reflected on the amended record" gap.</p>
+  <p><strong>REQ-503:</strong> folded into Conflict 5 — both are the same "Manifestation didn't get regenerated" gap.</p>
+
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>
