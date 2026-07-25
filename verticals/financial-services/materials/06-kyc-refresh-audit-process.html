@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KYC Refresh & Audit Process — Kestrel Bank</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .station { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; background: var(--card); }
+  .qc-flag { background: var(--accent-bg); border-left: 3px solid var(--accent); padding: 0.5rem 0.8rem; border-radius: 6px; margin: 0.6rem 0; font-size: 0.92rem; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services — Source material</span>
+  <h1>KYC Refresh & Loan Approval Process Notes</h1>
+  <p class="lede">Maintained by Compliance Operations. (<a href="06-kyc-refresh-audit-process.md">raw export</a>)</p>
+
+  <h2>Annual KYC Refresh Checklist</h2>
+  <div class="station"><strong>1. Trigger.</strong> Refresh due date reached (365 days since last refresh).</div>
+  <div class="station">
+    <strong>2. Confirm still operating.</strong> Verify business is active (state registration lookup, site visit or call).
+    <div class="qc-flag">Does not re-verify beneficial ownership — a business can pass this check while its ownership structure has changed entirely, or was never fully traced in the first place.</div>
+  </div>
+  <div class="station"><strong>3. Update risk rating.</strong> Analyst reviews file, assigns risk tier.</div>
+  <div class="station"><strong>4. File.</strong></div>
+
+  <h2>Loan Approval Recording</h2>
+  <p>Approval decisions are recorded in the loan system's <code>status</code> field (Approved/Declined) plus a free-text <code>notes</code> field where the approver writes their name and date by convention — not a structured, queryable approver/timestamp pair. There is no system-enforced requirement that the note actually contain this information.</p>
+
+  <h2>Risk Rating vs. Transaction Monitoring</h2>
+  <table>
+    <thead><tr><th>Source</th><th>Assessment</th></tr></thead>
+    <tbody>
+      <tr><td>Compliance risk rating</td><td>Low (annual review cycle)</td></tr>
+      <tr style="background:var(--accent-bg);"><td>Transaction Monitoring flag (2025-11, unreviewed)</td><td>"Elevated transaction volume inconsistent with stated business purpose (retail holding company; transaction pattern resembles a payment intermediary)."</td></tr>
+    </tbody>
+  </table>
+  <p>The two assessments have not been reconciled. Risk rating and transaction monitoring are maintained by different teams on different review cycles.</p>
+</div>
+</body>
+</html>

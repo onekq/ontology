@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entity & Rate Change Log — Kestrel Bank</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services — Source material</span>
+  <h1>Entity & Rate Change Log</h1>
+  <p class="lede">(<a href="03-entity-rate-change-log.md">raw export</a>)</p>
+
+  <h2>Larkspur Holdings LLC — jurisdiction history</h2>
+  <p><strong>2019-03-01</strong> — Formed as a Delaware LLC. Onboarded at Kestrel same month; core system jurisdiction field set to "Delaware."</p>
+  <p><strong>2024-02-14</strong> — Secretary of State filing shows re-domestication to Nevada. Kestrel's core system was never updated — legal entity registration data flows from onboarding, not from an ongoing feed of state filings.</p>
+
+  <h2>Larkspur Holdings LLC — Loan KB-88291 interest rate history</h2>
+  <div class="conflict">
+    <p><strong>RATE-1</strong> — Standard rate schedule. 7.25%, effective 2023-01-01, no end date on file.</p>
+    <p><strong>RATE-2</strong> — Rate lock agreement (signed as part of a 2023 refinance conversation that was never finalized). 6.85%, effective 2023-06-01 through 2023-12-31.</p>
+    <p>Both records remain in the system as "active" — the standard schedule was never marked superseded during the rate-lock window, and the rate lock was never marked expired afterward. For any date in the 2023-06-01 to 2023-12-31 window, both rates are simultaneously on file.</p>
+  </div>
+</div>
+</body>
+</html>

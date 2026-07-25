@@ -1,0 +1,5 @@
+customer_id,legal_name,entity_type,lei,tax_id,legal_form,jurisdiction,effective_from,effective_to,notes
+CUST-10045,Larkspur Holdings LLC,Organization,549300ABCDEF1234567,84-3321100,Limited Liability Company,Delaware,2019-03-01,,"Secretary of State filing shows re-domestication to Nevada in 2024. Core system record still shows Delaware."
+CUST-10046,Bramwell Capital Partners LP,Organization,549300GHIJKL7654321,,Limited Partnership,Delaware,2017-11-14,,No Tax ID on file - relationship team never collected one since this entity never directly borrowed.
+CUST-10047,Fennimore Retail Holdings Inc.,Organization,,71-9982340,C Corporation,Delaware,2021-06-01,,No LEI on file - not required for this loan product, never requested.
+CUST-20011,Priya Anand,NaturalPerson,,,,,2020-01-15,,Individuals do not have LEIs - this is expected, not a gap.

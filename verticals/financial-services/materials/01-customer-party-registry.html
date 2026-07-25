@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer & Party Registry — Kestrel Bank</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services — Source material</span>
+  <h1>Customer & Party Registry</h1>
+  <p class="lede">
+    Exported from Kestrel's core banking system. <code>lei</code>, <code>tax_id</code>, and
+    <code>legal_form</code>/<code>jurisdiction</code> are all real fields, and all
+    inconsistently populated — same as a real export would be.
+    (<a href="01-customer-party-registry.csv">raw .csv export</a>)
+  </p>
+  <table>
+    <thead><tr><th>Customer ID</th><th>Legal Name</th><th>Type</th><th>LEI</th><th>Tax ID</th><th>Legal Form</th><th>Jurisdiction</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td>CUST-10045</td><td>Larkspur Holdings LLC</td><td>Organization</td><td>549300ABCDEF1234567</td><td>84-3321100</td><td>LLC</td><td>Delaware</td><td>Secretary of State filing shows re-domestication to Nevada in 2024. Core system record still shows Delaware.</td></tr>
+      <tr><td>CUST-10046</td><td>Bramwell Capital Partners LP</td><td>Organization</td><td>549300GHIJKL7654321</td><td>—</td><td>Limited Partnership</td><td>Delaware</td><td>No Tax ID on file — this entity never directly borrowed.</td></tr>
+      <tr><td>CUST-10047</td><td>Fennimore Retail Holdings Inc.</td><td>Organization</td><td>—</td><td>71-9982340</td><td>C Corporation</td><td>Delaware</td><td>No LEI on file — not required for this loan product, never requested.</td></tr>
+      <tr><td>CUST-20011</td><td>Priya Anand</td><td>NaturalPerson</td><td>—</td><td>—</td><td>—</td><td>—</td><td>Individuals do not have LEIs — expected, not a gap.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

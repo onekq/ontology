@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KYC Requirements Register — Kestrel Bank</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services — Source material</span>
+  <h1>KYC & Compliance Requirements Register <span style="font-weight:400;color:var(--muted)">(excerpt)</span></h1>
+  <p class="lede">Maintained by Compliance. Each requirement has a "Satisfied by" field set at policy creation and rarely revisited. (<a href="05-kyc-requirements-register.md">raw export</a>)</p>
+
+  <div class="conflict">
+    <span class="label">REQ-201 — Beneficial ownership identification</span>
+    <h3>Any individual or entity with 25% or greater effective ownership of a borrower must be identified and screened.</h3>
+    <p><strong>Satisfied by:</strong> the Beneficial Ownership File's direct-ownership records.</p>
+    <p>For Larkspur Holdings LLC, this stops at Bramwell Capital Partners LP (60%, direct) — Bramwell's own controlling individuals, who hold the effective 60% stake in Larkspur, were never identified. The requirement is satisfied for the direct layer and unmet for the effective one.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-202 — Approval audit trail</span>
+    <h3>Every loan approval decision must record who approved it and when, in a queryable field.</h3>
+    <p><strong>Satisfied by:</strong> the loan approval record's <code>status</code> field.</p>
+    <p>In practice, approver identity and timestamp are recorded only in a free-text <code>notes</code> field ("Approved by J. Whitcombe 3/14"), not in structured, queryable fields.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-203 — Annual KYC refresh</span>
+    <h3>Every business borrower's KYC file must be refreshed annually, including a re-check of beneficial ownership.</h3>
+    <p><strong>Satisfied by:</strong> the annual refresh checklist's "confirm still operating" checkpoint.</p>
+    <p>That checkpoint confirms the business is still active — it does not re-verify beneficial ownership. Larkspur's file has been "refreshed" annually since 2019 without the underlying Bramwell gap ever being caught.</p>
+  </div>
+</div>
+</body>
+</html>

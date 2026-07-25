@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope — Financial Services — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .cq-status { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.55rem; border-radius: 999px; }
+  .cq-status.answerable { color: var(--accent); background: var(--accent-bg); }
+  .cq-row { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; border-bottom:1px solid var(--border); padding: 0.7rem 0; }
+  .cq-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services</span>
+  <h1>Stage 0 — Scope</h1>
+  <p class="lede">
+    Written before touching any source material — the questions the finished ontology needs to
+    be able to answer (Grüninger &amp; Fox 1995; Noy &amp; McGuinness).
+  </p>
+
+  <div class="stage-nav">
+    <a class="current" href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>Kestrel Bank's competency questions</h2>
+  <p>Written before Discover, checked again in Stage 4 — Validate.</p>
+
+  <div class="cq-row"><span>When a record says "Customer ID," does it identify the legal entity or a specific account relationship?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Given an internal customer number, an LEI, and a Tax ID for "the same" borrower, are all three actually describing the same legal entity?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Who ultimately owns or controls a given borrower, not just who directly owns it?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Do a borrower's recorded ownership percentages actually sum to 100%, and when were they last verified?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Is a borrower's recorded legal form and jurisdiction still its current one?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>When someone says "Relationship," do they mean an employee's assigned accounts or a formal ownership/consolidation link between entities?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>On a given date, which interest rate actually applies to a given loan?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>For a given loan approval, who approved it and when, in a form that can actually be queried rather than just read?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Would the periodic KYC refresh actually catch a beneficial-ownership change since onboarding?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Does the assigned risk rating for a borrower match what transaction monitoring is actually observing?</span><span class="cq-status answerable">Target</span></div>
+
+  <p style="margin-top:1.5rem;">Next: <a href="01-discover.html">Stage 1 — Discover</a>.</p>
+</div>
+</body>
+</html>
