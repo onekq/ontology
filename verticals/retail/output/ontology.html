@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Alderleaf</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail — Result</span>
+  <h1>Alderleaf — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in
+    <a href="http://www.heppnetz.de/projects/goodrelations/primer/">GoodRelations</a> and
+    <a href="https://schema.org/Product">schema.org's</a> commerce vocabulary, plus W3C PROV-O
+    and W3C SKOS where domain-neutral. See <a href="../stages/03-resolve.html">Stage 3 —
+    Resolve</a> for the reasoning, and the <a href="changelog.html">changelog</a> for a flat
+    list of decisions. Machine-readable: <a href="ontology.ttl">ontology.ttl</a> (raw markdown:
+    <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Product</code> / <code>ProductGroup</code></td><td><span class="src-tag real">schema.org</span></td><td>The abstract item and its variant-bearing group.</td></tr>
+      <tr><td><code>Offering</code></td><td><span class="src-tag real">GoodRelations</span></td><td>A seller's public announcement to provide a product — one per seller per product.</td></tr>
+      <tr><td><code>BusinessEntity</code></td><td><span class="src-tag real">GoodRelations</span></td><td>The seller making an <code>Offering</code>.</td></tr>
+      <tr><td><code>AggregateOffer</code></td><td><span class="src-tag real">schema.org</span></td><td>Rolls up multiple <code>Offering</code>s into a price range for the storefront page.</td></tr>
+      <tr><td><code>UnitPriceSpecification</code></td><td><span class="src-tag real">GoodRelations</span></td><td>A price with <code>validFrom</code>/<code>validThrough</code>.</td></tr>
+      <tr><td><code>OfferItemCondition</code></td><td><span class="src-tag real">schema.org</span></td><td>Enumeration: <code>NewCondition</code>, <code>RefurbishedCondition</code>, <code>UsedCondition</code>.</td></tr>
+      <tr><td><code>PolicyRequirement</code></td><td><span class="src-tag domain">domain</span></td><td>A compliance rule (e.g. hazmat shipping notice) — neither real vocabulary models this; checked both before inventing.</td></tr>
+      <tr><td><code>DeliveryEstimate</code></td><td><span class="src-tag domain">domain</span></td><td>A cycle-time/SLA claim — same reasoning as <code>PolicyRequirement</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>sku</code></td><td><span class="src-tag real">schema.org</span></td><td><code>Product</code></td><td>Kept separate from <code>seller_sku</code> (Conflict 1)</td></tr>
+      <tr><td><code>seller_sku</code></td><td><span class="src-tag domain">domain</span></td><td><code>Offering</code></td><td>Per-seller identifier</td></tr>
+      <tr><td><code>gtin13</code> / <code>mpn</code></td><td><span class="src-tag real">schema.org</span></td><td><code>Product</code></td><td>Independent of each other and of <code>sku</code> (Conflict 4)</td></tr>
+      <tr><td><code>isVariantOf</code></td><td><span class="src-tag real">schema.org</span></td><td><code>Product</code> → <code>ProductGroup</code></td><td></td></tr>
+      <tr><td><code>gr:offers</code></td><td><span class="src-tag real">GoodRelations</span></td><td><code>BusinessEntity</code> → <code>Offering</code></td><td></td></tr>
+      <tr><td><code>gr:includesObject</code></td><td><span class="src-tag real">GoodRelations</span></td><td><code>Offering</code> → <code>Product</code></td><td></td></tr>
+      <tr><td><code>validFrom</code> / <code>validThrough</code></td><td><span class="src-tag real">GoodRelations</span></td><td><code>UnitPriceSpecification</code></td><td>Overlap left queryable, not resolved (Conflict 7)</td></tr>
+      <tr><td><code>wasRevisionOf</code></td><td><span class="src-tag real">PROV-O</span></td><td><code>Product</code> → <code>Product</code></td><td>Redesigned → original, same GTIN (Conflict 2)</td></tr>
+      <tr><td><code>descriptionContradictsCondition</code></td><td><span class="src-tag domain">domain</span></td><td><code>Offering</code> (boolean)</td><td>Self-consistency flag, not a SKOS match (Conflict 3)</td></tr>
+      <tr><td><code>identifierCompleteness</code></td><td><span class="src-tag domain">domain</span></td><td><code>Product</code></td><td><code>partial</code> where genuinely absent (Conflict 4)</td></tr>
+      <tr><td><code>priorCategoryOf</code></td><td><span class="src-tag domain">domain</span></td><td>category → category</td><td>Legacy tree kept, not deleted (Conflict 5)</td></tr>
+      <tr><td><code>policySatisfiedBy</code></td><td><span class="src-tag domain">domain</span></td><td><code>PolicyRequirement</code> → category</td><td>Re-verify-on-recategorization (Conflict 8)</td></tr>
+      <tr><td><code>verifiesAgainstOriginalOrder</code></td><td><span class="src-tag domain">domain</span></td><td>process step (boolean)</td><td><code>false</code> where a checkpoint doesn't check identity (Conflict 9)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>Cascade Trail Backpack</strong> (<code>ProductGroup</code>) — three <code>Product</code> variants <code>isVariantOf</code> it: 45L Slate Grey, 45L Moss Green, 60L Slate Grey</li>
+    <li><strong>ALD-BP-CASCADE-60-SG</strong> — original <code>Product</code> (60L, MPN CT60-SG) and redesigned <code>Product</code> (55L, MPN CT55-SG) share one GTIN, linked by <code>wasRevisionOf</code>; the shared GTIN flagged against GS1 guidance</li>
+    <li><strong>GTIN 00612345678905</strong> — three <code>Offering</code>s, rolled up into one <code>AggregateOffer</code>; OutdoorLiquidators' carries <code>descriptionContradictsCondition: true</code></li>
+    <li><strong>PROMO-114 / PROMO-121</strong> — two <code>UnitPriceSpecification</code>s with overlapping validity on the same variant, kept distinct</li>
+    <li><strong>REQ-101</strong> (<code>PolicyRequirement</code>) — <code>policySatisfiedBy</code> → the Batteries category flag; the headlamp's actual category doesn't carry it — violation surfaced, not hidden</li>
+    <li><strong>Returns <code>ReturnAction</code></strong> — inspection step carries <code>verifiesAgainstOriginalOrder: false</code></li>
+    <li><strong>Two <code>DeliveryEstimate</code>s</strong> — Marketing's (1 day) and Warehouse Ops' (1.5 days), kept separate</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p><strong><code>priorCategoryOf</code> has only one fully worked pair</strong> (Cascade Trail Backpack's legacy/current category link) in <code>ontology.ttl</code> — the Trailmix Cook Pot's crosswalk is documented in the materials and changelog but not separately instantiated, to keep the Turtle file focused rather than mechanically duplicating the same pattern.</p>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code>, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>

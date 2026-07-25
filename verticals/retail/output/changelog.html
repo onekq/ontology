@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Alderleaf</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Retail — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published ontology, not invented for this
+    project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>Yes</td></tr>
+      <tr><td>6</td><td>6</td><td>No instance needed — resolved by citing two existing real classes, not by adding one</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes</td></tr>
+      <tr><td>8</td><td>8</td><td>Yes</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>SKU ambiguity</strong> resolved by splitting <strong>schema.org's <code>sku</code></strong> (kept on <code>Product</code>) from a new <code>seller_sku</code> (on <code>Offering</code>) — schema.org's own definition covers both meanings without distinguishing them; this ontology is more precise than the standard it's built on.</li>
+    <li><strong>ALD-BP-CASCADE-60-SG's silent redesign</strong> modeled as two <code>Product</code> instances sharing one GTIN, linked by <strong>PROV-O's <code>wasRevisionOf</code></strong> — with the GTIN reuse itself flagged as a violation of GS1's own guidance, not silently accepted.</li>
+    <li><strong>OutdoorLiquidators' self-contradicting offer</strong> resolved with <code>schema:OfferItemCondition = RefurbishedCondition</code> plus a domain <code>descriptionContradictsCondition</code> flag — deliberately not <code>skos:closeMatch</code>, since this is a self-consistency problem within one seller's data, not a cross-source entity-matching problem like manufacturing's vendor cross-references.</li>
+    <li><strong>SKU/GTIN/MPN independence</strong> kept as three separate <strong>schema.org</strong> properties, none implying the others; the Trailmix Cook Pot's missing MPN left absent with <code>identifierCompleteness: partial</code> rather than inferred.</li>
+    <li><strong>Category crosswalk</strong> kept as two linked category instances (<code>priorCategoryOf</code>, domain-specific) rather than collapsing to the current tree — unmigrated BI dashboards still depend on the legacy one existing.</li>
+    <li><strong>"Listing"</strong> resolved without inventing anything: Marketing's meaning is <strong>schema.org's <code>AggregateOffer</code></strong>, Marketplace Ops' is <strong>GoodRelations' <code>Offering</code></strong> — both already real, standard classes.</li>
+    <li><strong>PROMO-114/121 overlap</strong> modeled as two separate <strong>GoodRelations <code>UnitPriceSpecification</code></strong> instances with their own <code>validFrom</code>/<code>validThrough</code> — the overlap is left queryable, not resolved; which promotion wins at checkout is a business stacking rule, out of ontology scope.</li>
+    <li><strong>REQ-101 (hazmat)</strong> modeled with a domain <code>PolicyRequirement</code> and <code>policySatisfiedBy</code> — checked GoodRelations and schema.org first, neither models compliance policy; invented deliberately. Treated as needing re-verification on recategorization — the conflict with real shipping-compliance stakes.</li>
+    <li><strong>Returns inspection checkpoint</strong> modeled as a real <strong>schema.org <code>ReturnAction</code></strong> rather than a bespoke process class, with a domain <code>verifiesAgainstOriginalOrder: false</code> flag for the gap neither real vocabulary covers at that granularity.</li>
+    <li><strong>Fulfillment SLA disagreement</strong> kept as two domain <code>DeliveryEstimate</code> instances rather than reconciled into one number — the disagreement between the two teams is the fact worth preserving.</li>
+  </ol>
+
+  <p><strong>Two items were explicitly logged as not resolved separately</strong>, not silently dropped: REQ-102 (folded into #3) and REQ-103 (folded into #2). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+@prefix ald:    <https://onekq.github.io/ontology/verticals/retail/ontology#> .
+@prefix gr:     <http://purl.org/goodrelations/v1#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Domain classes/properties not covered by GoodRelations / schema.org ----
+
+ald:PolicyRequirement a owl:Class ;
+    rdfs:comment "A compliance rule. Neither GoodRelations nor schema.org models this; checked both before inventing." .
+ald:DeliveryEstimate a owl:Class ;
+    rdfs:comment "A cycle-time/SLA claim. Same reasoning as PolicyRequirement." .
+ald:seller_sku a owl:DatatypeProperty ; rdfs:domain gr:Offering ; rdfs:range xsd:string .
+ald:descriptionContradictsCondition a owl:DatatypeProperty ; rdfs:domain gr:Offering ; rdfs:range xsd:boolean .
+ald:identifierCompleteness a owl:DatatypeProperty ; rdfs:domain schema:Product ; rdfs:range xsd:string .
+ald:priorCategoryOf a owl:ObjectProperty ;
+    rdfs:comment "Domain-specific: legacy category tree kept queryable after a merger, not deleted." .
+ald:policySatisfiedBy a owl:ObjectProperty ; rdfs:domain ald:PolicyRequirement .
+ald:verifiesAgainstOriginalOrder a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+
+# --- Conflict 1: SKU (product) vs seller_sku (offer) -------------------------
+
+ald:CascadeTrail45SG a schema:Product ;
+    schema:sku "ALD-BP-CASCADE-45-SG" ;
+    schema:gtin13 "00612345678905" ;
+    schema:mpn "CT45-SG" ;
+    schema:isVariantOf ald:CascadeTrailBackpackGroup .
+ald:CascadeTrailBackpackGroup a schema:ProductGroup ;
+    rdfs:label "Cascade Trail Backpack" .
+
+# --- Conflict 2: silent frame redesign, same GTIN ----------------------------
+
+ald:CascadeTrail60SG-original a schema:Product ;
+    schema:sku "ALD-BP-CASCADE-60-SG" ;
+    schema:gtin13 "00612345678929" ;
+    schema:mpn "CT60-SG" ;
+    rdfs:comment "60L, as catalogued. Shares a GTIN with the redesigned 55L product below - contrary to GS1 guidance for a materially different product." .
+ald:CascadeTrail60SG-redesigned a schema:Product ;
+    schema:gtin13 "00612345678929" ;
+    schema:mpn "CT55-SG" ;
+    prov:wasRevisionOf ald:CascadeTrail60SG-original ;
+    rdfs:comment "55L, actual current product per Whitcombe Gear's 2025 frame redesign." .
+
+# --- Conflict 3: multi-seller offers, one self-contradicting -----------------
+
+ald:Offering-AlderleafDirect-45SG a gr:Offering ;
+    ald:seller_sku "ALD-BP-CASCADE-45-SG" ;
+    gr:includesObject ald:CascadeTrail45SG ;
+    schema:itemCondition schema:NewCondition .
+ald:AlderleafDirect a gr:BusinessEntity ; gr:offers ald:Offering-AlderleafDirect-45SG .
+
+ald:Offering-TrailGearCo-45SG a gr:Offering ;
+    ald:seller_sku "TGC-8842" ;
+    gr:includesObject ald:CascadeTrail45SG ;
+    schema:itemCondition schema:NewCondition .
+ald:TrailGearCo a gr:BusinessEntity ; gr:offers ald:Offering-TrailGearCo-45SG .
+
+ald:Offering-OutdoorLiquidators-45SG a gr:Offering ;
+    ald:seller_sku "OL-45231" ;
+    gr:includesObject ald:CascadeTrail45SG ;
+    schema:itemCondition schema:RefurbishedCondition ;
+    ald:descriptionContradictsCondition true ;
+    rdfs:comment "Description text claims 'brand new... never used' - contradicts its own RefurbishedCondition." .
+ald:OutdoorLiquidators a gr:BusinessEntity ; gr:offers ald:Offering-OutdoorLiquidators-45SG .
+
+ald:AggregateOffer-45SG a schema:AggregateOffer ;
+    schema:itemOffered ald:CascadeTrail45SG .
+
+# --- Conflict 4: identifier completeness -------------------------------------
+
+ald:TrailmixCookPot15L a schema:Product ;
+    schema:sku "ALD-CK-POT15" ;
+    schema:gtin13 "00612345680210" ;
+    ald:identifierCompleteness "partial" ;
+    rdfs:comment "No MPN on file - sourced from a marketplace seller who never supplied one. Left absent, not inferred." .
+
+# --- Conflict 5: category crosswalk ------------------------------------------
+
+ald:Category-Legacy-CampingBackpacks a schema:DefinedTerm ; rdfs:label "Camping > Backpacks" .
+ald:Category-Current-OutHikPack01 a schema:DefinedTerm ;
+    rdfs:label "Outdoor Gear > Hiking > Packs" ;
+    schema:termCode "OUT-HIK-PACK-01" .
+ald:Category-Legacy-CampingBackpacks ald:priorCategoryOf ald:Category-Current-OutHikPack01 .
+
+# --- Conflict 7: overlapping promotions ---------------------------------------
+
+ald:Promo114-SummerTrailSale a gr:UnitPriceSpecification ;
+    rdfs:label "Summer Trail Sale" ;
+    gr:validFrom "2026-06-01"^^xsd:date ;
+    gr:validThrough "2026-07-15"^^xsd:date .
+ald:Promo121-ClearanceLastSeason a gr:UnitPriceSpecification ;
+    rdfs:label "Clearance: Last Season Colors" ;
+    gr:hasCurrencyValue 99.99 ;
+    gr:validFrom "2026-07-01"^^xsd:date .
+# Both valid 2026-07-01 through 2026-07-15 for the same variant - overlap left
+# queryable, not resolved; which one applies is a checkout business rule.
+
+# --- Conflict 8: hazmat policy requirement -----------------------------------
+
+ald:CascadeHeadlamp300 a schema:Product ;
+    schema:sku "ALD-LT-HEADLAMP-01" ;
+    schema:gtin13 "00612345679100" ;
+    rdfs:comment "Contains a rechargeable lithium battery." .
+ald:REQ-101-HazmatNotice a ald:PolicyRequirement ;
+    rdfs:comment "Any product containing a lithium battery must display a hazardous-shipping restriction notice." ;
+    ald:policySatisfiedBy ald:Category-Batteries-HazmatFlag .
+ald:Category-Batteries-HazmatFlag a schema:DefinedTerm ; rdfs:label "Electronics > Batteries (hazmat_flag=true)" .
+# ald:CascadeHeadlamp300 is NOT filed under ald:Category-Batteries-HazmatFlag -
+# it is filed under Outdoor Gear > Lighting, which carries no such flag.
+# The requirement is satisfied for the category it names, violated for this product.
+
+# --- Conflict 9: returns inspection checkpoint gap ---------------------------
+
+ald:ReturnsInspectionStep a schema:ReturnAction ;
+    ald:verifiesAgainstOriginalOrder false ;
+    rdfs:comment "Confirms item present, box present. Does not verify the returned item's SKU/GTIN matches the original order." .
+
+# --- Conflict 10: disagreeing delivery estimates -----------------------------
+
+ald:DeliveryEstimate-Marketing a ald:DeliveryEstimate ;
+    rdfs:label "Marketing storefront copy" ;
+    rdfs:comment "Ships within 1 business day." .
+ald:DeliveryEstimate-WarehouseOps a ald:DeliveryEstimate ;
+    rdfs:label "Warehouse Ops capacity note" ;
+    rdfs:comment "Average 1.5 business days for non-priority orders." .
