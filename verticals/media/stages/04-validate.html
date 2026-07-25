@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validate — Media / Real Estate — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Media / Real Estate</span>
+  <h1>Stage 4 — Validate</h1>
+  <p class="lede">Check the resolved ontology against the Stage 1 inventory, and against the Stage 0 competency questions.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a class="current" href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Discover-stage term</th><th>Where it landed</th></tr></thead>
+    <tbody>
+      <tr><td>"License"</td><td><code>odrl:Offer</code> vs. <code>odrl:Agreement</code> (Conflict 1)</td></tr>
+      <tr><td>Asset ID / syndication ID / creator catalog #</td><td>Independent identifiers on <code>Asset</code>, missing ones left absent (Conflict 2)</td></tr>
+      <tr><td>POL-9002 (Prohibition)</td><td>Both <code>Permission</code> and <code>Prohibition</code> asserted, flagged <code>conflictsWithProhibition: true</code> (Conflict 3)</td></tr>
+      <tr><td>POL-9010</td><td><code>license</code> action asserted per signed terms, domain <code>internalLabelDisagreesWithTerms: true</code> (Conflict 4)</td></tr>
+      <tr><td>POL-9001 timeInterval</td><td>Rights-management canonical; billing modeled as a derived, flaggably-stale copy (Conflict 5)</td></tr>
+      <tr><td>POL-9001 spatial constraint (the violation)</td><td>Domain <code>UsageEvent</code>, flagged <code>withinSpatialConstraint: false</code> (Conflict 6)</td></tr>
+      <tr><td>REQ-402 (no enforcement mechanism)</td><td>Domain <code>ComplianceCheck</code>, flagged <code>hasScheduledComplianceCheck: false</code> (Conflict 7)</td></tr>
+      <tr><td>REQ-401 (attribution)</td><td><code>odrl:Duty</code> kept; domain <code>dutyFulfillmentVerified: false</code> (Conflict 8)</td></tr>
+      <tr><td>Studio A double-booking</td><td>Two <code>odrl:use</code> Permissions on one physical <code>Asset</code>, overlapping <code>timeInterval</code> (Conflict 9)</td></tr>
+      <tr><td>Royalty percentage (POL-9001)</td><td>Contract file canonical; Finance's figure modeled as a divergence-flaggable <code>PaymentRecord</code> (Conflict 10)</td></tr>
+      <tr><td>REQ-403 (royalty consistency)</td><td>Not independently resolved — same underlying gap as Conflict 10. See below.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Competency questions, re-checked</h2>
+  <p>All ten from <a href="00-competency-questions.html">Stage 0</a> are answerable against the resolved structure — including the highest-stakes one: the ontology can now represent that a Permission and a still-active Prohibition coexist on the same asset, rather than letting the newer grant silently imply the older restriction no longer matters.</p>
+
+  <h2>Not resolved — logged, not dropped</h2>
+  <p><strong>REQ-403:</strong> folded into Conflict 10 — both are the same "Finance vs. contract file" royalty discrepancy, viewed from the policy side and the data side respectively.</p>
+
+  <p>See <a href="../output/ontology.html">the final ontology</a> (with a real
+  <a href="../output/ontology.ttl">Turtle serialization</a>) and
+  <a href="../output/changelog.html">the resolution changelog</a>.</p>
+</div>
+</body>
+</html>

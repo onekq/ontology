@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Media / Real Estate — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Media / Real Estate</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">One conflict at a time, in dependency order. Vocabulary comes from ODRL — see Stage 2 for where each came from.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Does "License" mean any agreed deal, or a fully executed Agreement?</h3>
+      <p>Sales uses it for anything agreed to, even pending signature. Rights/Legal reserves it for countersigned terms.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL, used precisely</div>
+        Model Sales' meaning as <code>odrl:Offer</code> and Legal's as <code>odrl:Agreement</code> — real, distinct ODRL subtypes of <code>Policy</code>. A deal only becomes an Agreement at countersignature; before that, it's an Offer no matter what Sales calls it internally.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Conflict 2 of 10</span>
+      <h3>Asset ID, syndication ID, and creator catalog number don't all exist for every asset</h3>
+      <p>AMB-40013 has no syndication ID. AMB-40014 has no creator catalog number.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL + domain</div>
+        Keep all three as independent identifiers on <code>Asset</code> — ODRL doesn't require any particular identifier scheme. Leave genuinely missing ones absent rather than inferred, same discipline as every prior vertical's missing-identifier conflict.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10 — highest stakes</span>
+      <h3>A Permission was granted without checking a still-active Prohibition on the same asset</h3>
+      <p>POL-9001 (Agreement, distribute, Northwind Publishing) doesn't reference POL-9002 (Prohibition, predates it, forbids distribution to competing outdoor apparel brands).</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL, used as intended</div>
+        Assert both <code>Permission</code> and <code>Prohibition</code> on the same <code>Asset</code> — ODRL explicitly allows this, because real-world rights conflicts genuinely can require a human or legal review to resolve, not an automatic rule. Flag the pair with a domain <code>conflictsWithProhibition: true</code> so it surfaces for review rather than silently coexisting unnoticed, which is what actually happened here.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>POL-9010 was called "sold" internally, but its signed terms say otherwise</h3>
+      <p>ODRL's own <code>sell</code>/<code>give</code> actions mean ownership transfer "while deleting the original asset." <code>license</code> grants use without deleting or transferring anything.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL, used precisely</div>
+        Assert the real action <code>license</code> on POL-9010, matching the signed terms — not <code>sell</code>. Flag the record with a domain <code>internalLabelDisagreesWithTerms: true</code> so Sales' casual "sold" language doesn't quietly become the client's (or Amberlane's own future staff's) understanding of what was actually granted.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Conflict 5 of 10</span>
+      <h3>POL-9001's license window differs between two systems</h3>
+      <p>Rights-management: ends 2025-12-31. Billing: no end date, still "current."</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL, with a different shape than prior verticals</div>
+        Unlike the Prohibition/Permission conflict, this isn't two legitimately independent facts — rights-management is definitionally the system of record for a Policy's <code>timeInterval</code>. Model billing's copy as derived from it with its own <code>lastSynced</code> date, and flag it stale rather than treating both figures as equally authoritative. Not every two-system disagreement is a "keep both" case; some have a real canonical source.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Conflict 6 of 10</span>
+      <h3>Harbor Sunrise was used outside its licensed territory</h3>
+      <p>POL-9001's <code>spatial</code> constraint: North America. 2025 audit found usage in France and Germany.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Record the actual usage as a domain <code>UsageEvent</code> linked to the Agreement, flagged <code>withinSpatialConstraint: false</code> — makes the violation a permanent, queryable fact rather than something that only ever lived in a one-off audit report.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10 — distinct from Conflict 6</span>
+      <h3>Nothing routinely checks usage against spatial constraints</h3>
+      <p>REQ-402 is satisfied by the <code>spatial</code> field simply existing — not by anything that verifies usage against it. Conflict 6 is the one violation an audit happened to catch; this is the missing general mechanism.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain-specific</div>
+        Model a recurring domain <code>ComplianceCheck</code> tied to each Agreement's constraints, and flag its current absence explicitly with <code>hasScheduledComplianceCheck: false</code> — the gap is structural, not specific to POL-9001.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Conflict 8 of 10</span>
+      <h3>An attribution Duty's fulfillment was never verified</h3>
+      <p>REQ-401 is satisfied by the Duty clause existing on the Agreement — not by the credit actually appearing in the published work.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL + domain</div>
+        Keep <code>odrl:Duty</code> (with action <code>attribute</code>) as the obligation itself — that part is real and correct. Add a domain <code>dutyFulfillmentVerified: false</code> flag, since ODRL models the obligation but not runtime fulfillment-tracking. Same checkpoint-gap pattern as every prior vertical.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Conflict 9 of 10 — the real-estate half</span>
+      <h3>Studio A is booked twice for the same window</h3>
+      <p>Facilities calendar: internal photography, 09:00–17:00. Rights-management: Vantage Ad Group shoot (POL-9020), 08:00–14:00. Neither system knows about the other's booking.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL, no invented "lease" action</div>
+        Model both bookings as <code>odrl:use</code> Permissions on the same physical <code>Asset</code> (Studio A), each with its own <code>timeInterval</code> constraint — the overlap becomes directly visible as two Permissions with conflicting temporal scope on one asset, structurally identical to Conflict 3's Permission/Prohibition clash, just Permission-vs-Permission this time. No dedicated "lease" action was invented — ODRL's real vocabulary doesn't have one, and <code>use</code> plus real constraint operands covers this precisely.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>Finance and Rights/Legal disagree on Jamie Tran's royalty percentage</h3>
+      <p>Finance's payment system: 12%. Rights/Legal's countersigned contract file: 15%. Never reconciled.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — ODRL</div>
+        The countersigned contract file is the canonical source for a <code>Duty</code>'s <code>percentage</code> term — same "one system is definitionally authoritative" reasoning as Conflict 5. Model Finance's running figure as a separate <code>PaymentRecord</code>, flagged when it diverges from the contracted percentage, rather than silently trusting whichever number Finance happened to enter.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>

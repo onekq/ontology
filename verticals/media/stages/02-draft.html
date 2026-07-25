@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Media / Real Estate — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Media / Real Estate</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    Grounded in <a href="https://www.w3.org/TR/odrl-model/">ODRL</a> (Open Digital Rights
+    Language, W3C Recommendation) — fully open, actively maintained, and structurally unlike
+    every prior vertical's grounding.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>A genuinely different reasoning shape</h2>
+  <p>
+    IOF Core, GoodRelations, FIBO, and FHIR are all fundamentally <em>descriptive</em> — they
+    model what exists and how things relate. ODRL is <strong>deontic</strong>: it models what's
+    <em>permitted</em>, <em>prohibited</em>, or <em>owed</em>, under what conditions. A
+    <code>Permission</code> and a <code>Prohibition</code> can target the very same asset and
+    action — the ontology's job is to represent that both exist, not to resolve which one wins
+    (real-world rights conflicts often need a human or a court to actually decide that).
+  </p>
+
+  <h2>Classes adopted from ODRL</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Definition (from the spec)</th></tr></thead>
+    <tbody>
+      <tr><td><code>Policy</code></td><td>The umbrella concept, with three real subtypes: <code>Set</code> (generic rules), <code>Offer</code> ("offerings of Rules from assigner Parties"), <code>Agreement</code> ("granting of Rules from assigner to assignee Parties"). The Offer/Agreement distinction directly resolves the "License" glossary collision.</td></tr>
+      <tr><td><code>Permission</code></td><td>"The ability to exercise an Action over an Asset."</td></tr>
+      <tr><td><code>Prohibition</code></td><td>"The inability to exercise an Action over an Asset."</td></tr>
+      <tr><td><code>Duty</code></td><td>"The obligation to exercise an agreed Action" — covers the attribution and royalty requirements directly.</td></tr>
+      <tr><td><code>Asset</code></td><td>"A resource... that are the subject of a Rule" — covers both a digital photo and, for the real-estate half of this vertical, a physical studio space.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>A real semantic distinction worth using precisely</h2>
+  <p>
+    ODRL's own action definitions distinguish <code>sell</code>/<code>give</code> (ownership
+    transfer, "while deleting the original asset") from <code>use</code>/<code>license</code>
+    (a right granted without deleting or transferring the original). This maps directly onto
+    POL-9010's Sales-vs-signed-terms conflict — not a modeling choice invented for this vertical,
+    but a distinction ODRL's spec already makes explicit.
+  </p>
+
+  <h2>Where ODRL doesn't reach</h2>
+  <p>
+    ODRL models rights and obligations exhaustively, but has no notion of "an asset registry
+    export," "a facilities booking calendar," or "a royalty reconciliation process." Those need
+    domain-specific vocabulary, checked against ODRL first.
+  </p>
+  <p>
+    One deliberate non-invention: ODRL's real action vocabulary has no dedicated "lease" or
+    "rent" action. Rather than invent one for the studio-space conflict, Resolve models studio
+    booking as <code>odrl:use</code> constrained by <code>spatial</code>/<code>timeInterval</code>
+    operands — both real ODRL constraint left-operands — which is a more precise fit than a
+    fabricated action would have been.
+  </p>
+
+  <h2>Candidate operands</h2>
+  <table>
+    <thead><tr><th>Operand</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>timeInterval</code></td><td><strong>ODRL</strong></td><td>Candidate for both the license-window drift and the studio double-booking</td></tr>
+      <tr><td><code>spatial</code></td><td><strong>ODRL</strong></td><td>Candidate for the territory-violation conflict</td></tr>
+      <tr><td><code>payAmount</code> / <code>percentage</code></td><td><strong>ODRL</strong></td><td><code>[inferred, contested]</code> — candidates for the royalty-percentage conflict; Resolve confirms whether Finance's or Legal's figure is authoritative, or whether both stay on record</td></tr>
+    </tbody>
+  </table>
+
+  <p>One item marked <em>contested</em> on purpose. Stage 3 resolves it explicitly, along with every other conflict.</p>
+</div>
+</body>
+</html>

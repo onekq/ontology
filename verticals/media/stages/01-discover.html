@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Media / Real Estate — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Media / Real Estate</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">Read every source document and log every term, code, and relationship — without resolving conflicts yet.</p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>"License"</td><td>Glossary</td><td>Sales: any agreed deal, even pending signature. Rights/Legal: only a fully executed, countersigned Agreement.</td><td>Conflict</td></tr>
+      <tr><td>Asset ID / syndication ID / creator catalog #</td><td>Asset registry</td><td>Three identifier systems; AMB-40013 has no syndication ID, AMB-40014 has no creator catalog number.</td><td>Conflict</td></tr>
+      <tr><td>POL-9002 (Prohibition)</td><td>Licensing agreements log</td><td>Predates POL-9001, still active, forbids distribution to competing outdoor apparel brands. POL-9001 was granted without checking it.</td><td>Conflict — highest stakes</td></tr>
+      <tr><td>POL-9010</td><td>Licensing agreements log</td><td>Recorded as "sold" by Sales; signed terms actually say action = license, not sell/give — asset was never transferred.</td><td>Conflict</td></tr>
+      <tr><td>POL-9001 timeInterval</td><td>Constraint drift records</td><td>Rights-management: ends 2025-12-31. Billing: no end date, still "current."</td><td>Conflict</td></tr>
+      <tr><td>POL-9001 spatial constraint</td><td>Constraint drift records</td><td>Constraint: North America. 2025 audit found usage in France and Germany.</td><td>Conflict</td></tr>
+      <tr><td>REQ-401 (attribution)</td><td>Requirements register</td><td>Satisfied-by is the Duty clause existing, not confirmation the credit actually appeared.</td><td>Conflict</td></tr>
+      <tr><td>REQ-402 (territory enforcement)</td><td>Requirements register</td><td>Satisfied-by is the spatial field itself; no process checks usage against it before the audit caught POL-9001.</td><td>Conflict</td></tr>
+      <tr><td>Studio A double-booking</td><td>Studio booking process</td><td>Facilities calendar and rights-management system both grant overlapping use of the same physical space, unaware of each other.</td><td>Conflict</td></tr>
+      <tr><td>Royalty percentage (POL-9001)</td><td>Studio booking & royalty process</td><td>Finance: 12%. Rights/Legal's countersigned file: 15%. Never reconciled.</td><td>Conflict</td></tr>
+      <tr><td>REQ-403 (royalty consistency)</td><td>Requirements register</td><td>Satisfied-by is the filed terms at signing; nothing reconciles Finance's running figures against them afterward.</td><td>Conflict — ties to above</td></tr>
+    </tbody>
+  </table>
+
+  <p>Eleven entries logged, ten flagged as standalone conflicts (REQ-403 points at the same underlying gap as the royalty-percentage entry above it — a Validate-stage observation, not decided here).</p>
+</div>
+</body>
+</html>
