@@ -1,0 +1,102 @@
+@prefix kb:     <https://onekq.github.io/ontology/verticals/financial-services/ontology#> .
+@prefix cmns-org: <https://www.omg.org/spec/Commons/Organizations/> .
+@prefix fibo-be-le-lp: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LegalPersons/> .
+@prefix fibo-be-le-lei: <https://spec.edmcouncil.org/fibo/ontology/BE/LegalEntities/LEIEntities/> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Domain classes/properties not covered by FIBO / PROV-O -----------------
+
+kb:AccountRelationship a owl:Class ;
+    rdfs:comment "A Relationship Manager's serviced account - distinct from LegalEntity identity." .
+kb:ProspectContact a owl:Class ;
+    rdfs:comment "A CRM contact not yet KYC-complete. Promoted to cmns-org:LegalPerson once screening finishes." .
+kb:RateRecord a owl:Class ;
+    rdfs:comment "An interest-rate figure with its own effective-date range. FIBO's rate/pricing modules were not researched deeply enough here to ground this in; used deliberately, not by default." .
+kb:identifierCompleteness a owl:DatatypeProperty ; rdfs:domain cmns-org:LegalEntity ; rdfs:range xsd:string .
+kb:reverifiesBeneficialOwnership a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+kb:effectiveFrom a owl:DatatypeProperty ; rdfs:range xsd:date .
+kb:effectiveTo a owl:DatatypeProperty ; rdfs:range xsd:date .
+
+# --- Conflict 1/2: entity identity vs account relationship, identifiers -----
+
+kb:LarkspurHoldings a cmns-org:LegalEntity, cmns-org:LegalPerson ;
+    rdfs:label "Larkspur Holdings LLC" ;
+    fibo-be-le-lei:LegalEntityIdentifier "549300ABCDEF1234567" ;
+    kb:identifierCompleteness "complete" .
+
+kb:BramwellCapitalPartners a cmns-org:LegalEntity, cmns-org:LegalPerson, fibo-be-le-lp:SpecialPurposeVehicle ;
+    rdfs:label "Bramwell Capital Partners LP" ;
+    fibo-be-le-lei:LegalEntityIdentifier "549300GHIJKL7654321" ;
+    kb:identifierCompleteness "partial" ;
+    rdfs:comment "No Tax ID on file - never directly borrowed. Its own controllers are not identified (see below)." .
+
+kb:FennimoreRetailHoldings a cmns-org:LegalEntity, cmns-org:LegalPerson ;
+    rdfs:label "Fennimore Retail Holdings Inc." ;
+    kb:identifierCompleteness "partial" ;
+    rdfs:comment "No LEI on file - not required for its loan product." .
+
+kb:MarcusFeld a fibo-be-le-lp:LegallyCompetentNaturalPerson ; rdfs:label "Marcus Feld" .
+kb:SoniaFeld a fibo-be-le-lp:LegallyCompetentNaturalPerson ; rdfs:label "Sonia Feld" .
+
+# --- Conflict 3: direct vs ultimate beneficial ownership --------------------
+
+kb:BramwellCapitalPartners fibo-be-le-lei:isDirectlyConsolidatedBy kb:LarkspurHoldings ;
+    fibo-be-le-lei:hasOwnershipPercentage 60.0 .
+kb:MarcusFeld fibo-be-le-lei:isDirectlyConsolidatedBy kb:LarkspurHoldings ;
+    fibo-be-le-lei:hasOwnershipPercentage 25.0 .
+kb:SoniaFeld fibo-be-le-lei:isDirectlyConsolidatedBy kb:LarkspurHoldings ;
+    fibo-be-le-lei:hasOwnershipPercentage 15.0 .
+# Deliberately NOT asserted: any fibo-be-le-lei:isUltimatelyConsolidatedBy
+# triple for kb:BramwellCapitalPartners's own controlling individuals.
+# The absence itself is the finding - see changelog.
+
+# --- Conflict 4: jurisdiction history ---------------------------------------
+
+kb:Larkspur-Jurisdiction-Delaware a fibo-be-le-lei:EntityLegalForm ;
+    rdfs:label "Delaware LLC" ;
+    kb:effectiveFrom "2019-03-01"^^xsd:date .
+kb:Larkspur-Jurisdiction-Nevada a fibo-be-le-lei:EntityLegalForm ;
+    rdfs:label "Nevada LLC (re-domesticated)" ;
+    kb:effectiveFrom "2024-02-14"^^xsd:date ;
+    prov:wasRevisionOf kb:Larkspur-Jurisdiction-Delaware .
+
+# --- Conflict 6: prospect vs KYC-complete party ------------------------------
+
+kb:ProspectExample a kb:ProspectContact ;
+    rdfs:comment "A CRM contact not yet promoted to cmns-org:LegalPerson." .
+
+# --- Conflict 7: overlapping rate records -----------------------------------
+
+kb:Rate1-Standard a kb:RateRecord ;
+    rdfs:label "Standard rate schedule" ;
+    rdfs:comment "7.25%" ;
+    kb:effectiveFrom "2023-01-01"^^xsd:date .
+kb:Rate2-Lock a kb:RateRecord ;
+    rdfs:label "Rate lock agreement" ;
+    rdfs:comment "6.85%" ;
+    kb:effectiveFrom "2023-06-01"^^xsd:date ;
+    kb:effectiveTo "2023-12-31"^^xsd:date .
+
+# --- Conflict 8: audit trail -------------------------------------------------
+
+kb:Approval-KB88291 a prov:Activity ;
+    prov:wasAssociatedWith kb:ApproverJWhitcombe ;
+    prov:endedAtTime "2023-03-14T00:00:00"^^xsd:dateTime .
+kb:ApproverJWhitcombe a prov:Agent ; rdfs:label "J. Whitcombe" .
+
+# --- Conflict 9: KYC refresh checkpoint gap ---------------------------------
+
+kb:KYCRefreshCheckpoint-ConfirmOperating a owl:NamedIndividual ;
+    rdfs:label "Confirm still operating" ;
+    kb:reverifiesBeneficialOwnership false .
+
+# --- Conflict 10: disagreeing risk assessments -------------------------------
+
+kb:RiskRating-Compliance a owl:NamedIndividual ;
+    rdfs:label "Compliance risk rating: Low" .
+kb:MonitoringFlag-TransactionMonitoring a owl:NamedIndividual ;
+    rdfs:label "Transaction Monitoring flag: elevated activity inconsistent with stated business purpose" ;
+    rdfs:comment "Raised 2025-11, not yet reviewed by Compliance." .

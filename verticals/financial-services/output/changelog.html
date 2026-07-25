@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Kestrel Bank</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published ontology, not invented for this
+    project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>No instance needed — resolved by Conflict 1's split</td></tr>
+      <tr><td>6</td><td>6</td><td>Yes</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes</td></tr>
+      <tr><td>8</td><td>8</td><td>Yes</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>Customer ID ambiguity</strong> resolved by keeping <strong>FIBO's <code>LegalEntity</code>/<code>LegalPerson</code></strong> as the identity, with a new domain <code>AccountRelationship</code> for the Relationship Manager's book of accounts — same shape as retail's SKU/Offering split.</li>
+    <li><strong>LEI/Tax ID/internal ID independence</strong> kept as separate properties — FIBO itself doesn't require an LEI for every legal person. Genuinely missing identifiers flagged with <code>identifierCompleteness</code>, not inferred.</li>
+    <li><strong>Larkspur's beneficial ownership</strong> resolved by asserting <strong>FIBO's <code>isDirectlyConsolidatedBy</code></strong> for the known Bramwell → Larkspur link, and deliberately not asserting <strong><code>isUltimatelyConsolidatedBy</code></strong> for anyone — the gap is genuine and stays visible. Bramwell classified as a <strong>FIBO <code>SpecialPurposeVehicle</code></strong> to make the gap queryable, not silent.</li>
+    <li><strong>Larkspur's jurisdiction</strong> modeled as two point-in-time <code>EntityLegalForm</code> records linked by <strong>PROV-O's <code>wasRevisionOf</code></strong>, rather than one field silently overwritten.</li>
+    <li><strong>"Relationship"</strong> required no new work — Conflict 1's split already separates the two meanings.</li>
+    <li><strong>"Party"</strong> resolved with a domain <code>ProspectContact</code> class, promoted to <strong>FIBO's <code>LegalPerson</code></strong> only once KYC completes.</li>
+    <li><strong>RATE-1/RATE-2 overlap</strong> kept as two domain <code>RateRecord</code> instances — FIBO's rate modules weren't researched deeply enough to ground this one; used deliberately rather than guessed.</li>
+    <li><strong>Loan approval audit trail</strong> modeled as a <strong>W3C PROV-O <code>Activity</code></strong> with <code>wasAssociatedWith</code> and <code>endedAtTime</code>.</li>
+    <li><strong>KYC refresh checkpoint gap</strong> flagged with a domain <code>reverifiesBeneficialOwnership: false</code> property.</li>
+    <li><strong>Risk rating vs. transaction monitoring</strong> kept as two separate, timestamped assessments rather than reconciled.</li>
+  </ol>
+
+  <p><strong>One item was explicitly logged as not resolved separately</strong>: REQ-201 (folded into #3). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

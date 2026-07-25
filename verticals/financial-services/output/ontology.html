@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Kestrel Bank</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Financial Services — Result</span>
+  <h1>Kestrel Bank — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in
+    <a href="https://github.com/edmcouncil/fibo">FIBO</a> (Financial Industry Business Ontology,
+    EDM Council) plus W3C PROV-O for audit trail. See <a href="../stages/03-resolve.html">Stage 3
+    — Resolve</a> for the reasoning, and the <a href="changelog.html">changelog</a> for a flat
+    list of decisions. Machine-readable: <a href="ontology.ttl">ontology.ttl</a> (raw markdown:
+    <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>LegalEntity</code> / <code>LegalPerson</code></td><td><span class="src-tag real">FIBO</span></td><td>A person (natural or organizational) recognized by law as having rights and obligations.</td></tr>
+      <tr><td><code>LegalEntityIdentifier</code></td><td><span class="src-tag real">FIBO</span></td><td>"An organization identifier that uniquely identifies a legal person as defined in ISO 17442" — the real LEI standard.</td></tr>
+      <tr><td><code>LegallyCompetentNaturalPerson</code></td><td><span class="src-tag real">FIBO</span></td><td>An individual with legal capacity.</td></tr>
+      <tr><td><code>EntityLegalForm</code></td><td><span class="src-tag real">FIBO</span></td><td>A jurisdiction-recognized legal form, identified per ISO 20275.</td></tr>
+      <tr><td><code>SpecialPurposeVehicle</code></td><td><span class="src-tag real">FIBO</span></td><td>A pass-through vehicle — used for Bramwell to make "an SPV with no traced ultimate owner" a queryable pattern.</td></tr>
+      <tr><td><code>AccountRelationship</code></td><td><span class="src-tag domain">domain</span></td><td>A Relationship Manager's serviced account — distinct from <code>LegalEntity</code> identity (Conflict 1).</td></tr>
+      <tr><td><code>ProspectContact</code></td><td><span class="src-tag domain">domain</span></td><td>A CRM contact not yet KYC-complete — promoted to <code>LegalPerson</code> once screening finishes (Conflict 6).</td></tr>
+      <tr><td><code>RateRecord</code></td><td><span class="src-tag domain">domain</span></td><td>An interest-rate figure with its own effective-date range (Conflict 7).</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>hasOwnershipPercentage</code></td><td><span class="src-tag real">FIBO</span></td><td>ownership record</td><td>Direct quote: "the percentage ownership interest... if known"</td></tr>
+      <tr><td><code>isDirectlyConsolidatedBy</code></td><td><span class="src-tag real">FIBO</span></td><td><code>LegalEntity</code> → <code>LegalEntity</code></td><td>Asserted: Bramwell → Larkspur</td></tr>
+      <tr><td><code>isUltimatelyConsolidatedBy</code></td><td><span class="src-tag real">FIBO</span></td><td><code>LegalEntity</code> → <code>LegalEntity</code></td><td><strong>Deliberately not asserted</strong> for Bramwell's controllers (Conflict 3)</td></tr>
+      <tr><td><code>hasLegalForm</code></td><td><span class="src-tag real">FIBO</span></td><td><code>LegalEntity</code> → <code>EntityLegalForm</code></td><td>Modeled with effective dates (Conflict 4)</td></tr>
+      <tr><td><code>wasRevisionOf</code></td><td><span class="src-tag real">PROV-O</span></td><td><code>EntityLegalForm</code> → <code>EntityLegalForm</code></td><td>Nevada record → Delaware record (Conflict 4)</td></tr>
+      <tr><td><code>identifierCompleteness</code></td><td><span class="src-tag domain">domain</span></td><td><code>LegalEntity</code></td><td>Flags genuinely absent identifiers</td></tr>
+      <tr><td><code>wasAssociatedWith</code> / <code>endedAtTime</code></td><td><span class="src-tag real">PROV-O</span></td><td>approval <code>Activity</code></td><td>Replaces a free-text approval note (Conflict 8)</td></tr>
+      <tr><td><code>reverifiesBeneficialOwnership</code></td><td><span class="src-tag domain">domain</span></td><td>refresh checkpoint (boolean)</td><td><code>false</code> (Conflict 9)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>Larkspur Holdings LLC</strong> (<code>LegalEntity</code>) — <code>isDirectlyConsolidatedBy</code> ← Bramwell Capital Partners LP (60%), Marcus Feld (25%), Sonia Feld (15%); two jurisdiction records (Delaware 2019, Nevada 2024)</li>
+    <li><strong>Bramwell Capital Partners LP</strong> (<code>SpecialPurposeVehicle</code>) — no <code>isUltimatelyConsolidatedBy</code> asserted; the gap itself is the point</li>
+    <li><strong>Loan KB-88291</strong> — two <code>RateRecord</code>s, kept distinct</li>
+    <li><strong>Approval <code>Activity</code></strong> — <code>wasAssociatedWith</code> the approver, <code>endedAtTime</code> the decision timestamp</li>
+    <li><strong>KYC refresh checkpoint</strong> — <code>reverifiesBeneficialOwnership: false</code></li>
+    <li><strong>Two risk assessments</strong> — Compliance's "Low" rating and Transaction Monitoring's unreviewed flag, kept separate</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p><strong><code>isUltimatelyConsolidatedBy</code> is intentionally absent for Bramwell</strong> — this is the central finding of the whole vertical, not an oversight. A future update should add it only once Kestrel's compliance team actually identifies Bramwell's controlling individuals.</p>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code>, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>
