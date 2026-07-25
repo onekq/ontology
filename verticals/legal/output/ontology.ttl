@@ -1,0 +1,100 @@
+@prefix tf:   <https://onekq.github.io/ontology/verticals/legal/ontology#> .
+@prefix akn:  <http://docs.oasis-open.org/legaldocml/ns/akn/3.0#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# NOTE: Akoma Ntoso (namespace http://docs.oasis-open.org/legaldocml/ns/akn/3.0,
+# verified against the real OASIS XSD) is an XML Schema vocabulary with no
+# official RDF/OWL binding. The akn: prefix below maps its real element and
+# attribute names into RDF as this project's own mapping - not an existing
+# standard. See ontology.md's "A different kind of real" section.
+
+# --- Domain classes/properties not covered by Akoma Ntoso --------------------
+
+tf:CodifiedCode a owl:Class ;
+    rdfs:comment "The Clerk's 'whole consolidated Code' meaning - an aggregate over current Expressions." .
+tf:FilingDivision a owl:Class ;
+    rdfs:comment "The Records Office's 'Section' meaning - a filing-folder tab, unrelated to akn:section." .
+tf:RequestSLA a owl:Class ;
+    rdfs:comment "An operational turnaround claim." .
+tf:lastGenerated a owl:DatatypeProperty ; rdfs:domain akn:FRBRManifestation ; rdfs:range xsd:date .
+tf:manifestationStale a owl:DatatypeProperty ; rdfs:domain akn:FRBRManifestation ; rdfs:range xsd:boolean .
+tf:verifiedCurrentExpression a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+tf:needsRevalidation a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+tf:clerkFilingNo a owl:DatatypeProperty ; rdfs:domain akn:FRBRWork ; rdfs:range xsd:string .
+tf:stateCitation a owl:DatatypeProperty ; rdfs:domain akn:FRBRWork ; rdfs:range xsd:string .
+tf:codeSection a owl:DatatypeProperty ; rdfs:domain akn:FRBRWork ; rdfs:range xsd:string .
+
+# --- Conflict 1/2: Work vs Expression, competing identifiers -----------------
+
+tf:Ordinance-2019-14 a akn:FRBRWork ;
+    rdfs:label "Noise Control Standards" ;
+    tf:clerkFilingNo "CLK-2019-014" ;
+    tf:stateCitation "ST-CITE-4471" ;
+    tf:codeSection "TMC 14.20.030" .
+
+tf:Expression-2019-14-v1 a akn:FRBRExpression ;
+    akn:start "2019-06-01"^^xsd:date ;
+    rdfs:comment "The 2019 text, before the 2023 amendment." ;
+    akn:work tf:Ordinance-2019-14 .
+
+# --- Conflict 3: activeModifications / passiveModifications -----------------
+
+tf:Ordinance-2023-07 a akn:FRBRWork ;
+    rdfs:label "Amendment to Noise Control Standards" ;
+    tf:clerkFilingNo "CLK-2023-007" ;
+    tf:stateCitation "ST-CITE-5820" ;
+    tf:codeSection "TMC 14.20.030" ;
+    akn:activeModifications tf:Expression-2019-14-v1 .
+
+tf:Expression-2019-14-v1 akn:passiveModifications tf:Ordinance-2023-07 .
+# The above triple is the fix - previously absent, the central finding of this vertical.
+
+# --- Conflict 4: repealed section missing @end ------------------------------
+
+tf:Ordinance-2015-TMC9-04-010 a akn:FRBRWork ;
+    tf:codeSection "TMC 9.04.010" .
+tf:Expression-TMC9-04-010 a akn:FRBRExpression ;
+    akn:work tf:Ordinance-2015-TMC9-04-010 ;
+    akn:end "2021-02-10"^^xsd:date ;
+    rdfs:comment "No akn:start asserted - per the spec, an end with no start marks a repealed original fragment. Repealed by Ordinance 2021-02 (CLK-2021-002)." .
+
+# --- Conflict 5: Manifestation drift -----------------------------------------
+
+tf:Manifestation-TMC14-20-030-PDF a akn:FRBRManifestation ;
+    rdfs:label "Posted PDF of TMC 14.20.030" ;
+    tf:lastGenerated "2022-01-01"^^xsd:date ;
+    tf:manifestationStale true ;
+    rdfs:comment "Does not reflect the 2023-07 amendment." .
+
+# --- Conflict 6: Code / Section glossary collision ---------------------------
+
+tf:ThornfieldMunicipalCode a tf:CodifiedCode ;
+    rdfs:label "Thornfield Municipal Code (whole consolidated corpus)" .
+tf:RecordsFilingSectionExample a tf:FilingDivision ;
+    rdfs:comment "A filing-folder tab, unrelated to akn:section numbering." .
+
+# --- Conflict 7: stale cross-reference ---------------------------------------
+
+tf:Ref-TMC14-20-030-to-14-08-010 a owl:NamedIndividual ;
+    rdfs:label "Cross-reference in TMC 14.20.030 to 'Section 14.08.010'" ;
+    tf:needsRevalidation true ;
+    rdfs:comment "Pre-2020 numbering. Content now at TMC 14.20.010, per the 2020 recodification." .
+
+# --- Conflict 8: passed/published/effective dates ----------------------------
+
+tf:Lifecycle-2019-14-Passed a owl:NamedIndividual ; rdfs:label "passed" ; akn:date "2019-05-15"^^xsd:date .
+tf:Lifecycle-2019-14-Published a owl:NamedIndividual ; rdfs:label "published" ; akn:date "2019-05-22"^^xsd:date .
+tf:Lifecycle-2019-14-Effective a owl:NamedIndividual ; rdfs:label "effective" ; akn:date "2019-06-01"^^xsd:date .
+
+# --- Conflict 9: records-request checkpoint gap ------------------------------
+
+tf:RecordsRequestCheckpoint-ConfirmProvided a owl:NamedIndividual ;
+    rdfs:label "Confirm document provided" ;
+    tf:verifiedCurrentExpression false .
+
+# --- Conflict 10: disagreeing request SLAs -----------------------------------
+
+tf:RequestSLA-Published a tf:RequestSLA ; rdfs:label "Published standard" ; rdfs:comment "10 business days" .
+tf:RequestSLA-CodeSectionActual a tf:RequestSLA ; rdfs:label "Actual, code-section requests" ; rdfs:comment "18 business days average" .

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — City of Thornfield</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal — Result</span>
+  <h1>City of Thornfield — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in
+    <a href="https://docs.oasis-open.org/legaldocml/akn-core/v1.0/cs01/part1-vocabulary/akn-core-v1.0-cs01-part1-vocabulary.html">Akoma Ntoso</a>
+    (LegalDocML, OASIS standard). See <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>
+    for the reasoning, and the <a href="changelog.html">changelog</a> for a flat list of
+    decisions. Machine-readable: <a href="ontology.ttl">ontology.ttl</a> (raw markdown:
+    <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>A different kind of "real" than prior verticals</h2>
+  <p>IOF Core, GoodRelations, FIBO, FHIR, and ODRL are all natively RDF/OWL. <strong>Akoma Ntoso is not</strong> — it's an XML Schema vocabulary (real namespace, verified: <code>http://docs.oasis-open.org/legaldocml/ns/akn/3.0</code>), with no official RDF/OWL binding. This Turtle file maps its real element/attribute names into RDF as this project's own mapping, not an existing standard one — a bigger disclosure than FHIR's "simplified triple shape," since there's no official RDF version to simplify from here.</p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>FRBRWork</code></td><td><span class="src-tag real">Akoma Ntoso</span></td><td>The abstract ordinance as a legal concept.</td></tr>
+      <tr><td><code>FRBRExpression</code></td><td><span class="src-tag real">Akoma Ntoso</span></td><td>One specific, dated version of the ordinance's text.</td></tr>
+      <tr><td><code>FRBRManifestation</code></td><td><span class="src-tag real">Akoma Ntoso</span></td><td>A specific rendering of an Expression (PDF, XML).</td></tr>
+      <tr><td><code>CodifiedCode</code></td><td><span class="src-tag domain">domain</span></td><td>The Clerk's "whole consolidated Code" meaning.</td></tr>
+      <tr><td><code>FilingDivision</code></td><td><span class="src-tag domain">domain</span></td><td>The Records Office's "Section" meaning — unrelated to the real hierarchical <code>section</code> element.</td></tr>
+      <tr><td><code>RequestSLA</code></td><td><span class="src-tag domain">domain</span></td><td>An operational turnaround claim.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations / attributes</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>activeModifications</code> / <code>passiveModifications</code></td><td><span class="src-tag real">Akoma Ntoso</span></td><td><code>FRBRWork</code></td><td>Bidirectional by design (Conflict 3)</td></tr>
+      <tr><td><code>start</code> / <code>end</code></td><td><span class="src-tag real">Akoma Ntoso</span></td><td><code>FRBRExpression</code></td><td>An <code>end</code> with no <code>start</code> marks a repealed original fragment (Conflict 4)</td></tr>
+      <tr><td><code>lifecycle</code> event</td><td><span class="src-tag real">Akoma Ntoso</span></td><td><code>FRBRWork</code></td><td>passed/published/effective, distinct events (Conflict 8)</td></tr>
+      <tr><td><code>ref</code> (<code>href</code>)</td><td><span class="src-tag real">Akoma Ntoso</span></td><td>cross-reference</td><td>Should target a stable identifier (Conflict 7)</td></tr>
+      <tr><td><code>lastGenerated</code> / <code>manifestationStale</code></td><td><span class="src-tag domain">domain</span></td><td><code>FRBRManifestation</code></td><td>(Conflict 5)</td></tr>
+      <tr><td><code>clerkFilingNo</code> / <code>stateCitation</code> / <code>codeSection</code></td><td><span class="src-tag domain">domain</span></td><td><code>FRBRWork</code></td><td>(Conflict 2)</td></tr>
+      <tr><td><code>needsRevalidation</code></td><td><span class="src-tag domain">domain</span></td><td>cross-reference (boolean)</td><td>(Conflict 7)</td></tr>
+      <tr><td><code>verifiedCurrentExpression</code></td><td><span class="src-tag domain">domain</span></td><td>checkpoint (boolean)</td><td>(Conflict 9)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>CLK-2019-014</strong> (<code>FRBRWork</code>) — <code>passiveModifications</code> now asserted, pointing to CLK-2023-007</li>
+    <li><strong>CLK-2023-007</strong> — <code>activeModifications</code> targeting CLK-2019-014's Expression</li>
+    <li><strong>TMC 9.04.010's Expression</strong> — real <code>end</code> attribute at the 2021 repeal date, no <code>start</code></li>
+    <li><strong>TMC 14.20.030's Manifestation</strong> — <code>lastGenerated: 2022</code>, flagged stale</li>
+    <li><strong>Stale <code>ref</code></strong> in TMC 14.20.030 — flagged for revalidation</li>
+    <li><strong>Two <code>RequestSLA</code> instances</strong> — published (10 days) and actual (18 days), kept separate</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p>This file's RDF mapping of Akoma Ntoso is this project's own, not an official OASIS RDF binding — disclosed above, not glossed over.</p>
+  <p>Full picture, including which conflicts have a worked example in <code>ontology.ttl</code>, is in the <a href="changelog.html">changelog</a>.</p>
+</div>
+</body>
+</html>

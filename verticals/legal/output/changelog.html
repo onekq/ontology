@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — City of Thornfield</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published standard, not invented for this
+    project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>Yes</td></tr>
+      <tr><td>6</td><td>6</td><td>Yes</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes</td></tr>
+      <tr><td>8</td><td>8</td><td>Yes</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>"Ordinance 2019-14" ambiguity</strong> resolved with <strong>Akoma Ntoso's real <code>FRBRWork</code>/<code>FRBRExpression</code></strong> layering.</li>
+    <li><strong>Clerk filing # / state citation / code section independence</strong> kept as three separate, cross-indexed identifiers.</li>
+    <li><strong>The one-sided amendment record</strong> fixed by asserting <strong><code>passiveModifications</code></strong> on CLK-2019-014, plus a general integrity check for future gaps of the same shape.</li>
+    <li><strong>The repealed section with no <code>@end</code></strong> fixed per Akoma Ntoso's own stated rule — an <code>end</code> with no <code>start</code> marks a repealed original fragment.</li>
+    <li><strong>Manifestation drift</strong> resolved with a domain <code>lastGenerated</code>/<code>manifestationStale</code> flag.</li>
+    <li><strong>"Code"/"Section" collision</strong> resolved with domain <code>CodifiedCode</code>/<code>FilingDivision</code> classes, kept distinct from <strong>Akoma Ntoso's real <code>section</code></strong> element.</li>
+    <li><strong>The stale cross-reference</strong> flagged for revalidation — <strong>Akoma Ntoso's <code>ref</code></strong> is designed for stable targeting, not citation numbers that recodification can change.</li>
+    <li><strong>"Enacted date" conflation</strong> resolved into three distinct <strong><code>lifecycle</code></strong> events.</li>
+    <li><strong>Records-request checkpoint gap</strong> flagged with a domain <code>verifiedCurrentExpression: false</code>.</li>
+    <li><strong>SLA disagreement</strong> kept as two domain <code>RequestSLA</code> instances.</li>
+  </ol>
+
+  <p><strong>Two items were explicitly logged as not resolved separately</strong>: REQ-501 (folded into #3) and REQ-503 (folded into #5). See <a href="../stages/04-validate.html">Stage 4 — Validate</a> for the full trace.</p>
+
+  <h2>A disclosure carried through from Draft</h2>
+  <p>Unlike every prior vertical's grounding ontology, Akoma Ntoso has no official RDF/OWL binding — it's an XML Schema vocabulary. This file's <code>akn:</code> mapping is this project's own construction using the real, verified element and attribute names, not an existing standard RDF vocabulary.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>
