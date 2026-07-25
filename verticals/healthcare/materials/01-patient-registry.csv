@@ -1,0 +1,5 @@
+mrn,legal_name,dob,ssn_last4,insurance_member_id,registered_at,notes
+MRN-100234,Dana Osei,1985-04-12,6721,KHP-88213-01,2018-05-01,Primary care registration.
+MRN-100891,Dana Ossei,1985-04-12,6721,KHP-88213-01,2023-11-03,"ER registration - name misspelled at intake. System flagged 'possible duplicate' in 2023; flag never actioned."
+MRN-100555,Elena Reyes,1979-02-20,4410,KHP-77410-01,2016-08-14,Family plan policyholder.
+MRN-100556,Tomas Reyes,2009-06-30,,KHP-77410-02,2016-08-14,"Dependent on Elena's policy - shares the KHP-77410 prefix. A 2024 lab result was routed to Elena's chart before staff caught the member-ID mismatch."

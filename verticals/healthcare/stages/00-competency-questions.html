@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope — Healthcare — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .cq-status { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.55rem; border-radius: 999px; }
+  .cq-status.answerable { color: var(--accent); background: var(--accent-bg); }
+  .cq-row { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; border-bottom:1px solid var(--border); padding: 0.7rem 0; }
+  .cq-row:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare</span>
+  <h1>Stage 0 — Scope</h1>
+  <p class="lede">
+    Written before touching any source material — the questions the finished ontology needs to
+    be able to answer (Grüninger &amp; Fox 1995; Noy &amp; McGuinness).
+  </p>
+
+  <div class="stage-nav">
+    <a class="current" href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>Millbrook Health's competency questions</h2>
+  <p>Written before Discover, checked again in Stage 4 — Validate.</p>
+
+  <div class="cq-row"><span>Do two patient records actually refer to the same person, or two different people?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Given an MRN, an SSN, and an insurance member ID for "the same" patient, are all three actually identifying that one patient and no one else?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Is a condition marked "active" actually still believed to be true, or was it flagged as entered in error?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Do the billing code and the clinical code for a condition still agree on what it is?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Does a patient's full allergy list survive when two of their records get reconciled?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>When someone says "active," do they mean the patient is currently admitted, or that a condition is still current?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Is an encounter marked "in progress" actually still happening?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Is a given data-sharing consent still valid for the purpose it's being used for?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Would the care plan review checkpoint actually catch an out-of-date medication list?</span><span class="cq-status answerable">Target</span></div>
+  <div class="cq-row"><span>Does the advertised referral turnaround match what the specialty clinic actually delivers?</span><span class="cq-status answerable">Target</span></div>
+
+  <p style="margin-top:1.5rem;">Next: <a href="01-discover.html">Stage 1 — Discover</a>.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Allergy & Medication Log — Millbrook Health</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare — Source material</span>
+  <h1>Allergy & Medication Change Log</h1>
+  <p class="lede">(<a href="03-allergy-medication-log.md">raw export</a>)</p>
+
+  <h2>AllergyIntolerance records</h2>
+  <table>
+    <thead><tr><th>Record</th><th>Patient MRN</th><th>Substance</th><th>Criticality</th><th>Verification status</th><th>Recorded</th></tr></thead>
+    <tbody>
+      <tr><td>ALG-201</td><td>MRN-100234 (Dana Osei)</td><td>Penicillin</td><td><strong>high</strong></td><td>confirmed</td><td>2019-06-02</td></tr>
+      <tr style="background:var(--accent-bg);"><td>—</td><td>MRN-100891 (Dana Ossei)</td><td colspan="4"><em>No allergy records on file</em></td></tr>
+    </tbody>
+  </table>
+  <p>MRN-100891 has no allergy records at all — allergy history wasn't asked about (or wasn't found) during the 2023 ER registration, since staff had no way to know it was the same patient as MRN-100234. Because MRN-100891 has had more recent activity, some downstream systems treat it as the "current" record for Dana Osei/Ossei — meaning the Penicillin allergy effectively disappears from view for anyone querying the more recently active record.</p>
+
+  <h2>Medication changes (MRN-100234)</h2>
+  <ul>
+    <li>2019-06-02 — Amoxicillin discontinued after the Penicillin allergy was identified (cross-reactive risk).</li>
+    <li>2022-03-11 — Lisinopril started for blood pressure management.</li>
+  </ul>
+  <p>No corresponding medication history exists on MRN-100891.</p>
+</div>
+</body>
+</html>

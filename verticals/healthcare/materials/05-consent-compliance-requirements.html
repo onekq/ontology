@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consent & Compliance Requirements — Millbrook Health</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare — Source material</span>
+  <h1>Consent & Compliance Requirements Register <span style="font-weight:400;color:var(--muted)">(excerpt)</span></h1>
+  <p class="lede">Maintained by Compliance. Each requirement has a "Satisfied by" field set once and rarely revisited. (<a href="05-consent-compliance-requirements.md">raw export</a>)</p>
+
+  <div class="conflict">
+    <span class="label">REQ-301 — Data sharing consent</span>
+    <h3>Sharing a patient's record with the external specialty referral network requires an active consent on file covering the "care coordination" purpose of use.</h3>
+    <p><strong>Satisfied by:</strong> Consent record CONSENT-401.</p>
+    <p>CONSENT-401 was obtained in 2020, scoped to "billing" purpose only — not "care coordination." Referral sharing has been proceeding under a consent that doesn't actually cover it.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-302 — Medication reconciliation at care plan review</span>
+    <h3>Every care plan review must include a reconciliation of the patient's current medication list.</h3>
+    <p><strong>Satisfied by:</strong> the care plan review checklist's "confirm patient contacted" checkpoint.</p>
+    <p>That checkpoint confirms contact happened — it does not require the medication list to actually be reconciled against what the patient reports taking.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-303 — Duplicate-record verification before merge</span>
+    <h3>Two matching identifiers must be confirmed before two patient records can be flagged as duplicates of each other and merged.</h3>
+    <p><strong>Satisfied by:</strong> the registration system's automated duplicate-check flag.</p>
+    <p>The system flagged MRN-100234 and MRN-100891 as a possible duplicate in 2023 (matching DOB, SSN last 4, and insurance member ID — well past the two-identifier bar). The flag was never actioned by staff, and the records remain unmerged.</p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encounter & Condition Records — Millbrook Health</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare — Source material</span>
+  <h1>Encounter & Condition Records</h1>
+  <p class="lede">(<a href="02-encounter-condition-records.md">raw export</a>)</p>
+
+  <h2>Encounters</h2>
+  <table>
+    <thead><tr><th>Encounter ID</th><th>Patient MRN</th><th>Status</th><th>Period start</th><th>Period end</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td>ENC-5001</td><td>MRN-100234 (Dana Osei)</td><td>in-progress</td><td>2024-01-10</td><td>—</td><td>Never closed out — clinically finished weeks ago per the chart, but nothing marked it complete.</td></tr>
+      <tr><td>ENC-5002</td><td>MRN-100891 (Dana Ossei)</td><td>finished</td><td>2023-11-03</td><td>2023-11-03</td><td>The ER visit that created the duplicate record.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Conditions</h2>
+  <table>
+    <thead><tr><th>Condition ID</th><th>Patient MRN</th><th>ICD-10</th><th>Clinical code</th><th>Clinical status</th><th>Verification status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>COND-8801</td><td>MRN-100234 (Dana Osei)</td><td>E11.9</td><td>DM2-STD-1994</td><td>active</td><td>confirmed</td><td>Control example — no conflict.</td></tr>
+      <tr class="flagged"><td>COND-8802</td><td>MRN-100891 (Dana Ossei)</td><td>I10</td><td>HTN-STD-1994</td><td>active</td><td><strong>entered-in-error</strong></td><td>Documentation mistake, flagged by the original clinician. The downstream population-health reporting system reads only <code>clinical_status</code> and currently counts this patient as having active hypertension.</td></tr>
+    </tbody>
+  </table>
+  <p>Note on COND-8801's clinical code: the ICD-10 code (E11.9) has been updated in national coding guidance since 2019 to distinguish diabetes sub-types more precisely; the clinical terminology mapping was never re-synced and now represents a broader, less specific concept than the current ICD-10 code does.</p>
+</div>
+</body>
+</html>

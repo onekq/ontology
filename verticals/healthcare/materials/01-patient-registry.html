@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patient Registry — Millbrook Health</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Healthcare — Source material</span>
+  <h1>Patient Registry</h1>
+  <p class="lede">
+    Exported from Millbrook's registration system. <code>mrn</code>, <code>ssn_last4</code>, and
+    <code>insurance_member_id</code> are all real identifier fields, and all inconsistently
+    reconciled — same as a real export would be.
+    (<a href="01-patient-registry.csv">raw .csv export</a>)
+  </p>
+  <table>
+    <thead><tr><th>MRN</th><th>Legal Name</th><th>DOB</th><th>SSN (last 4)</th><th>Insurance Member ID</th><th>Registered</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td>MRN-100234</td><td>Dana Osei</td><td>1985-04-12</td><td>6721</td><td>KHP-88213-01</td><td>2018-05-01</td><td>Primary care registration.</td></tr>
+      <tr class="flagged"><td>MRN-100891</td><td>Dana Ossei</td><td>1985-04-12</td><td>6721</td><td>KHP-88213-01</td><td>2023-11-03</td><td>ER registration — name misspelled at intake. System flagged "possible duplicate" in 2023; flag never actioned.</td></tr>
+      <tr><td>MRN-100555</td><td>Elena Reyes</td><td>1979-02-20</td><td>4410</td><td>KHP-77410-01</td><td>2016-08-14</td><td>Family plan policyholder.</td></tr>
+      <tr class="flagged"><td>MRN-100556</td><td>Tomas Reyes</td><td>2009-06-30</td><td>—</td><td>KHP-77410-02</td><td>2016-08-14</td><td>Dependent on Elena's policy — shares the KHP-77410 prefix. A 2024 lab result was routed to Elena's chart before staff caught the member-ID mismatch.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
