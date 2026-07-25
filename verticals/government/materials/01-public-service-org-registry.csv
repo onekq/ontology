@@ -1,0 +1,5 @@
+record_type,id,name,channel,org_unit_code,state_registry_id,federal_grant_id,notes
+Service,SVC-2201,Business License Renewal,In-Person,ORG-COMM-04,,,Original channel; recognizes fee-waiver code FW-VET for veteran-owned businesses.
+Service,SVC-2201-ON,Business License Renewal,Online Portal,ORG-COMM-04,,,"Same service, different channel. Online form has no field for fee-waiver code FW-VET - veterans applying online are charged full price."
+Organization,ORG-COMM-04,Department of Commerce,,,SR-88213,FED-GR-33210,"Listed as competent authority for SVC-2201 and SVC-2201-ON. Business licensing was reassigned to ORG-ECON-01 in the 2024 reorganization; this record was never updated."
+Organization,ORG-ECON-01,Department of Economic Development,,,SR-91045,,"Created in the 2024 reorganization. Actually handles business licensing now, per the reorg order - but no service record points to it as competent authority."

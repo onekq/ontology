@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Public Service & Organization Registry — Elmsworth County</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Government — Source material</span>
+  <h1>Public Service & Organization Registry</h1>
+  <p class="lede">
+    Exported from Elmsworth County's service catalog and org directory. <code>org_unit_code</code>,
+    <code>state_registry_id</code>, and <code>federal_grant_id</code> are all real reference
+    fields, and all inconsistently populated — same as a real export would be.
+    (<a href="01-public-service-org-registry.csv">raw .csv export</a>)
+  </p>
+  <table>
+    <thead><tr><th>Type</th><th>ID</th><th>Name</th><th>Channel</th><th>Org Unit</th><th>State ID</th><th>Federal Grant ID</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td>Service</td><td>SVC-2201</td><td>Business License Renewal</td><td>In-Person</td><td>ORG-COMM-04</td><td>—</td><td>—</td><td>Original channel; recognizes fee-waiver code FW-VET for veteran-owned businesses.</td></tr>
+      <tr class="flagged"><td>Service</td><td>SVC-2201-ON</td><td>Business License Renewal</td><td>Online Portal</td><td>ORG-COMM-04</td><td>—</td><td>—</td><td>Same service, different channel. Online form has no field for fee-waiver code FW-VET — veterans applying online are charged full price.</td></tr>
+      <tr class="flagged"><td>Organization</td><td>ORG-COMM-04</td><td>Department of Commerce</td><td>—</td><td>—</td><td>SR-88213</td><td>FED-GR-33210</td><td>Listed as competent authority for both services above. Business licensing was reassigned to ORG-ECON-01 in the 2024 reorganization; this record was never updated.</td></tr>
+      <tr class="flagged"><td>Organization</td><td>ORG-ECON-01</td><td>Department of Economic Development</td><td>—</td><td>—</td><td>SR-91045</td><td>—</td><td>Created in the 2024 reorganization. Actually handles business licensing now — but no service record points to it as competent authority.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
