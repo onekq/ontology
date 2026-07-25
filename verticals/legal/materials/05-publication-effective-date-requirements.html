@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Publication & Effective Date Requirements — City of Thornfield</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal — Source material</span>
+  <h1>Publication & Effective Date Requirements Register <span style="font-weight:400;color:var(--muted)">(excerpt)</span></h1>
+  <p class="lede">Maintained by the City Attorney's office. Each requirement has a "Satisfied by" field set once and rarely revisited. (<a href="05-publication-effective-date-requirements.md">raw export</a>)</p>
+
+  <div class="conflict">
+    <span class="label">REQ-501 — Complete lifecycle record</span>
+    <h3>Every ordinance's lifecycle record must list every event that has affected it — enactment, amendment, and repeal — with dates and references to the amending/repealing instrument.</h3>
+    <p><strong>Satisfied by:</strong> the lifecycle entry created at enactment.</p>
+    <p>CLK-2019-014's lifecycle record has only its own enactment event. Ordinance 2023-07's amendment was never added to it.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-502 — Effective date public notice</span>
+    <h3>The public must be able to determine an ordinance's legally effective date, which may differ from its passage date or publication date per state law's mandatory waiting period.</h3>
+    <p><strong>Satisfied by:</strong> the "enacted_date" field in the ordinance registry.</p>
+    <p>The registry's single date field does not distinguish passed, published, and effective dates. For ordinances subject to the waiting period, "enacted_date" as recorded may not be the date the ordinance actually took legal effect.</p>
+  </div>
+
+  <div class="conflict">
+    <span class="label">REQ-503 — Manifestation matches current Expression</span>
+    <h3>Any publicly posted rendering of an ordinance must reflect its current, amended text.</h3>
+    <p><strong>Satisfied by:</strong> the PDF generation step run at initial codification.</p>
+    <p>Nothing re-runs this step when a later amendment changes the underlying text — see the Manifestation drift already found for TMC 14.20.030.</p>
+  </div>
+</div>
+</body>
+</html>

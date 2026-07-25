@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ordinance Registry — City of Thornfield</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Legal — Source material</span>
+  <h1>Ordinance Registry</h1>
+  <p class="lede">
+    Exported from the City Clerk's filing system. <code>clerk_filing_no</code>,
+    <code>state_citation</code>, and <code>code_section</code> are all real reference fields,
+    and all inconsistently reconciled — same as a real export would be.
+    (<a href="01-ordinance-registry.csv">raw .csv export</a>)
+  </p>
+  <table>
+    <thead><tr><th>Clerk Filing #</th><th>State Citation</th><th>Code Section</th><th>Title</th><th>Enacted</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr class="flagged"><td>CLK-2019-014</td><td>ST-CITE-4471</td><td>TMC 14.20.030</td><td>Noise Control Standards</td><td>2019-06-01</td><td>Original enactment. See CLK-2023-007 — amends this same code section, but this record was never updated to show it.</td></tr>
+      <tr class="flagged"><td>CLK-2023-007</td><td>ST-CITE-5820</td><td>TMC 14.20.030</td><td>Amendment to Noise Control Standards</td><td>2023-03-15</td><td>Amends CLK-2019-014. <code>activeModifications</code> recorded here; <code>passiveModifications</code> never added to CLK-2019-014's own record.</td></tr>
+      <tr class="flagged"><td>CLK-2021-002</td><td>ST-CITE-4890</td><td>TMC 9.04.010</td><td>Repeal of Temporary Vending Permit Requirement</td><td>2021-02-10</td><td>Repeals TMC 9.04.010 (enacted under a 2015 ordinance). The repealed section's own record was never given an <code>@end</code> date — it still displays as in force in the codified text.</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
