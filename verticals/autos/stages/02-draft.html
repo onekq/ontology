@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — Autos — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles</span>
+  <h1>Stage 2 — Draft</h1>
+  <p class="lede">
+    No single published ontology covers "autonomous vehicle fleet operations" end to end. This
+    draft combines <a href="https://schema.org/Vehicle">schema.org's Vehicle</a> vocabulary for
+    the vehicle itself, <a href="https://www.w3.org/TR/vocab-ssn/">W3C/OGC SOSA/SSN</a> for
+    sensing and events, W3C PROV-O for revision and attribution, and W3C SKOS both for
+    cross-reference confidence and for representing two real external controlled vocabularies —
+    SAE J3016's automation levels and ISO 26262's ASIL scale — as first-class, queryable concept
+    schemes rather than free-text strings.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a class="current" href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <h2>The pattern this draft uses: identity vs. claim vs. context</h2>
+  <p>
+    Discover surfaced the same shape three separate times: a vehicle's automation level, a
+    subsystem's ASIL rating, and a road segment's validated speed are all treated by source
+    documents as fixed properties, when each is actually a <em>claim</em> made by a specific team,
+    at a specific time, under specific conditions. schema.org's <code>Vehicle</code> gives a
+    stable identity anchor (<code>vehicleIdentificationNumber</code>); PROV-O and SKOS give the
+    vocabulary for attaching time- and agent-scoped claims to that anchor instead of overwriting
+    a single field every time someone's understanding changes.
+  </p>
+
+  <h2>Classes adopted from real ontologies</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Vehicle</code></td><td><strong>schema.org</strong></td><td>The physical vehicle, identified by <code>vehicleIdentificationNumber</code> (VIN) — the ontology's durable identity anchor, distinct from any fleet ID.</td></tr>
+      <tr><td><code>sosa:Observation</code></td><td><strong>W3C/OGC SOSA</strong></td><td>An act of observing a property of a feature of interest. Base pattern for disengagement events and detection events — each has a <code>madeBySensor</code>/<code>madeByActor</code>, an <code>observedProperty</code>, and a <code>hasResult</code>.</td></tr>
+      <tr><td><code>sosa:FeatureOfInterest</code></td><td><strong>W3C/OGC SOSA</strong></td><td>The thing an observation is about — a road segment (for ODD validation), or a pedestrian-detection event's surrounding scene.</td></tr>
+      <tr><td><code>prov:Attribution</code> / <code>prov:Agent</code></td><td><strong>W3C PROV-O</strong></td><td>Links a claim (a disengagement cause, an ASIL rating) to whoever made it — telemetry system, safety driver, or engineering review board are each a distinct <code>Agent</code>.</td></tr>
+      <tr><td><code>skos:ConceptScheme</code> / <code>skos:Concept</code></td><td><strong>W3C SKOS</strong></td><td>Used twice: once for SAE J3016's L0–L5 automation-level scale, once for ISO 26262's ASIL A–D/QM scale — both real external controlled vocabularies, neither natively RDF, exactly what SKOS exists to represent.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Where real ontologies don't reach — flagged, not forced</h2>
+  <p>
+    Nothing in schema.org, SOSA/SSN, PROV-O, or SKOS models a <em>regulatory permit</em> or its
+    boundary — that's a legal/administrative concept, not a sensing or provenance one. A
+    domain-specific <code>Permit</code> class is needed, the same way manufacturing needed
+    <code>PurchasedKit</code> and retail needed a compliance-rule concept where their reference
+    ontologies didn't reach either.
+  </p>
+  <p>
+    <a href="https://www.asam.net/standards/detail/openodd/">ASAM OpenODD</a> is the real published
+    standard for describing an Operational Design Domain, but it's an XML/schema-based format, not
+    RDF — this draft borrows its condition-scoping <em>pattern</em> (road class × weather × speed
+    range, each independently validated) for a domain-specific <code>OperationalDesignDomain</code>
+    class rather than claiming a native RDF serialization that doesn't exist.
+  </p>
+  <p>
+    <code>SoftwareRelease</code> is also domain-specific — PROV-O's <code>Entity</code> and
+    <code>wasRevisionOf</code> cover its version history once it exists, but nothing upstream
+    models "a bundle of independently-versioned components released together under one label."
+  </p>
+
+  <h2>Candidate relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><code>denotes</code></td><td>domain, PROV-O-adjacent</td><td>Candidate for fleet ID → VIN, time-qualified — direct parallel to manufacturing's <code>Identifier</code>/<code>denotes</code> pattern for the FLT-0231 chassis swap</td></tr>
+      <tr><td><code>exactMatch</code> / <code>closeMatch</code> / <code>broadMatch</code></td><td><strong>W3C SKOS</strong></td><td><code>[inferred, contested]</code> — candidates for reconciling the ODD polygon, permit boundary, and marketing service-area map against each other</td></tr>
+      <tr><td><code>wasAssociatedWith</code> / <code>qualifiedAttribution</code></td><td><strong>W3C PROV-O</strong></td><td><code>[inferred, contested]</code> — candidate for keeping telemetry, safety-driver, and engineering-review determinations as separate, non-overwriting claims on the same event</td></tr>
+      <tr><td><code>hasResult</code> / <code>observedProperty</code></td><td><strong>W3C/OGC SOSA</strong></td><td>Candidate for detection-range and speed-envelope claims — makes a 38m-vs-40m or 45mph-vs-35mph disagreement a queryable pair of results, not a single overwritten number</td></tr>
+      <tr><td><code>requirementSatisfiedBy</code></td><td>domain, IOF-Core-inspired</td><td><code>[inferred, contested]</code> — candidate for REQ-AV-014/022, same re-verify-on-change shape manufacturing's Resolve stage settled on for its own requirements register</td></tr>
+    </tbody>
+  </table>
+
+  <p>Five items are marked <em>contested</em> on purpose. Stage 3 resolves each explicitly.</p>
+</div>
+</body>
+</html>

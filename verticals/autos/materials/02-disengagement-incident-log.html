@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Disengagement &amp; Incident Log — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Source material</span>
+  <h1>Disengagement &amp; Incident Log</h1>
+  <p class="lede">
+    Shaped like what NHTSA's Standing General Order 2021-01 requires ADS operators to report:
+    every disengagement, its trigger, and — for reportable events — a determination. Overland's
+    own systems capture three independent determinations per event (vehicle telemetry, the safety
+    driver's note if one was aboard, and Engineering's post-hoc review); only one of the three is
+    actually submitted to NHTSA, and they don't always agree.
+    (<a href="02-disengagement-incident-log.csv">raw .csv export</a>)
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Event</th><th>Vehicle</th><th>Trigger</th><th>Telemetry flag</th><th>Safety driver note</th><th>Engineering review</th><th>SGO reportable</th></tr>
+    </thead>
+    <tbody>
+      <tr class="flagged">
+        <td>INC-0442</td><td>FLT-0231 (VIN ...100111)</td><td>collision</td>
+        <td>planner following-distance fault</td>
+        <td>"obstructed view by parked delivery van; disengaged and braked, believed necessary"</td>
+        <td>perception object-tracking loss on adjacent-lane debris was a contributing factor — <strong>this is the only determination actually filed with NHTSA</strong></td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>EVT-1187</td><td>FLT-0201</td><td>remote-operator</td>
+        <td>n/a — operator-initiated for construction detour</td>
+        <td>n/a — no safety driver on board (Dunmore deployment permit)</td>
+        <td>routine</td>
+        <td>No</td>
+      </tr>
+      <tr class="flagged">
+        <td>EVT-1204</td><td>FLT-0277</td><td>telemetry-auto-flag</td>
+        <td>route ODD exit — Colby Bridge corridor</td>
+        <td>n/a — no safety driver on board</td>
+        <td>vehicle briefly entered an unvalidated road segment — see <a href="03-odd-geofence-register.html">ODD register</a></td>
+        <td>Under review</td>
+      </tr>
+      <tr class="flagged">
+        <td>EVT-1250</td><td>FLT-0202</td><td>telemetry-auto-flag</td>
+        <td>pedestrian detected inside minimum following distance — low light</td>
+        <td>n/a — no safety driver on board</td>
+        <td>detection occurred later than the requirement baseline assumes — see <a href="04-software-release-log.html">release log</a> and <a href="05-safety-case-requirements.html">requirements</a></td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>EVT-1266</td><td>FLT-0215</td><td>safety-driver-initiated</td>
+        <td>n/a</td>
+        <td>"yielded manually to emergency vehicle, standard procedure"</td>
+        <td>routine driver-initiated yield; no fault</td>
+        <td>No</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

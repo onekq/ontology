@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolution Changelog — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  ol.changelog { padding-left: 1.3rem; }
+  ol.changelog li { margin: 0.9rem 0; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Result</span>
+  <h1>Resolution Changelog</h1>
+  <p class="lede">
+    Each entry settles one conflict logged in <a href="../stages/01-discover.html">Stage 1 —
+    Discover</a> and resolved in <a href="../stages/03-resolve.html">Stage 3 — Resolve</a>.
+    Vocabulary in <strong>bold</strong> is from a real published ontology or standard, not
+    invented for this project.
+  </p>
+
+  <table>
+    <thead><tr><th>#</th><th>Resolve conflict</th><th>In ontology.ttl?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>Yes</td></tr>
+      <tr><td>2</td><td>2</td><td>Yes</td></tr>
+      <tr><td>3</td><td>3</td><td>Yes</td></tr>
+      <tr><td>4</td><td>4</td><td>Yes</td></tr>
+      <tr><td>5</td><td>5</td><td>Yes</td></tr>
+      <tr><td>6</td><td>6</td><td>Yes</td></tr>
+      <tr><td>7</td><td>7</td><td>Yes — as two competing claims, deliberately unresolved</td></tr>
+      <tr><td>8</td><td>8</td><td>Yes</td></tr>
+      <tr><td>9</td><td>9</td><td>Yes</td></tr>
+      <tr><td>10</td><td>10</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="changelog">
+    <li><strong>Marketed vs. operational automation level</strong> split into a static <code>marketedAutomationLevel</code> on <strong>schema.org's <code>Vehicle</code></strong> and a separate per-trip <code>operationalAutomationLevel</code> on a new <code>TripContext</code>, both referencing <strong>SAE J3016</strong>'s real L0–L5 scale via <strong>SKOS</strong> — not a second static vehicle property, since operational level genuinely depends on metro and permit context.</li>
+    <li><strong>FLT-0231</strong>'s reused fleet ID split into two time-qualified <code>Identifier</code>s <code>denotes</code>-ing two different VINs — the shared display string is not treated as a single identity, same discipline as manufacturing's ROT-320 case.</li>
+    <li><strong>Mapping's ODD polygon, Regulatory's permit boundary, and Marketing's service-area map</strong> kept as three distinct domain classes rather than one "supported area" concept. Genuine overlaps get <strong>SKOS</strong> <code>closeMatch</code>; Ashcombe Commons and the Colby Bridge corridor get <strong>no match property at all</strong> — confirmed outside both real boundaries, not merely unverified.</li>
+    <li><strong>INC-0442</strong>'s three cause determinations kept as three separate <strong>PROV-O</strong> <code>Attribution</code>s on one event, rather than collapsed into a single "cause" field — with an explicit <code>regulatoryFilingOf</code> flag marking which one was actually submitted under NHTSA SGO 2021-01.</li>
+    <li><strong>Build 4.12.2 / perception-v7.3.1 bundle</strong> modeled as one <code>SoftwareRelease</code> with two <code>Identifier</code>s and a <strong>SKOS</strong> <code>exactMatch</code> — the two labels denote the literally identical deployed artifact, unlike Conflict 3's genuinely different area scopes.</li>
+    <li><strong>perception-v7.3.1's unflagged detection-range reduction</strong> resolved by making any <code>SoftwareRelease</code> that changes a value a <code>SafetyRequirement</code> depends on set that requirement's <code>requiresReverification</code> flag automatically — REQ-AV-014 is currently flagged stale as a direct result.</li>
+    <li><strong>REQ-AV-022's ASIL-D vs. ASIL-C disagreement</strong> kept as two dated, attributed claims (via <strong>SKOS</strong> concepts from the real <strong>ISO 26262</strong> ASIL scale plus <strong>PROV-O</strong> attribution) rather than resolved to either number — deployment sign-off should be blocked on this, not silently pass.</li>
+    <li><strong>Ashcombe Commons / Colby Bridge route</strong> modeled as a <code>PermitBoundaryExcursion</code> — compliance is checked against full route geometry, not just trip endpoints.</li>
+    <li><strong>Safety driver required vs. present</strong> split into <code>Permit.safetyDriverRequired</code> (policy rule) and a <strong>SOSA</strong>-sourced <code>safetyDriverPresent</code> observation (observed fact) — the fleet-wide roster toggle conflated the two in both directions.</li>
+    <li><strong>Mapping's 45mph vs. Perception Engineering's 35mph</strong> for the same road class kept as two separate <strong>SOSA</strong> <code>Observation</code>s attributed via <strong>PROV-O</strong> <code>wasAssociatedWith</code>, rather than averaged — the 10mph gap is itself the fact worth surfacing.</li>
+  </ol>
+
+  <p><strong>No item from Discover was silently dropped.</strong> REQ-AV-031 (lidar range) and the Sensor Pod v3.0 retrofit note are logged in <a href="../stages/04-validate.html">Stage 4 — Validate</a> as checked-with-no-conflict, not omitted.</p>
+
+  <p style="margin-top:2rem;"><a href="ontology.html">← Back to the resolved ontology</a> · raw: <a href="changelog.md">changelog.md</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolve — Autos — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .stepper-bar { display:flex; align-items:center; gap:0.75rem; margin: 1.2rem 0; font-size:0.9rem; color:var(--muted); }
+  .stepper-dots { display:flex; gap:0.35rem; }
+  .stepper-dots span { width:8px; height:8px; border-radius:50%; background:var(--border); display:inline-block; }
+  .stepper-dots span.done { background: var(--accent); }
+  .stepper-dots span.current { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  .conflict-step { display: none; }
+  .conflict-step.active { display: block; }
+  .recommended { display: none; }
+  .recommended.shown { display: block; }
+  .reveal-btn, .next-btn {
+    border: 1px solid var(--accent); background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.9rem; margin-top: 0.9rem;
+  }
+  .next-btn { display: none; margin-left: 0.5rem; }
+  .recommended.shown .next-btn { display: inline-block; }
+  .done-msg { display: none; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles</span>
+  <h1>Stage 3 — Resolve</h1>
+  <p class="lede">
+    One conflict at a time, in dependency order. Reveal the recommended answer, then move on —
+    same discipline the method itself requires: <em>"never batch conflicts."</em> Vocabulary
+    below comes from real ontologies (schema.org, W3C SOSA/SSN, W3C PROV-O, W3C SKOS) plus real
+    external standards represented via SKOS (SAE J3016, ISO 26262) — see Stage 2 for where each
+    came from.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a class="current" href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <div class="stepper-bar">
+    <span id="stepper-label">Conflict 1 of 10</span>
+    <div class="stepper-dots" id="stepper-dots"></div>
+  </div>
+
+  <div class="conflict-step active" data-step="1">
+    <div class="conflict">
+      <span class="label">Parent decision — resolve first</span>
+      <h3>Is "automation level" a fixed property of the Ridgeline R4 platform, or does it depend on where and when a trip happens?</h3>
+      <p>The fleet registry lists "L4" as marketed level on every row, uniformly. Actual operational level varies by metro and permit: true driverless in Dunmore, supervised in Millbrook, and inconsistent even within Millbrook (FLT-0244).</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + SKOS</div>
+        Keep <code>marketedAutomationLevel</code> as a static <code>schema:Vehicle</code> property, referencing a fixed <code>skos:Concept</code> from the SAE J3016 scheme. Model <code>operationalAutomationLevel</code> as a separate, per-trip claim tied to metro/permit context, not a second static property on the vehicle. This is the parent decision because Conflicts 8 and 9 both depend on "operational level" being trip-scoped, not vehicle-scoped.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="2">
+    <div class="conflict">
+      <span class="label">Conflict 2 of 10</span>
+      <h3>FLT-0231 has denoted two physically different vehicles</h3>
+      <p>Fleet ID FLT-0231 was assigned to VIN ...100111 until it was written off in INC-0442, then reassigned to replacement VIN ...100558 six weeks later. The telematics dashboard still labels pre-swap trip logs under plain "FLT-0231," with no VIN qualifier.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — schema.org + domain <code>denotes</code></div>
+        <code>vehicleIdentificationNumber</code> is the ontology's canonical identity anchor — one <code>schema:Vehicle</code> instance per VIN. <code>FLT-0231</code> becomes an <code>Identifier</code> that <code>denotes</code> a specific VIN <em>at a given time</em>, not a standing alias for "whichever vehicle currently holds this fleet ID." Any trip log has to resolve to the VIN active on the trip's date, not to today's FLT-0231 assignment — the same discipline manufacturing used for ROT-320's Rev B/Rev C identifier reuse.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="3">
+    <div class="conflict">
+      <span class="label">Conflict 3 of 10</span>
+      <h3>Do Mapping's ODD polygon, Regulatory's permit boundary, and Marketing's service-area map describe the same "supported area"?</h3>
+      <p>All three claim to describe where Overland vehicles operate in Dunmore. Marketing's 15-mile circle includes the Colby Bridge corridor and Ashcombe Commons — both outside Mapping's validated ODD and outside Regulatory's permit boundary.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — SKOS + domain classes</div>
+        Three distinct classes, not one: domain-specific <code>OperationalDesignDomain</code> (Mapping, ASAM OpenODD-informed condition scoping), domain-specific <code>PermitBoundary</code> (Regulatory), and domain-specific <code>MarketingServiceArea</code> (Product). Where Marketing's area genuinely matches the other two, use <code>skos:closeMatch</code>. For Ashcombe Commons and the Colby Bridge corridor, <strong>no match property at all</strong> — same discipline as manufacturing's Value Bolt case: an area that's outside both the validated ODD and the legal permit boundary isn't "approximately supported," it's unsupported, and SKOS shouldn't imply otherwise.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="4">
+    <div class="conflict">
+      <span class="label">Conflict 4 of 10</span>
+      <h3>INC-0442 has three disagreeing cause determinations, but only one is filed with NHTSA</h3>
+      <p>Telemetry: planner following-distance fault. Safety driver: obstructed view, believed necessary. Engineering review: perception object-tracking loss on adjacent-lane debris was a contributing factor — this is the only one submitted under NHTSA SGO 2021-01.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — PROV-O</div>
+        Model each determination as a separate <code>prov:Attribution</code> from a distinct <code>prov:Agent</code> (telemetry system, safety driver, engineering review board) on the same <code>sosa:Observation</code> — don't collapse to one "cause" field. Mark the engineering review's attribution with an explicit <code>regulatoryFilingOf</code> flag so the ontology can represent both "what actually happened, per three sources" and "what was legally reported," without conflating the two.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="5">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 4's pattern — Conflict 5 of 10</span>
+      <h3>Are "Build 4.12.2" (Fleet Ops) and "perception-v7.3.1 + planning-v2.9.0 + control-v1.4.4" (Engineering) the same thing?</h3>
+      <p>The 2025-06-05 repackage changed no component — only the Fleet Ops build number. Nothing in either system links the two labels to each other.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — SKOS + domain <code>SoftwareRelease</code></div>
+        One <code>SoftwareRelease</code> resource with two <code>Identifier</code>s — <code>skos:exactMatch</code>, not <code>closeMatch</code>, since they denote the literally identical deployed artifact. Unlike Conflict 3's geofence case, this isn't a genuine scope difference — it's purely two teams' independent naming schemes for one thing, so the highest-confidence SKOS predicate is the correct one.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="6">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 5 — Conflict 6 of 10</span>
+      <h3>perception-v7.3.1 reduced pedestrian detection range below REQ-AV-014's minimum, and nothing flagged it</h3>
+      <p>The release-notes template only has checkboxes for New feature / Bug fix / Performance — no field for "changed a detection-envelope value" — so the 45m→38m reduction was published as "Performance" and REQ-AV-014 (40m minimum) was never re-verified.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain <code>requirementSatisfiedBy</code>, re-verify-on-change</div>
+        Any <code>SoftwareRelease</code> that changes a <code>sosa:hasResult</code> value a <code>SafetyRequirement</code>'s <code>requirementSatisfiedBy</code> link depends on must flag that requirement <code>requiresReverification</code> automatically — not rely on a release-notes checkbox category that was never designed to catch this class of change. Same discipline as manufacturing's Conflict 8 (stale requirement links), applied here to a case with materially higher stakes: a pedestrian-detection requirement is currently unmet by production software.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="7">
+    <div class="conflict">
+      <span class="label">Conflict 7 of 10</span>
+      <h3>REQ-AV-022's ASIL rating disagrees with the current supplier component spec</h3>
+      <p>Original hazard analysis HA-2023-08 rates the emergency braking subsystem ASIL-D. The current supplier spec, after a Q2 2025 redesign that removed a redundant sensor, rates the same subsystem ASIL-C. No formal re-rating review is on record.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — SKOS + PROV-O</div>
+        Model <code>ASILRating</code> as a temporally-qualified <code>skos:Concept</code> assertion (from the ISO 26262 concept scheme) attributed via <code>prov:wasAttributedTo</code> to a specific hazard analysis document version — not a static property of the subsystem. Keep both HA-2023-08's ASIL-D and the supplier spec's ASIL-C as distinct, dated claims. Do not silently prefer either the higher or lower rating: the disagreement itself is what should block deployment sign-off pending a real re-rating review.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="8">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 3 — Conflict 8 of 10</span>
+      <h3>A completed trip's origin and destination were inside the permit boundary — but was the whole route?</h3>
+      <p>A pickup at Ashcombe Commons requires crossing either Colby Bridge or a 400m stretch of unincorporated Ashcombe County road — both outside Regulatory's permit boundary — even when the trip's endpoints are otherwise unremarkable.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — domain <code>PermitBoundaryExcursion</code></div>
+        Compliance has to be checked against the full route geometry, not just origin/destination — endpoint-only checking is exactly how Ashcombe Commons ended up as a live pickup point in the rider app despite being outside the permit boundary Conflict 3 established. Log any route segment outside <code>PermitBoundary</code> as a <code>PermitBoundaryExcursion</code> event, linked to the specific trip and the specific boundary it crossed, rather than treating the trip as compliant by default.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="9">
+    <div class="conflict">
+      <span class="label">Depends on Conflict 1 — Conflict 9 of 10</span>
+      <h3>Does the fleet-wide "safety driver required" roster field tell you whether a driver was actually present?</h3>
+      <p>The roster defaults to YES for every vehicle and was never flipped to NO for Dunmore after its Deployment Permit was granted — so it can't confirm driverless trips actually happened there. In Millbrook, FLT-0244's roster says "required and scheduled," but seat-occupancy telemetry shows the seat empty on 12 of 20 recent trips — the same field failing in the opposite direction.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — SOSA</div>
+        Split into two distinct properties: <code>safetyDriverRequired</code> (a policy rule, derived from the vehicle's permit type — schema-level, per Conflict 1's operational-level context) and <code>safetyDriverPresent</code> (a <code>sosa:Observation</code> from the seat-occupancy sensor, per trip). The roster field currently conflates a policy default with an observed fact; only the sensor observation can actually answer the Stage 0 gap question about what happened on a given trip.
+        <button class="next-btn" onclick="nextStep()">Next conflict →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="conflict-step" data-step="10">
+    <div class="conflict">
+      <span class="label">Conflict 10 of 10</span>
+      <h3>Mapping and Perception Engineering maintain two different max-speed figures for the same road class</h3>
+      <p>Mapping's ODD register lists 45 mph as the validated max speed for arterial roads. Perception Engineering's own detection-envelope spec — based on sensor range at speed — puts reliable pedestrian detection at a maximum of 35 mph on the same road class. Neither team maintains the other's number.</p>
+      <button class="reveal-btn" onclick="reveal(this)">Reveal recommended answer</button>
+      <div class="recommended">
+        <div class="label">Recommended — SOSA</div>
+        Model each figure as a separate <code>sosa:Observation</code>'s <code>hasResult</code>, attributed to its own <code>prov:Agent</code> (Mapping vs. Perception Engineering) via <code>wasAssociatedWith</code> — don't average the two speeds or treat one as authoritative by default. The 10 mph gap is itself the operationally significant fact: it means the ODD register currently permits a speed the perception stack can't reliably detect pedestrians at, which is exactly the kind of disagreement that should surface, not disappear into a single reconciled number.
+        <div class="done-msg" id="done-msg" style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+          All ten resolved. Next: <a href="04-validate.html">Stage 4 — Validate</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 10;
+    let current = 1;
+
+    function renderDots() {
+      const dots = document.getElementById('stepper-dots');
+      dots.innerHTML = '';
+      for (let i = 1; i <= TOTAL; i++) {
+        const d = document.createElement('span');
+        if (i < current) d.classList.add('done');
+        if (i === current) d.classList.add('current');
+        dots.appendChild(d);
+      }
+      document.getElementById('stepper-label').textContent = `Conflict ${current} of ${TOTAL}`;
+    }
+
+    function reveal(btn) {
+      btn.parentElement.querySelector('.recommended').classList.add('shown');
+      btn.style.display = 'none';
+      if (current === TOTAL) {
+        document.getElementById('done-msg').style.display = 'block';
+      }
+    }
+
+    function nextStep() {
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.remove('active');
+      current += 1;
+      document.querySelector(`.conflict-step[data-step="${current}"]`).classList.add('active');
+      renderDots();
+      window.scrollTo({ top: document.querySelector('.stage-nav').offsetTop, behavior: 'smooth' });
+    }
+
+    renderDots();
+  </script>
+</div>
+</body>
+</html>

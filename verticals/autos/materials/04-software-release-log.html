@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software Release Log — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>tr.flagged { background: var(--accent-bg); }</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Source material</span>
+  <h1>Software Release Log</h1>
+  <p class="lede">
+    Two systems of record for the same deployed builds, maintained by different teams, using
+    different naming schemes. (<a href="04-software-release-log.md">raw markdown</a>)
+  </p>
+
+  <h2>Fleet Ops release notes</h2>
+  <table>
+    <thead><tr><th>Label</th><th>Date</th><th>Summary</th></tr></thead>
+    <tbody>
+      <tr><td>Build 4.11.0</td><td>2025-04-02</td><td>Route planning improvements, reduced wait times</td></tr>
+      <tr class="flagged"><td>Build 4.12.0</td><td>2025-05-20</td><td>Perception update — reduced false-positive braking events</td></tr>
+      <tr class="flagged"><td>Build 4.12.2</td><td>2025-06-05</td><td>Bugfix patch on top of 4.12.0</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Engineering build manifest</h2>
+  <table>
+    <thead><tr><th>Date</th><th>Components</th></tr></thead>
+    <tbody>
+      <tr><td>2025-04-02</td><td>perception-v7.1.4, planning-v2.8.0, control-v1.4.4</td></tr>
+      <tr class="flagged"><td>2025-05-20</td><td>perception-v7.3.1, planning-v2.9.0, control-v1.4.4</td></tr>
+      <tr class="flagged"><td>2025-06-05</td><td>perception-v7.3.1, planning-v2.9.0, control-v1.4.4 (bundle repackaged, no component changed)</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    <strong>Fleet Ops "Build 4.12.2" and Engineering's <code>perception-v7.3.1 + planning-v2.9.0 +
+    control-v1.4.4</code> bundle are the same deployed artifact</strong> — the 2025-06-05 repackage
+    changed no component, only the bundle's build number. Nothing links the two labels to each
+    other in either system.
+  </p>
+
+  <h2>The perception-v7.3.1 change, in engineering's own commit notes</h2>
+  <blockquote>
+    Reduced pedestrian detection range in low-light conditions from 45m to 38m to cut
+    false-positive emergency-braking events (rider comfort complaint volume was the driver for
+    this change). Detection accuracy at the reduced range is unchanged.
+  </blockquote>
+  <p>
+    The release-notes template Fleet Ops used only has checkboxes for <strong>New feature / Bug
+    fix / Performance</strong> — no field for "changed a detection-envelope value," so this change
+    was published under <strong>Performance</strong> and never flagged as safety-relevant. See
+    <a href="05-safety-case-requirements.html">safety-case requirements</a> — REQ-AV-014 assumes a
+    40m detection range and was never re-verified against this change.
+  </p>
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resolved Ontology — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  .src-tag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .src-tag.real { color: var(--accent); background: var(--accent-bg); }
+  .src-tag.domain { color: var(--muted); background: var(--border); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Result</span>
+  <h1>Overland Autonomy — Resolved Ontology</h1>
+  <p class="lede">
+    Output of the Build method applied to <code>materials/</code>, grounded in
+    <a href="https://schema.org/Vehicle">schema.org's Vehicle</a> vocabulary,
+    <a href="https://www.w3.org/TR/vocab-ssn/">W3C/OGC SOSA/SSN</a>, W3C PROV-O, and W3C SKOS —
+    the last used both for cross-reference confidence and to represent two real external
+    controlled vocabularies (SAE J3016 automation levels, ISO 26262 ASIL ratings) as queryable
+    concept schemes. See <a href="../stages/03-resolve.html">Stage 3 — Resolve</a> for the
+    reasoning, and the <a href="changelog.html">changelog</a> for a flat list of decisions.
+    Machine-readable: <a href="ontology.ttl">ontology.ttl</a> (raw markdown:
+    <a href="ontology.md">ontology.md</a>).
+  </p>
+
+  <h2>Classes</h2>
+  <table>
+    <thead><tr><th>Class</th><th>Source</th><th>Definition</th></tr></thead>
+    <tbody>
+      <tr><td><code>Vehicle</code></td><td><span class="src-tag real">schema.org</span></td><td>The physical vehicle, identified by <code>vehicleIdentificationNumber</code> — the ontology's durable identity anchor.</td></tr>
+      <tr><td><code>Identifier</code></td><td><span class="src-tag domain">domain</span></td><td>Denotes a thing via <code>denotes</code>, time-qualified — the fix for FLT-0231's reused fleet ID.</td></tr>
+      <tr><td><code>SAE-J3016-Level</code></td><td><span class="src-tag real">W3C SKOS</span></td><td>L0–L5 from the real SAE J3016 scale, modeled as a <code>skos:ConceptScheme</code>.</td></tr>
+      <tr><td><code>ASIL-Rating</code></td><td><span class="src-tag real">W3C SKOS</span></td><td>QM/A/B/C/D from the real ISO 26262 scale, same treatment.</td></tr>
+      <tr><td><code>OperationalDesignDomain</code></td><td><span class="src-tag domain">domain</span>, ASAM OpenODD-informed</td><td>Validated road-class/weather/speed conditions — ASAM OpenODD is XML/schema-based, not RDF, so this borrows the pattern rather than a serialization.</td></tr>
+      <tr><td><code>PermitBoundary</code></td><td><span class="src-tag domain">domain</span></td><td>A jurisdiction boundary derived from a specific <code>Permit</code>.</td></tr>
+      <tr><td><code>MarketingServiceArea</code></td><td><span class="src-tag domain">domain</span></td><td>Product's rider-facing "supported area" claim — no real ontology reaches this.</td></tr>
+      <tr><td><code>Permit</code></td><td><span class="src-tag domain">domain</span></td><td>A DMV/municipal authorization (Testing or Deployment).</td></tr>
+      <tr><td><code>SoftwareRelease</code></td><td><span class="src-tag real">PROV-O</span> <code>Entity</code> pattern</td><td>A bundle of independently-versioned components released under one or more labels.</td></tr>
+      <tr><td><code>SafetyRequirement</code></td><td><span class="src-tag domain">domain</span></td><td>A requirement with a <code>requirementSatisfiedBy</code> link.</td></tr>
+      <tr><td><code>sosa:Observation</code> subclasses</td><td><span class="src-tag real">W3C/OGC SOSA</span></td><td><code>DisengagementEvent</code>, <code>DetectionObservation</code>, <code>SpeedEnvelopeObservation</code>, <code>SeatOccupancyObservation</code> — base pattern for every sensor/telemetry-sourced claim.</td></tr>
+      <tr><td><code>PermitBoundaryExcursion</code></td><td><span class="src-tag domain">domain</span></td><td>A trip-route segment outside a <code>PermitBoundary</code>, checked at the route level.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Relations</h2>
+  <table>
+    <thead><tr><th>Relation</th><th>Source</th><th>Domain → Range</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>vehicleIdentificationNumber</code></td><td><span class="src-tag real">schema.org</span></td><td><code>Vehicle</code> → literal</td><td>Canonical identity anchor</td></tr>
+      <tr><td><code>denotes</code></td><td><span class="src-tag domain">domain</span></td><td><code>Identifier</code> → <code>Vehicle</code>/<code>SoftwareRelease</code></td><td>Time-qualified</td></tr>
+      <tr><td><code>marketedAutomationLevel</code> / <code>operationalAutomationLevel</code></td><td>domain, referencing <span class="src-tag real">SAE J3016</span></td><td><code>Vehicle</code>/<code>TripContext</code> → <code>SAE-J3016-Level</code></td><td>Former static, latter per-trip</td></tr>
+      <tr><td><code>hasResult</code> / <code>observedProperty</code></td><td><span class="src-tag real">SOSA</span></td><td><code>Observation</code> → various</td><td>Detection ranges, speed envelopes, seat occupancy</td></tr>
+      <tr><td><code>wasAssociatedWith</code> / <code>qualifiedAttribution</code></td><td><span class="src-tag real">PROV-O</span></td><td>claim → <code>Agent</code></td><td>Keeps disagreeing determinations separate, non-overwriting</td></tr>
+      <tr><td><code>exactMatch</code> / <code>closeMatch</code></td><td><span class="src-tag real">SKOS</span></td><td>area/identifier → area/identifier</td><td>No match property at all where a claim is disproven, not unverified</td></tr>
+      <tr><td><code>requirementSatisfiedBy</code> / <code>requiresReverification</code></td><td><span class="src-tag domain">domain</span></td><td><code>SafetyRequirement</code> → <code>SoftwareRelease</code></td><td>Re-verify-on-change</td></tr>
+      <tr><td><code>safetyDriverRequired</code></td><td><span class="src-tag domain">domain</span></td><td><code>Permit</code> → boolean</td><td>Policy rule</td></tr>
+      <tr><td><code>safetyDriverPresent</code></td><td>domain, <span class="src-tag real">SOSA</span>-observed</td><td><code>SeatOccupancyObservation</code> → boolean</td><td>Observed fact, kept separate from the rule above</td></tr>
+      <tr><td><code>regulatoryFilingOf</code></td><td><span class="src-tag domain">domain</span></td><td><code>Attribution</code> → boolean</td><td>Flags which determination was actually filed</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worked instances</h2>
+  <ul>
+    <li><strong>VIN ...100111 / ...100558</strong> — both denoted by fleet ID <code>FLT-0231</code>, at non-overlapping time ranges</li>
+    <li><strong>Build 4.12.2 / perception-v7.3.1 bundle</strong> — two <code>Identifier</code>s, <code>skos:exactMatch</code></li>
+    <li><strong>INC-0442</strong> — three <code>prov:Attribution</code>s; engineering review's carries <code>regulatoryFilingOf = true</code></li>
+    <li><strong>REQ-AV-014</strong> — <code>requirementSatisfiedBy</code> perception-v7.2.0, <code>requiresReverification = true</code></li>
+    <li><strong>REQ-AV-022</strong> — two <code>ASIL-Rating</code> claims (ASIL-D, ASIL-C), both retained, neither preferred</li>
+    <li><strong>Ashcombe Commons</strong> — no match property to either <code>OperationalDesignDomain</code> or <code>PermitBoundary</code>; route produces a <code>PermitBoundaryExcursion</code></li>
+    <li><strong>FLT-0244</strong> — <code>Permit.safetyDriverRequired = true</code>, but <code>safetyDriverPresent = false</code> on 12 of 20 recent trips</li>
+    <li><strong>Arterial road class, Dunmore</strong> — two <code>SpeedEnvelopeObservation</code>s (45mph, 35mph), kept as two results</li>
+  </ul>
+
+  <h2>Known gaps</h2>
+  <p>
+    <strong><code>PermitBoundaryExcursion</code> has one worked instance</strong> (Ashcombe
+    Commons/Colby Bridge) — no other route has been checked at the segment level fleet-wide yet.
+  </p>
+  <p>
+    <strong>REQ-AV-022's ASIL disagreement is deliberately left unresolved</strong>, not defaulted
+    to either rating — the ontology's job is to make the conflict blocking and visible, not to
+    substitute for a real safety review.
+  </p>
+</div>
+</body>
+</html>

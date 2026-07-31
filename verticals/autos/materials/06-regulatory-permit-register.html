@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulatory Permit Register — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Source material</span>
+  <h1>Regulatory Permit Register</h1>
+  <p class="lede">
+    Two metros, two different permit types under California's DMV autonomous vehicle regulations
+    (13 CCR §227 et seq.), each with different conditions.
+    (<a href="06-regulatory-permit-register.md">raw markdown</a>)
+  </p>
+
+  <h2>Millbrook — CA DMV Testing Permit</h2>
+  <p>
+    Testing permits require <strong>a safety driver in the driver's seat at all times</strong>,
+    ready to take control. No driverless authorization. Does not by itself authorize carrying
+    paying passengers.
+  </p>
+
+  <h2>Dunmore — CA DMV Deployment Permit + city Transportation Charter Permit</h2>
+  <p>
+    Deployment permits authorize <strong>driverless operation</strong> (no safety driver required)
+    within the permitted boundary. The city Transportation Charter Permit is layered on top for
+    passenger service and defines the boundary as <strong>City of Dunmore limits</strong> — see
+    <a href="03-odd-geofence-register.html">ODD register</a> for where that boundary does and
+    doesn't line up with the marketing service-area map and Mapping's validated ODD.
+  </p>
+
+  <h2>Fleet Ops driver roster — the "safety driver required" toggle</h2>
+  <p>
+    Fleet Ops schedules safety drivers through a single fleet-wide roster system. The
+    <code>safety_driver_required</code> field defaults to <strong>YES</strong> for every vehicle
+    regardless of metro or permit type — set conservatively at Millbrook launch and never flipped
+    to NO for Dunmore vehicles after the Deployment Permit was granted. Dispatch mostly stopped
+    scheduling drivers for Dunmore trips in practice, but the roster field still reads YES
+    fleet-wide, so <strong>the roster cannot be used to determine whether a given Dunmore trip
+    actually ran driverless</strong> — only the vehicle's own seat-occupancy telemetry can. The
+    same ambiguity cuts the other way for FLT-0244 in Millbrook (see
+    <a href="01-fleet-vehicle-registry.html">fleet registry</a>) — roster says "required and
+    scheduled," telemetry says the seat was empty on 12 of the last 20 trips.
+  </p>
+
+  <h2>NHTSA Standing General Order 2021-01</h2>
+  <p>
+    Requires ADS operators to report certain crash and disengagement events. Overland's incident
+    review process (<a href="02-disengagement-incident-log.html">incident log</a>) produces three
+    independent determinations per reportable event — telemetry, safety driver, and engineering
+    review — but SGO reporting requires exactly one determination per event, which is why INC-0442
+    shows only the engineering review determination as the one actually filed.
+  </p>
+</div>
+</body>
+</html>

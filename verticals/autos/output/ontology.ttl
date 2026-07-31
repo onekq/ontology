@@ -1,0 +1,200 @@
+@prefix overland: <https://onekq.github.io/ontology/verticals/autos/ontology#> .
+@prefix schema:   <https://schema.org/> .
+@prefix sosa:     <http://www.w3.org/ns/sosa/> .
+@prefix ssn:      <http://www.w3.org/ns/ssn/> .
+@prefix prov:     <http://www.w3.org/ns/prov#> .
+@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Domain classes not covered by schema.org / SOSA / PROV-O / SKOS --------
+
+overland:Identifier a owl:Class ;
+    rdfs:comment "Denotes a Vehicle or SoftwareRelease via overland:denotes, time-qualified. Not the thing itself." .
+overland:OperationalDesignDomain a owl:Class ;
+    rdfs:comment "ASAM OpenODD-informed condition scoping (road class x weather x speed). ASAM OpenODD is XML/schema-based, not RDF - this class borrows the pattern, not a native serialization." .
+overland:PermitBoundary a owl:Class .
+overland:MarketingServiceArea a owl:Class ;
+    rdfs:comment "No real ontology reaches this - a rider-facing commercial claim, drawn independently of OperationalDesignDomain and PermitBoundary on purpose." .
+overland:Permit a owl:Class .
+overland:SoftwareRelease a owl:Class ; rdfs:subClassOf prov:Entity .
+overland:SafetyRequirement a owl:Class .
+overland:PermitBoundaryExcursion a owl:Class .
+overland:DisengagementEvent a owl:Class ; rdfs:subClassOf sosa:Observation .
+overland:DetectionObservation a owl:Class ; rdfs:subClassOf sosa:Observation .
+overland:SpeedEnvelopeObservation a owl:Class ; rdfs:subClassOf sosa:Observation .
+overland:SeatOccupancyObservation a owl:Class ; rdfs:subClassOf sosa:Observation .
+overland:TripContext a owl:Class ;
+    rdfs:comment "A per-trip scope for claims (like operational automation level) that don't hold globally for a Vehicle." .
+overland:PickupPoint a owl:Class .
+
+overland:denotes a owl:ObjectProperty ; rdfs:domain overland:Identifier .
+overland:denotesFrom a owl:DatatypeProperty ; rdfs:domain overland:Identifier ; rdfs:range xsd:date .
+overland:denotesTo a owl:DatatypeProperty ; rdfs:domain overland:Identifier ; rdfs:range xsd:date .
+overland:marketedAutomationLevel a owl:ObjectProperty ;
+    rdfs:domain schema:Vehicle ; rdfs:range skos:Concept ;
+    rdfs:comment "Static platform-certified maximum, referencing the SAE J3016 scheme." .
+overland:operationalAutomationLevel a owl:ObjectProperty ;
+    rdfs:domain overland:TripContext ; rdfs:range skos:Concept ;
+    rdfs:comment "Per-trip claim, not a second static Vehicle property - see Resolve Conflict 1." .
+overland:vehicle a owl:ObjectProperty ; rdfs:domain overland:TripContext ; rdfs:range schema:Vehicle .
+overland:trip a owl:ObjectProperty ; rdfs:range overland:TripContext .
+overland:excursionBoundary a owl:ObjectProperty ;
+    rdfs:domain overland:PermitBoundaryExcursion ; rdfs:range overland:PermitBoundary .
+overland:detectionRangeMeters a owl:DatatypeProperty ;
+    rdfs:domain overland:SoftwareRelease ; rdfs:range xsd:decimal .
+overland:speedMph a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+overland:requirementSatisfiedBy a owl:ObjectProperty ;
+    rdfs:domain overland:SafetyRequirement ; rdfs:range overland:SoftwareRelease .
+overland:requiresReverification a owl:DatatypeProperty ;
+    rdfs:domain overland:SafetyRequirement ; rdfs:range xsd:boolean .
+overland:safetyDriverRequired a owl:DatatypeProperty ;
+    rdfs:domain overland:Permit ; rdfs:range xsd:boolean .
+overland:safetyDriverPresent a owl:DatatypeProperty ;
+    rdfs:domain overland:SeatOccupancyObservation ; rdfs:range xsd:boolean .
+overland:regulatoryFilingOf a owl:DatatypeProperty ;
+    rdfs:domain prov:Attribution ; rdfs:range xsd:boolean .
+
+# --- SAE J3016 automation-level scale, represented via SKOS ------------------
+
+overland:SAE-J3016 a skos:ConceptScheme ;
+    rdfs:label "SAE J3016 Levels of Driving Automation" ;
+    rdfs:seeAlso <https://www.sae.org/standards/content/j3016_202104/> .
+overland:L2 a skos:Concept ; skos:inScheme overland:SAE-J3016 ; skos:notation "L2" .
+overland:L4 a skos:Concept ; skos:inScheme overland:SAE-J3016 ; skos:notation "L4" .
+
+# --- ISO 26262 ASIL scale, represented via SKOS ------------------------------
+
+overland:ISO-26262-ASIL a skos:ConceptScheme ;
+    rdfs:label "ISO 26262 Automotive Safety Integrity Levels" .
+overland:ASIL-C a skos:Concept ; skos:inScheme overland:ISO-26262-ASIL ; skos:notation "ASIL-C" .
+overland:ASIL-D a skos:Concept ; skos:inScheme overland:ISO-26262-ASIL ; skos:notation "ASIL-D" .
+
+# --- Conflict 1: marketed vs. operational automation level ------------------
+
+overland:Vehicle-100215 a schema:Vehicle ;
+    schema:vehicleIdentificationNumber "5YJOA1E24PF100215" ;
+    overland:marketedAutomationLevel overland:L4 .
+overland:Trip-FLT0215-context a overland:TripContext ;
+    overland:vehicle overland:Vehicle-100215 ;
+    overland:operationalAutomationLevel overland:L4 ;
+    rdfs:comment "L4-supervised: Millbrook Testing Permit requires a safety driver at all times, per-trip context, not a second static vehicle property." .
+
+# --- Conflict 2: FLT-0231 denotes two VINs across time -----------------------
+
+overland:Vehicle-100111 a schema:Vehicle ;
+    schema:vehicleIdentificationNumber "5YJOA1E26PF100111" .
+overland:Vehicle-100558 a schema:Vehicle ;
+    schema:vehicleIdentificationNumber "5YJOA1E28PF100558" .
+
+overland:FLT-0231 a overland:Identifier ;
+    overland:denotes overland:Vehicle-100111 ;
+    overland:denotesFrom "2023-01-15"^^xsd:date ;
+    overland:denotesTo "2025-05-02"^^xsd:date .
+overland:FLT-0231-2 a overland:Identifier ;
+    rdfs:label "FLT-0231 (post-swap)" ;
+    overland:denotes overland:Vehicle-100558 ;
+    overland:denotesFrom "2025-06-14"^^xsd:date .
+
+# --- Conflict 3: three service-area definitions -------------------------------
+
+overland:Dunmore-ODD a overland:OperationalDesignDomain ;
+    rdfs:comment "Arterial roads, posted speed <= 45mph, clear/light-rain. Excludes Colby Bridge (unvalidated radar returns)." .
+overland:Dunmore-PermitBoundary a overland:PermitBoundary ;
+    rdfs:comment "City of Dunmore limits only." .
+overland:Dunmore-MarketingArea a overland:MarketingServiceArea ;
+    rdfs:comment "15-mile radius circle around the depot; includes Colby Bridge corridor and Ashcombe Commons." .
+
+overland:AshcombeCommons a overland:PickupPoint ;
+    rdfs:label "Ashcombe Commons" ;
+    schema:containedInPlace overland:Dunmore-MarketingArea .
+    # Deliberately NO skos:closeMatch / skos:exactMatch asserted from AshcombeCommons
+    # to Dunmore-ODD or Dunmore-PermitBoundary - it is outside both, confirmed, not unverified.
+
+# --- Conflict 4: INC-0442's three determinations ------------------------------
+
+overland:INC-0442 a overland:DisengagementEvent ;
+    sosa:hasFeatureOfInterest overland:Vehicle-100111 ;
+    prov:qualifiedAttribution [
+        a prov:Attribution ;
+        prov:agent overland:TelemetrySystem ;
+        rdfs:comment "planner following-distance fault" ;
+        overland:regulatoryFilingOf false
+    ] , [
+        a prov:Attribution ;
+        prov:agent overland:SafetyDriver-INC0442 ;
+        rdfs:comment "obstructed view by parked delivery van; disengaged and braked, believed necessary" ;
+        overland:regulatoryFilingOf false
+    ] , [
+        a prov:Attribution ;
+        prov:agent overland:EngineeringReviewBoard ;
+        rdfs:comment "perception object-tracking loss on adjacent-lane debris was a contributing factor" ;
+        overland:regulatoryFilingOf true
+    ] .
+
+# --- Conflict 5: Build 4.12.2 / perception-v7.3.1 bundle ---------------------
+
+overland:Release-2025-06-05 a overland:SoftwareRelease .
+overland:Build-4.12.2 a overland:Identifier ;
+    overland:denotes overland:Release-2025-06-05 .
+overland:PerceptionBundle-7.3.1 a overland:Identifier ;
+    overland:denotes overland:Release-2025-06-05 ;
+    skos:exactMatch overland:Build-4.12.2 .
+
+# --- Conflict 6: REQ-AV-014 stale requirement --------------------------------
+
+overland:REQ-AV-014 a overland:SafetyRequirement ;
+    rdfs:comment "Perception system shall detect pedestrian presence/intent at >=40m, clear weather, low-light included." ;
+    overland:requirementSatisfiedBy overland:Release-Perception-7.2.0 ;
+    overland:requiresReverification true .
+overland:Release-Perception-7.2.0 a overland:SoftwareRelease ;
+    overland:detectionRangeMeters 45 .
+overland:Release-2025-06-05 overland:detectionRangeMeters 38 .
+    # 38m < REQ-AV-014's 40m minimum - superseded release never re-verified against this requirement.
+
+# --- Conflict 7: REQ-AV-022 ASIL disagreement --------------------------------
+
+overland:REQ-AV-022 a overland:SafetyRequirement ;
+    rdfs:comment "Emergency braking subsystem ASIL rating, per HA-2023-08." .
+overland:ASIL-Claim-HA-2023-08 a prov:Attribution ;
+    prov:entity overland:ASIL-D ;
+    prov:agent overland:OriginalHazardAnalysis .
+overland:ASIL-Claim-SupplierSpec-2025Q2 a prov:Attribution ;
+    prov:entity overland:ASIL-C ;
+    prov:agent overland:SupplierComponentSpec .
+    # Both retained. Neither preferred. No formal re-rating review on record - blocking, not resolved.
+
+# --- Conflict 8: route-level permit boundary excursion -----------------------
+
+overland:EVT-1204 a overland:PermitBoundaryExcursion ;
+    overland:trip overland:Trip-EVT1204 ;
+    overland:excursionBoundary overland:Dunmore-PermitBoundary ;
+    rdfs:comment "Route briefly crossed the Colby Bridge corridor, outside both Dunmore-ODD and Dunmore-PermitBoundary, despite endpoints being unremarkable." .
+
+# --- Conflict 9: safety driver required vs. observed present ----------------
+
+overland:Millbrook-Testing-Permit a overland:Permit ;
+    overland:safetyDriverRequired true .
+overland:Dunmore-Deployment-Permit a overland:Permit ;
+    overland:safetyDriverRequired false .
+
+overland:SeatObs-FLT0244-01 a overland:SeatOccupancyObservation ;
+    sosa:hasFeatureOfInterest overland:Vehicle-100244 ;
+    overland:safetyDriverPresent false .
+    # Roster says "required and scheduled" - contradicted by 12 of 20 recent SeatOccupancyObservations.
+
+# --- Conflict 10: two disagreeing speed-envelope figures ---------------------
+
+overland:ArterialRoadClass-Dunmore a sosa:FeatureOfInterest .
+
+overland:SpeedObs-Mapping a overland:SpeedEnvelopeObservation ;
+    sosa:hasFeatureOfInterest overland:ArterialRoadClass-Dunmore ;
+    prov:wasAssociatedWith overland:MappingTeam ;
+    sosa:hasResult [ overland:speedMph 45 ] .
+
+overland:SpeedObs-PerceptionEng a overland:SpeedEnvelopeObservation ;
+    sosa:hasFeatureOfInterest overland:ArterialRoadClass-Dunmore ;
+    prov:wasAssociatedWith overland:PerceptionEngineeringTeam ;
+    sosa:hasResult [ overland:speedMph 35 ] .
+    # Deliberately two observations, not one reconciled figure - see changelog.

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discover — Autos — ontology</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles</span>
+  <h1>Stage 1 — Discover</h1>
+  <p class="lede">
+    Read every source document and log every term, code, and relationship — without resolving
+    conflicts yet. A term used two different ways gets logged twice, not merged.
+  </p>
+
+  <div class="stage-nav">
+    <a href="00-competency-questions.html">0. Scope</a>
+    <a class="current" href="01-discover.html">1. Discover</a>
+    <a href="02-draft.html">2. Draft</a>
+    <a href="03-resolve.html">3. Resolve</a>
+    <a href="04-validate.html">4. Validate</a>
+  </div>
+
+  <table>
+    <thead><tr><th>Term / code</th><th>Found in</th><th>Raw observation</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td>marketed vs. operational automation level</td><td>Fleet registry</td><td>Every Ridgeline R4 lists "L4" as marketed level. Operational level varies by metro/permit: Dunmore rows are true driverless L4; several Millbrook rows are "L4-supervised" or "L2-supervised."</td><td>Conflict</td></tr>
+      <tr><td>FLT-0231</td><td>Fleet registry</td><td>Same fleet ID assigned first to VIN ...100111 (written off in INC-0442), then reassigned to replacement VIN ...100558 six weeks later. Telematics dashboard still labels pre-swap trip logs under plain "FLT-0231."</td><td>Conflict</td></tr>
+      <tr><td>FLT-0244 driver presence</td><td>Fleet registry</td><td>Roster marks driver "required and scheduled." Seat-occupancy telemetry shows the seat unoccupied on 12 of 20 recent trips.</td><td>Conflict</td></tr>
+      <tr><td>INC-0442 cause</td><td>Incident log</td><td>Telemetry: planner following-distance fault. Safety driver: obstructed view, believed necessary. Engineering review: perception object-tracking loss on adjacent-lane debris was a contributing factor — only this one is filed with NHTSA.</td><td>Conflict — regulatory stakes</td></tr>
+      <tr><td>EVT-1204 (Colby Bridge)</td><td>Incident log, ODD register</td><td>Telemetry auto-flagged a route ODD exit on the Colby Bridge corridor, a segment Mapping has explicitly not validated.</td><td>Conflict</td></tr>
+      <tr><td>EVT-1250 (low-light pedestrian)</td><td>Incident log, release log, requirements</td><td>Pedestrian detected inside minimum following distance shortly after perception-v7.3.1 rollout, which reduced low-light detection range below REQ-AV-014's stated minimum.</td><td>Conflict — safety stakes</td></tr>
+      <tr><td>Mapping's ODD polygon</td><td>ODD register</td><td>Validated road classes/weather/speed for Dunmore. Explicitly excludes Colby Bridge (unvalidated radar returns) and all of unincorporated Ashcombe County.</td><td>Note</td></tr>
+      <tr><td>Regulatory's permit boundary</td><td>ODD register, permit register</td><td>City of Dunmore limits only — does not extend to Ashcombe County.</td><td>Note</td></tr>
+      <tr><td>Marketing's "Dunmore Metro" service area</td><td>ODD register</td><td>15-mile radius circle around the depot, drawn independently of both documents above. Includes Colby Bridge corridor and Ashcombe Commons, both outside the other two definitions.</td><td>Conflict</td></tr>
+      <tr><td>Ashcombe Commons pickup point</td><td>ODD register</td><td>Currently requestable in the rider app despite being outside both the validated ODD and the permit boundary.</td><td>Conflict — compliance stakes</td></tr>
+      <tr><td>Build 4.12.2 / perception-v7.3.1 bundle</td><td>Software release log</td><td>Fleet Ops and Engineering label the same deployed artifact differently; nothing links the two labels in either system.</td><td>Conflict</td></tr>
+      <tr><td>perception-v7.3.1 detection-range change</td><td>Software release log</td><td>Reduced low-light pedestrian detection range 45m → 38m. Published under "Performance" — the release-notes template has no field for detection-envelope changes, so it wasn't flagged safety-relevant.</td><td>Conflict — safety stakes</td></tr>
+      <tr><td>REQ-AV-014 (pedestrian detection)</td><td>Requirements</td><td>Satisfied-by points at perception-v7.2.0 (45m), superseded by v7.3.1 (38m). Never re-verified.</td><td>Conflict — safety stakes</td></tr>
+      <tr><td>REQ-AV-022 (ASIL rating)</td><td>Requirements</td><td>Original hazard analysis (HA-2023-08) rates the subsystem ASIL-D. Current supplier component spec, post-redesign, rates it ASIL-C. No formal re-rating review on record.</td><td>Conflict — safety stakes</td></tr>
+      <tr><td>REQ-AV-031 (lidar range)</td><td>Requirements</td><td>Satisfied by Sensor Pod v3.2, re-verified as part of that release.</td><td>Note — control example</td></tr>
+      <tr><td>Millbrook Testing Permit</td><td>Permit register</td><td>Requires safety driver at all times; no driverless authorization; no passenger-service authorization by itself.</td><td>Note</td></tr>
+      <tr><td>Dunmore Deployment Permit + Charter Permit</td><td>Permit register</td><td>Authorizes driverless operation within City of Dunmore limits.</td><td>Note</td></tr>
+      <tr><td>Fleet-wide "safety driver required" roster toggle</td><td>Permit register, fleet registry</td><td>Defaults to YES for every vehicle regardless of metro or permit; never flipped to NO for Dunmore after deployment permit granted. Roster field alone can't establish whether a Dunmore trip actually ran driverless.</td><td>Conflict — compliance stakes</td></tr>
+    </tbody>
+  </table>
+
+  <p>Eighteen entries logged, twelve flagged as conflicts. None resolved yet — that's Stage 3.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet Vehicle Registry — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+<style>
+  tr.flagged { background: var(--accent-bg); }
+  .dl { font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Source material</span>
+  <h1>Fleet Vehicle Registry</h1>
+  <p class="lede">
+    Exported from Overland Autonomy's fleet management system. <code>marketed_automation_level</code>
+    is the platform's certified maximum (always "L4" for the Ridgeline R4);
+    <code>operational_automation_level</code> is what a vehicle is actually allowed to run in its
+    home metro, which depends on which DMV permit that metro holds — the two columns disagree on
+    purpose in several rows. Rows shaded orange are where that, or an identifier problem, creates a
+    genuine ambiguity. <span class="dl">(<a href="01-fleet-vehicle-registry.csv">raw .csv export</a>)</span>
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Fleet ID</th><th>VIN</th><th>Sensor pod</th><th>Metro</th><th>Permit</th><th>Marketed level</th><th>Operational level</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>FLT-0201</td><td>...100201</td><td>v3.2</td><td>Dunmore</td><td>Deployment</td><td>L4</td><td>L4 (driverless)</td><td>active</td><td></td></tr>
+      <tr><td>FLT-0202</td><td>...100202</td><td>v3.2</td><td>Dunmore</td><td>Deployment</td><td>L4</td><td>L4 (driverless)</td><td>active</td><td></td></tr>
+      <tr class="flagged"><td>FLT-0215</td><td>...100215</td><td>v3.1</td><td>Millbrook</td><td>Testing</td><td>L4</td><td>L4-supervised (safety driver required by permit)</td><td>active</td><td>Marketing site lists Millbrook as "L4 service" without the supervised qualifier</td></tr>
+      <tr class="flagged"><td>FLT-0231</td><td>...100111</td><td>v3.1</td><td>Dunmore</td><td>Deployment</td><td>L4</td><td>L4 (driverless)</td><td>written off</td><td>Written off in collision INC-0442 (2025-05-02); fleet ID retained for replacement below</td></tr>
+      <tr class="flagged"><td>FLT-0231</td><td>...100558</td><td>v3.2</td><td>Dunmore</td><td>Deployment</td><td>L4</td><td>L4 (driverless)</td><td>active</td><td>Replacement chassis since 2025-06-14 — telematics dashboard still labels older trip logs under plain "FLT-0231," no VIN qualifier</td></tr>
+      <tr class="flagged"><td>FLT-0244</td><td>...100244</td><td>v3.2</td><td>Millbrook</td><td>Testing</td><td>L4</td><td>L2-supervised (permit default)</td><td>active</td><td>Seat-occupancy sensor shows driver seat unoccupied on 12 of last 20 trips despite roster marking driver "required and scheduled"</td></tr>
+      <tr><td>FLT-0250</td><td>...100250</td><td>v3.2</td><td>Dunmore</td><td>Deployment</td><td>L4</td><td>L4 (driverless)</td><td>active</td><td></td></tr>
+      <tr><td>FLT-0263</td><td>...100263</td><td>v3.0</td><td>Millbrook</td><td>Testing</td><td>L4</td><td>L4-supervised (safety driver required by permit)</td><td>active</td><td>Oldest sensor pod revision still in service; v3.2 retrofit scheduled Q4 2025</td></tr>
+      <tr class="flagged"><td>FLT-0277</td><td>...100277</td><td>v3.2</td><td>Dunmore</td><td>Deployment</td><td>L4</td><td>L4 (driverless)</td><td>active</td><td>Standard route includes the Colby Bridge corridor — see <a href="03-odd-geofence-register.html">ODD register</a></td></tr>
+      <tr><td>FLT-0288</td><td>...100288</td><td>v3.2</td><td>Dunmore</td><td>Deployment</td><td>L4</td><td>L4 (driverless)</td><td>active</td><td>control example — no open conflicts on this row</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

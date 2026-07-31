@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ODD &amp; Service Area Register — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Source material</span>
+  <h1>Operational Design Domain &amp; Service Area Register</h1>
+  <p class="lede">
+    Three teams, three independently-maintained definitions of "where Overland vehicles are
+    allowed to operate" — none derived from either of the other two.
+    (<a href="03-odd-geofence-register.md">raw markdown</a>)
+  </p>
+
+  <h2>Mapping's ODD polygon (Dunmore)</h2>
+  <p>
+    Maintained per <a href="https://www.asam.net/standards/detail/openodd/">ASAM OpenODD</a>-style
+    condition scoping: road class, weather, and speed range each independently validated against
+    real sensor data before a segment is added.
+  </p>
+  <ul>
+    <li>Arterial roads, posted speed ≤ 45 mph, validated in clear and light-rain conditions.</li>
+    <li><strong>Colby Bridge is explicitly excluded</strong> — steel-grate deck geometry produces radar returns the perception stack was never validated against. Flagged <code>not-validated</code>, not <code>validated-clear-only</code>.</li>
+    <li>Unincorporated Ashcombe County roads aren't in this polygon at all — Mapping only builds polygons inside jurisdictions Regulatory Affairs has told them are permitted, and nobody told them Ashcombe County isn't.</li>
+  </ul>
+
+  <h2>Regulatory Affairs' permitted jurisdiction boundary (Dunmore)</h2>
+  <p>
+    Drawn directly from the CA DMV Deployment Permit (see <a href="06-regulatory-permit-register.html">permit register</a>):
+    <strong>City of Dunmore limits only.</strong> Explicitly does not extend into unincorporated
+    Ashcombe County, regardless of what any route or map elsewhere shows.
+  </p>
+
+  <h2>Product's marketing "Dunmore Metro" service area</h2>
+  <p>
+    Drawn by the marketing team as a 15-mile radius circle around the Dunmore depot, for the
+    launch website's service-area map. Never checked against either document above. It visually
+    includes:
+  </p>
+  <ul>
+    <li>The Colby Bridge corridor (outside Mapping's validated ODD).</li>
+    <li><strong>Ashcombe Commons</strong> shopping center, reachable only by crossing Colby Bridge or a 400m stretch of unincorporated Ashcombe County road — outside both Mapping's ODD <em>and</em> Regulatory's permit boundary.</li>
+  </ul>
+  <p>No one owns reconciling these three documents against each other. Ashcombe Commons is currently a requestable pickup point in the rider app.</p>
+</div>
+</body>
+</html>

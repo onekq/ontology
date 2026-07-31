@@ -1,0 +1,11 @@
+fleet_id,vin,platform,sensor_suite_rev,home_metro,permit_type,marketed_automation_level,operational_automation_level,status,notes
+FLT-0201,5YJOA1E29PF100201,Ridgeline R4,Sensor Pod v3.2,Dunmore,Deployment,L4,L4 (driverless),active,
+FLT-0202,5YJOA1E22PF100202,Ridgeline R4,Sensor Pod v3.2,Dunmore,Deployment,L4,L4 (driverless),active,
+FLT-0215,5YJOA1E24PF100215,Ridgeline R4,Sensor Pod v3.1,Millbrook,Testing,L4,L4-supervised (safety driver required by permit condition),active,Marketing site lists Millbrook as "L4 service" without the supervised qualifier
+FLT-0231,5YJOA1E26PF100111,Ridgeline R4,Sensor Pod v3.1,Dunmore,Deployment,L4,L4 (driverless),written off,Written off in collision INC-0442 (2025-05-02); fleet ID retained for replacement vehicle below
+FLT-0231,5YJOA1E28PF100558,Ridgeline R4,Sensor Pod v3.2,Dunmore,Deployment,L4,L4 (driverless),active,Replacement chassis in service since 2025-06-14; telematics provider's dashboard still labels pre-2025-06-14 trip logs under plain "FLT-0231" with no VIN qualifier
+FLT-0244,5YJOA1E20PF100244,Ridgeline R4,Sensor Pod v3.2,Millbrook,Testing,L4,L2-supervised (permit default),active,Seat-occupancy sensor shows driver seat unoccupied on 12 of last 20 logged trips despite roster marking driver "required and scheduled"
+FLT-0250,5YJOA1E27PF100250,Ridgeline R4,Sensor Pod v3.2,Dunmore,Deployment,L4,L4 (driverless),active,
+FLT-0263,5YJOA1E23PF100263,Ridgeline R4,Sensor Pod v3.0,Millbrook,Testing,L4,L4-supervised (safety driver required by permit condition),active,Oldest sensor pod revision still in service; scheduled for v3.2 retrofit Q4 2025
+FLT-0277,5YJOA1E25PF100277,Ridgeline R4,Sensor Pod v3.2,Dunmore,Deployment,L4,L4 (driverless),active,Standard route includes the Colby Bridge corridor — see materials/03
+FLT-0288,5YJOA1E21PF100288,Ridgeline R4,Sensor Pod v3.2,Dunmore,Deployment,L4,L4 (driverless),active,control example — no open conflicts on this row

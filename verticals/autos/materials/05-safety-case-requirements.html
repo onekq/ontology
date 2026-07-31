@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Safety Case Requirements — Overland Autonomy</title>
+<link rel="stylesheet" href="../../../shared/core/site.css">
+</head>
+<body>
+<nav class="top">
+  <a class="home" href="../../../index.html">ontology</a>
+  <a href="../../../methodology.html">methodology</a>
+  <a href="https://github.com/onekq/ontology">source</a>
+</nav>
+<div class="wrap">
+  <span class="tag">Autos / Autonomous Vehicles — Source material</span>
+  <h1>Safety Case Requirements Register (excerpt)</h1>
+  <p class="lede">
+    Structured the way ISO 26262 / UL 4600-style safety cases are: each requirement has a
+    "Satisfied by" field pointing at a specific software or hardware element, filled in at
+    requirement creation and rarely revisited when that element changes.
+    (<a href="05-safety-case-requirements.md">raw markdown</a>)
+  </p>
+
+  <h2>REQ-AV-014 — Pedestrian detection range</h2>
+  <blockquote>The perception system shall detect pedestrian presence and intent at a minimum range of 40m in clear weather, low-light included.</blockquote>
+  <p><strong>Satisfied by:</strong> perception-v7.2.0 (validated detection range: 45m).</p>
+  <p>
+    perception-v7.2.0 was superseded by perception-v7.3.1 (see
+    <a href="04-software-release-log.html">release log</a>), which reduced the low-light detection
+    range to 38m — below this requirement's 40m minimum. Nobody re-verified REQ-AV-014 against the
+    new release, because the release wasn't flagged as safety-relevant in the system that would
+    normally trigger that re-check.
+  </p>
+
+  <h2>REQ-AV-022 — Emergency braking subsystem ASIL rating</h2>
+  <blockquote>The emergency braking subsystem shall be designed and verified to ASIL-D per the original hazard and risk analysis (HA-2023-08).</blockquote>
+  <p>
+    <strong>Current supplier component spec (Q2 2025 redesign):</strong> rates the same subsystem
+    <strong>ASIL-C</strong>, following a hardware redesign that removed a redundant brake-pressure
+    sensor deemed "unnecessary given planning-stack improvements." No formal re-rating review
+    against HA-2023-08 is on record — the ASIL-C figure comes from the supplier's own updated
+    component datasheet, not from Overland's safety team re-running the hazard analysis.
+  </p>
+
+  <h2>REQ-AV-031 — Lidar minimum range <span style="font-weight:400; color:var(--muted)">(control example)</span></h2>
+  <blockquote>The primary lidar unit shall provide usable returns at a minimum range of 120m.</blockquote>
+  <p>
+    <strong>Satisfied by:</strong> Sensor Pod v3.2 lidar unit (validated range: 150m). No open
+    conflict — the v3.1 → v3.2 upgrade improved lidar range and the requirement was re-verified as
+    part of that release.
+  </p>
+</div>
+</body>
+</html>
